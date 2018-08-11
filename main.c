@@ -13,7 +13,7 @@
 
 int main(void)
 {
-    Bootloader_Start(); /* Enable global interrupts. */
+    CyGlobalIntEnable; /* Enable global interrupts. */
 
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
 

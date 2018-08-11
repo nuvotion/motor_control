@@ -1,4 +1,4 @@
-TARGET	    := bootloader
+TARGET	    := application
 TOP_SRCDIR  := ..
 
 CYPRESS_DIR := $(TOP_SRCDIR)/$(TARGET).cydsn
@@ -39,13 +39,15 @@ LDFLAGS += -Wl,--gc-sections -g -ffunction-sections -Og -ffat-lto-objects
 
 export
 
-$(TARGET).hex: $(TARGET).elf
-	cyelftool -P $< \
+$(TARGET).cyacd: $(TARGET).elf
+	cyelftool -B $< \
 	    --flash_row_size 256 \
 	    --flash_size 262144 \
 	    --flash_offset 0x00000000 \
-	    --size_var_name Bootloader_SizeBytes \
-	    --checksum_var_name Bootloader_Checksum
+	    --flash_array_size 65536 \
+	    --ee_array 64 \
+	    --ee_array_size 2048 \
+	    --ee_row_size 16
 	cyelftool -S $<
 
 $(TARGET).elf: lib/$(TARGET).a $(OBJ)
@@ -69,5 +71,6 @@ clean:
 	rm -f $(TARGET).map
 	rm -f $(TARGET).elf
 	rm -f $(TARGET).hex
+	rm -f $(TARGET).cyacd
 
 .PHONY: clean
