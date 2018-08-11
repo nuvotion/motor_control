@@ -8,13 +8,22 @@ CONFIG_DEPS := $(CYPRESS_DIR)/$(TARGET).cydwr \
 	       $(CYPRESS_DIR)/TopDesign/TopDesign.cysch
 
 PROJECT_FILE  := $(CYPRESS_DIR)/$(TARGET).cyprj
-WIN_PROJ_FILE := $(subst \,\\,$(shell cygpath -w $(PROJECT_FILE)))
 
 SRC := main.c
 OBJ := $(SRC:.c=.o)
 
-CC := arm-none-eabi-gcc
-AS := arm-none-eabi-as
+ifneq ($(shell uname),Linux)
+    CC := arm-none-eabi-gcc
+    AS := arm-none-eabi-as
+    CYELFTOOL := cyelftool
+    WIN_PROJ_FILE := $(subst \,\\,$(shell cygpath -w $(PROJECT_FILE)))
+else
+    TOOLCHAIN := $(abspath $(TOP_SRCDIR)/../toolchain)
+    TOOLCHAIN_GCC := $(TOOLCHAIN)/arm-none-eabi-gcc/4.8.3-2014q1/bin
+    CC := $(TOOLCHAIN_GCC)/arm-none-eabi-gcc
+    AS := $(TOOLCHAIN_GCC)/arm-none-eabi-as
+    CYELFTOOL := wine $(TOOLCHAIN)/cyelftool
+endif
 
 INCLUDES := -I config
 
@@ -40,7 +49,7 @@ LDFLAGS += -Wl,--gc-sections -g -ffunction-sections -Og -ffat-lto-objects
 export
 
 $(TARGET).cyacd: $(TARGET).elf
-	cyelftool -B $< \
+	$(CYELFTOOL) -B $< \
 	    --flash_row_size 256 \
 	    --flash_size 262144 \
 	    --flash_offset 0x00000000 \
@@ -48,7 +57,7 @@ $(TARGET).cyacd: $(TARGET).elf
 	    --ee_array 64 \
 	    --ee_array_size 2048 \
 	    --ee_row_size 16
-	cyelftool -S $<
+	$(CYELFTOOL) -S $<
 
 $(TARGET).elf: lib/$(TARGET).a $(OBJ)
 	$(CC) $(LDFLAGS) $^ -o $@
@@ -64,8 +73,10 @@ config/cyfitter_cfg.c: $(CONFIG_DEPS)
 %.o: $(TOP_SRCDIR)/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-clean:
+cleanall: clean
 	rm -rf config
+
+clean:
 	rm -rf lib
 	rm -f *.o
 	rm -f $(TARGET).map
