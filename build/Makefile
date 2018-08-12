@@ -1,5 +1,6 @@
 TARGET	    := application
 TOP_SRCDIR  := ..
+STMBL_DIR   := $(TOP_SRCDIR)/../stmbl
 
 CYPRESS_DIR := $(TOP_SRCDIR)/$(TARGET).cydsn
   
@@ -8,6 +9,21 @@ CONFIG_DEPS := $(CYPRESS_DIR)/$(TARGET).cydwr \
 	       $(CYPRESS_DIR)/TopDesign/TopDesign.cysch
 
 PROJECT_FILE  := $(CYPRESS_DIR)/$(TARGET).cyprj
+
+STMBL_COMPS := $(STMBL_DIR)/shared/comps/fb_switch.c
+STMBL_COMPS += $(STMBL_DIR)/shared/comps/vel.c
+STMBL_COMPS += $(STMBL_DIR)/shared/comps/pid.c
+STMBL_COMPS += $(STMBL_DIR)/shared/comps/pmsm_ttc.c
+STMBL_COMPS += $(STMBL_DIR)/shared/comps/pmsm_limits.c
+STMBL_COMPS += $(STMBL_DIR)/shared/comps/dq.c
+STMBL_COMPS += $(STMBL_DIR)/shared/comps/curpid.c
+STMBL_COMPS += $(STMBL_DIR)/shared/comps/idq.c
+STMBL_COMPS += $(STMBL_DIR)/shared/comps/svm.c
+STMBL_SRC := $(STMBL_COMPS)
+STMBL_SRC += $(STMBL_DIR)/shared/angle.c
+STMBL_SRC += $(STMBL_DIR)/shared/commands.c
+STMBL_SRC += $(STMBL_DIR)/shared/hal.c
+STMBL_SRC += stmbl/src/hal_tbl.c
 
 SRC := main.c
 OBJ := $(SRC:.c=.o)
@@ -25,9 +41,10 @@ else
     CYELFTOOL := wine $(TOOLCHAIN)/cyelftool
 endif
 
-INCLUDES := -I config
+STMBL_INC := -I stmbl/inc -I $(STMBL_DIR)/shared -I $(STMBL_DIR)/inc
+INCLUDES  := -I config $(STMBL_INC)
 
-CFLAGS := -mcpu=cortex-m3 -mthumb -g -Wall
+CFLAGS := -mcpu=cortex-m3 -mthumb -g -Wall -std=gnu11
 CFLAGS += -ffunction-sections -ffat-lto-objects -Og
 CFLAGS += -D DEBUG -D CY_CORE_ID=0 
 
@@ -59,8 +76,8 @@ $(TARGET).cyacd: $(TARGET).elf
 	    --ee_row_size 16
 	$(CYELFTOOL) -S $<
 
-$(TARGET).elf: lib/$(TARGET).a $(OBJ)
-	$(CC) $(LDFLAGS) $^ -o $@
+$(TARGET).elf: lib/$(TARGET).a stmbl/stmbl.a $(OBJ)
+	$(CC) $(LDFLAGS) -Wl,--start-group $^ -lm -Wl,--end-group -o $@
 
 lib/$(TARGET).a: config/cyfitter_cfg.c
 	mkdir -p lib
@@ -73,11 +90,14 @@ config/cyfitter_cfg.c: $(CONFIG_DEPS)
 %.o: $(TOP_SRCDIR)/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
+include stmbl.mak
+
 cleanall: clean
 	rm -rf config
 
 clean:
 	rm -rf lib
+	rm -rf stmbl
 	rm -f *.o
 	rm -f $(TARGET).map
 	rm -f $(TARGET).elf

@@ -62,12 +62,14 @@ config/cyfitter_cfg.c: $(CONFIG_DEPS)
 %.o: $(TOP_SRCDIR)/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
+cleanall: clean
+	rm -f $(TARGET).map
+	rm -f $(TARGET).elf
+	rm -f $(TARGET).hex
+
 clean:
 	rm -rf config
 	rm -rf lib
 	rm -f *.o
-	rm -f $(TARGET).map
-	rm -f $(TARGET).elf
-	rm -f $(TARGET).hex
 
 .PHONY: clean
