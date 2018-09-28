@@ -16,8 +16,7 @@ uint32_t hal_get_systick_freq() {
 
 volatile uint64_t systime = 0;
 
-int main(void)
-{
+int main(void) {
     CyGlobalIntEnable;
 
     hal_init(0.0002, 0.00005);
@@ -28,6 +27,8 @@ int main(void)
     hal_parse("load curpid");
 
     for(;;) {
+        hal_run_frt();
+        hal_run_rt();
         hal_run_nrt();
     }
 }
