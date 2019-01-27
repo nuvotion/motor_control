@@ -1,6 +1,6 @@
 stmbl_obj_name = $(addprefix stmbl/, $(notdir $(1:.c=.o)))
 define stmbl_lib_dep
-    $(eval $$(call stmbl_obj_name, $1): $1
+    $(eval $$(call stmbl_obj_name, $1): $1 $(STMBL_TBL)
 	@mkdir -p stmbl
 	$(CC) $(CFLAGS) $(INCLUDES) -c $$< -o $$@)
 endef
@@ -15,7 +15,7 @@ stmbl/inc/commandslist.h: $(STMBL_SRC)
 	@mkdir -p stmbl/inc
 	$(PYTHON) $(STMBL_DIR)/tools/create_cmd.py $^ > $@
 
-stmbl/inc/hal_tbl.h stmbl/src/hal_tbl.c: $(COMPS)
+stmbl/inc/hal_tbl.h stmbl/src/hal_tbl.c: $(STMBL_COMPS)
 	@mkdir -p stmbl/src stmbl/inc
 	$(PYTHON) $(STMBL_DIR)/tools/create_hal_tbl.py stmbl $(STMBL_COMPS)
 

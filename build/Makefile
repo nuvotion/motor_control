@@ -10,6 +10,7 @@ CONFIG_DEPS := $(CYPRESS_DIR)/$(TARGET).cydwr \
 
 PROJECT_FILE  := $(CYPRESS_DIR)/$(TARGET).cyprj
 
+STMBL_TBL := stmbl/inc/hal_tbl.h stmbl/src/hal_tbl.c
 STMBL_COMPS := $(STMBL_DIR)/shared/comps/fb_switch.c
 STMBL_COMPS += $(STMBL_DIR)/shared/comps/vel.c
 STMBL_COMPS += $(STMBL_DIR)/shared/comps/pid.c
@@ -19,13 +20,15 @@ STMBL_COMPS += $(STMBL_DIR)/shared/comps/dq.c
 STMBL_COMPS += $(STMBL_DIR)/shared/comps/curpid.c
 STMBL_COMPS += $(STMBL_DIR)/shared/comps/idq.c
 STMBL_COMPS += $(STMBL_DIR)/shared/comps/svm.c
+STMBL_COMPS += $(TOP_SRCDIR)/dbg_comp.c
+STMBL_COMPS += $(TOP_SRCDIR)/dbg_comp_rt.c
 STMBL_SRC := $(STMBL_COMPS)
 STMBL_SRC += $(STMBL_DIR)/shared/angle.c
 STMBL_SRC += $(STMBL_DIR)/shared/commands.c
 STMBL_SRC += $(STMBL_DIR)/shared/hal.c
 STMBL_SRC += stmbl/src/hal_tbl.c
 
-SRC := main.c
+SRC := main.c print.c
 OBJ := $(SRC:.c=.o)
 
 ifneq ($(shell uname),Linux)
@@ -41,7 +44,7 @@ else
     CYELFTOOL := wine $(TOOLCHAIN)/cyelftool
 endif
 
-STMBL_INC := -I stmbl/inc -I $(STMBL_DIR)/shared -I $(STMBL_DIR)/inc
+STMBL_INC := -I stmbl/inc -I $(STMBL_DIR)/shared
 INCLUDES  := -I config $(STMBL_INC)
 
 CFLAGS := -mcpu=cortex-m3 -mthumb -g -Wall -std=gnu11
@@ -62,6 +65,7 @@ WARP_ARGS := -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE
 LDFLAGS := -mcpu=cortex-m3 -mthumb -L config -T config/cm3gcc.ld
 LDFLAGS += -Wl,-Map,$(TARGET).map -specs=nano.specs
 LDFLAGS += -Wl,--gc-sections -g -ffunction-sections -Og -ffat-lto-objects
+LDFLAGS += -u _scanf_float
 
 export
 
