@@ -376,6 +376,7 @@
     </Group>
     <Group key="Pin">
       <Data key="1f49bec2-f347-4a72-a93d-bfa0dd3b9cef" value="RS485_RO_1" />
+      <Data key="2fdec8e8-4df2-4583-be46-e85ee57f485a/16a808f6-2e13-45b9-bce0-b001c8655113" value="ADC_Bypass" />
       <Data key="3fbbff5b-bda3-48df-a1e9-afd79c120756" value="QUAD2_A" />
       <Data key="4a297fe2-9203-462f-97a4-7382887e5204" value="SVM3" />
       <Data key="4ef54376-1034-43a7-9b1b-d2490c930b42" value="EN1" />
@@ -394,6 +395,7 @@
       <Data key="53f2117f-a45b-4c2a-830d-2311efbf5b2b" value="RS485_EN_1" />
       <Data key="63ea79fd-9627-4d9c-b0c7-d3365a2e02e7" value="RS485_DI_3" />
       <Data key="76bfcbd1-ea5d-42a3-80ba-2df6b3c81187" value="RS485_RO_2" />
+      <Data key="99d944a3-2f27-4af8-bf6f-0d8aca8fcd43" value="LED_1" />
       <Data key="156aa806-0d94-481a-a824-eb2453d44ee5" value="QUAD3_V" />
       <Data key="271d7d88-5d9a-4132-8859-4d93adf1bf9c" value="RS485_DI_0" />
       <Data key="373dd6dd-f898-4c37-8a38-0717685e3f1c" value="QUAD1_U" />
@@ -401,6 +403,7 @@
       <Data key="403512dc-609f-4518-b7a1-f6355f44b45a" value="QUAD0_B" />
       <Data key="21366543-84a3-434f-97b6-54fd74f7a9ab" value="AN1" />
       <Data key="77715107-f8d5-47e5-a629-0fb83101ac6b" value="AN0" />
+      <Data key="a1fabb33-e558-4f3d-9b48-313e61256bf6" value="LED_0" />
       <Data key="a9849bc0-7fd9-474a-a6f7-e4606a5f73c5" value="RS485_DI_2" />
       <Data key="a9676817-56d2-472a-870d-78e9c813aafa" value="SVM2" />
       <Data key="b61b82be-9728-4186-bb33-2010a2017ff2" value="AN5" />
@@ -3598,6 +3601,11 @@
         <Data key="Port Format" value="15,0" />
       </Group>
     </Group>
+    <Group key="99d944a3-2f27-4af8-bf6f-0d8aca8fcd43">
+      <Group key="0">
+        <Data key="Port Format" value="1,1" />
+      </Group>
+    </Group>
     <Group key="156aa806-0d94-481a-a824-eb2453d44ee5">
       <Group key="0">
         <Data key="Port Format" value="2,3" />
@@ -3631,6 +3639,11 @@
     <Group key="77715107-f8d5-47e5-a629-0fb83101ac6b">
       <Group key="0">
         <Data key="Port Format" value="1,2" />
+      </Group>
+    </Group>
+    <Group key="a1fabb33-e558-4f3d-9b48-313e61256bf6">
+      <Group key="0">
+        <Data key="Port Format" value="1,0" />
       </Group>
     </Group>
     <Group key="a9849bc0-7fd9-474a-a6f7-e4606a5f73c5">

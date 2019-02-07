@@ -48,10 +48,12 @@ CY_ISR(rt_irq_handler) {
 int main(void) {
     int i = 0;
 
+    LED_0_Write(1);
+
     USBFS_Start(0, USBFS_DWR_VDDD_OPERATION);
     RT_IRQ_StartEx(rt_irq_handler);
     RT_TIMER_Start();
-
+    QuadDec_0_Start();
     CyGlobalIntEnable;
 
     hal_init(0.0002, 0.00005);
@@ -79,7 +81,10 @@ int main(void) {
         //hal_run_nrt();
 
         if (i == 100000) {
-            hal_run_nrt();
+            //hal_run_nrt();
+            print("quad_dec: ");
+            print(print_num(QuadDec_0_GetCounter()));
+            print("\r\n");
             i = 0;
         }
 
