@@ -28,7 +28,7 @@ STMBL_SRC += $(STMBL_DIR)/shared/commands.c
 STMBL_SRC += $(STMBL_DIR)/shared/hal.c
 STMBL_SRC += stmbl/src/hal_tbl.c
 
-SRC := main.c print.c
+SRC := main.c print.c adc.c
 OBJ := $(SRC:.c=.o)
 
 ifneq ($(shell uname),Linux)
@@ -45,7 +45,7 @@ else
 endif
 
 STMBL_INC := -I stmbl/inc -I $(STMBL_DIR)/shared
-INCLUDES  := -I config $(STMBL_INC)
+INCLUDES  := -I config $(STMBL_INC) -I fix_case
 
 CFLAGS := -mcpu=cortex-m3 -mthumb -g -Wall -std=gnu11
 CFLAGS += -ffunction-sections -ffat-lto-objects -Og

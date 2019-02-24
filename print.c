@@ -54,28 +54,29 @@ char *print_hex(uint32_t num) {
 }
 
 /* Function to change integer to ascii with negative values*/
-char* itoa(int value, char *result, int base) {
+char *itoa(int value, int base) {
 
-	char* ptr = result;
-	char* ptr1 = result;
-	char tmp_char;
-	//*ptr = result;
-	//*ptr1 = result;
-	int tmp_value;
-	if(base < 2 || base > 36) { *result = '\0'; return result; }
-	do {
-		tmp_value = value;
-		value /= base;
-		*ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz" [35 + (tmp_value - value * base)];
-	} while ( value );
+    char *ptr = print_buf;
+    char *ptr1 = print_buf;
+    char tmp_char;
+    int tmp_value;
 
-	//Apply negative sign
-	if (tmp_value < 0) *ptr++ = '-';
-	*ptr-- = '\0';
-	while (ptr1 < ptr) {
-		tmp_char = *ptr;
-		*ptr--= *ptr1;
-		*ptr1++ = tmp_char;
-	}
-	return result;
+    if (base < 2 || base > 36) { *print_buf = '\0'; return print_buf; }
+    do {
+        tmp_value = value;
+        value /= base;
+        *ptr++ = "zyxwvutsrqponmlkjihgfedcba987654321"
+            "0123456789abcdefghijklmnopqrstuvwxyz"
+            [35 + (tmp_value - value * base)];
+    } while ( value );
+
+    //Apply negative sign
+    if (tmp_value < 0) *ptr++ = '-';
+    *ptr-- = '\0';
+    while (ptr1 < ptr) {
+        tmp_char = *ptr;
+        *ptr-- = *ptr1;
+        *ptr1++ = tmp_char;
+    }
+    return print_buf;
 }
