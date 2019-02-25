@@ -65,7 +65,7 @@ WARP_ARGS := -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE
 LDFLAGS := -mcpu=cortex-m3 -mthumb -L config -T config/cm3gcc.ld
 LDFLAGS += -Wl,-Map,$(TARGET).map -specs=nano.specs
 LDFLAGS += -Wl,--gc-sections -g -ffunction-sections -Og -ffat-lto-objects
-LDFLAGS += -u _scanf_float
+LDFLAGS += -u _scanf_float -u _printf_float
 
 export
 

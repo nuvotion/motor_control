@@ -12,7 +12,7 @@ static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     struct test_pin_ctx_t *pins = (struct test_pin_ctx_t *)pin_ptr;
 
     print("Hello world - testing from the hal nrt: ");
-    print(print_num(PIN(in)));
+    print(print_float(PIN(in)));
     print("\r\n");
 }
 

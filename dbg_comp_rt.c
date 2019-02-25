@@ -1,12 +1,11 @@
 #include "hal.h"
 
-extern uint64_t systime;
-
 HAL_COMP(testrt);
 
 HAL_PIN(out);
 
 extern uint64_t systime;
+extern int rt_deadline_err;
 
 static void rt_func(float period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     //struct testrt_ctx_t *ctx      = (struct testrt_ctx_t *)ctx_ptr;

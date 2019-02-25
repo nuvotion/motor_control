@@ -6,6 +6,8 @@
 #include "adc.h"
 
 static int usb_up;
+volatile uint64_t systime;
+volatile int rt_deadline_err;
 
 static void usb_poll(void) {
     if (USBFS_GetConfiguration()) {
@@ -22,35 +24,29 @@ void print(char *string) {
     USBFS_PutData((uint8_t *)string, strlen(string));
 }
 
-uint32_t hal_get_systick_value() {
-  return 0;
-}
-
-uint32_t hal_get_systick_reload() {
-  return 0;
-}
-
 uint32_t hal_get_systick_freq() {
   return 0;
 }
-
-volatile uint64_t systime = 0;
 
 CY_ISR(rt_irq_handler) {
     hal_run_rt();
 
     systime++;
 
-    RT_TIMER_Stop();
-    RT_RESET_Write(1);
-    RT_TIMER_Enable();
+    /* RT_TIMER is free running. If the interrupt bit is set at the end of the
+     * ISR then the ISR routine has missed the realtime deadline. */
+    if (*RT_IRQ_INTC_SET_PD & RT_IRQ__INTC_MASK) {
+        RT_RESET_Write(1);
+        rt_deadline_err++;
+        RT_IRQ_ClearPending();
+    }
 }
 
 static void init_io(void) {
     EN0_Write(1);
     EN1_Write(0);
-    LED_0_Write(1);
-    LED_1_Write(1);
+    LED_0_Write(0);
+    LED_1_Write(0);
     RELAY0_Write(1);
     RELAY1_Write(0);
     PWM_0_Start();
@@ -67,7 +63,7 @@ static void init_io(void) {
     PWM_4_WriteCompare2(0);
 
     QuadDec_0_Start();
-    //QuadDec_2_Start();
+    QuadDec_2_Start();
     ADC_Start();
 }
 
@@ -119,7 +115,7 @@ static void init_hal(void) {
 int main(void) {
     int i = 0;
     //int uvw;
-    int toggle = 0;
+    //int toggle = 0;
 
     init_io();
 
@@ -136,7 +132,7 @@ int main(void) {
         //hal_run_nrt();
 
         if (i == 1000000) {
-            //hal_run_nrt();
+            hal_run_nrt();
             /*
             print("uvw: ");
             uvw =   (QUAD1_U_Read() << 2) + 
@@ -147,6 +143,7 @@ int main(void) {
             print(print_num(QuadDec_0_GetCounter()));
             print("\r\n");
             */
+            /*
             print("ch0: "); print(itoa(ADC_GetResult16(0) + 215, 10));
             print(", ch1: "); print(itoa(ADC_GetResult16(1) + 110, 10));
             print(", ch2: "); print(itoa(ADC_GetResult16(2) + 325, 10));
@@ -156,8 +153,11 @@ int main(void) {
             motor_step();
             LED_0_Write(toggle);
             toggle = !toggle;
+            */
             i = 0;
         }
+
+        if (rt_deadline_err) LED_0_Write(1);
 
         usb_poll();
         i++;

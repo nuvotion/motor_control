@@ -1,6 +1,7 @@
 #include <project.h>
 
-#include "stdint.h"
+#include <stdio.h>
+#include <stdint.h>
 
 #define PRINT_BUF_LEN 64
 static char print_buf[PRINT_BUF_LEN];
@@ -51,6 +52,11 @@ char *print_hex(uint32_t num) {
     str -= __print_num(str, num, 16);
 
     return str;
+}
+
+char *print_float(float num) {
+    sprintf(print_buf, "%f", num);
+    return print_buf;
 }
 
 /* Function to change integer to ascii with negative values*/
