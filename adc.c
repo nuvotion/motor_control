@@ -1,13 +1,56 @@
 #include <project.h>
-#include "adc.h"
+#include "hal.h"
+
+#define ADC_NUMBER_OF_CHANNELS 4
+
+#define ADC_CYCLE_COUNTER_AUX_CONTROL_REG \
+        (*(reg8 *) bSAR_SEQ_ChannelCounter__CONTROL_AUX_CTL_REG)
+
+#define ADC_CONTROL_REG (*(reg8 *) bSAR_SEQ_CtrlReg__CONTROL_REG)
+
+#define ADC_STATUS_REG (*(reg8 *) bSAR_SEQ_EOCSts__STATUS_REG)
+#define ADC_STATUS_PTR ( (reg8 *) bSAR_SEQ_EOCSts__STATUS_REG)
+
+#define ADC_CYCLE_COUNTER_ENABLE    (0x20u)
+#define ADC_BASE_COMPONENT_ENABLE   (0x01u)
+#define ADC_LOAD_COUNTER_PERIOD     (0x02u)
+#define ADC_SOFTWARE_SOC_PULSE      (0x04u)
+
+HAL_COMP(adc);
+
+//phase current
+HAL_PIN(iu);
+HAL_PIN(iw);
+
+struct adc_ctx_t {
+    float u_offset;
+    float w_offset;
+};
 
 static uint16_t adc_buffer[ADC_NUMBER_OF_CHANNELS];
 
-void ADC_Start(void) {
+static void ADC_WaitConversion(void) {
+    volatile uint8_t status;
+
+    do {
+        status = ADC_STATUS_REG;
+    } while (status == 0);
+}
+
+static void ADC_StartConvert(void) {
+    ADC_CONTROL_REG |= ((uint8_t)(ADC_SOFTWARE_SOC_PULSE));
+}
+
+static int16_t ADC_GetResult16(uint16_t chan) {
+    return (adc_buffer[ADC_NUMBER_OF_CHANNELS - 1 - chan] - ADC_SAR_shift);
+}
+
+static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     static int16_t samples[ADC_NUMBER_OF_CHANNELS];
     uint8_t sample_ch, sample_td;
     uint8_t buffer_ch, buffer_td;
     uint8_t flags;
+    struct adc_ctx_t *ctx = (struct adc_ctx_t *) ctx_ptr;
 
     /* Init DMA, 2 bytes bursts, each burst requires a request */
     sample_ch = ADC_SAMPLE_DMA_DmaInitialize(2, 1,
@@ -71,12 +114,38 @@ void ADC_Start(void) {
     ADC_CONTROL_REG |= ADC_LOAD_COUNTER_PERIOD;
 
     CY_GET_REG8(ADC_STATUS_PTR);
+
+    /* Take 64 samples to determine offset */
+    for (flags = 0; flags < 64; flags++) {
+        ADC_StartConvert();
+        ADC_WaitConversion();
+        ctx->u_offset += ADC_GetResult16(1);
+        ctx->w_offset += ADC_GetResult16(0);
+    }
+    ctx->u_offset /= 64;
+    ctx->w_offset /= 64;
 }
 
-void ADC_StartConvert(void) {
-    ADC_CONTROL_REG |= ((uint8_t)(ADC_SOFTWARE_SOC_PULSE));
+static void rt_func(float period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
+    struct adc_ctx_t *ctx      = (struct adc_ctx_t *) ctx_ptr;
+    struct adc_pin_ctx_t *pins = (struct adc_pin_ctx_t *) pin_ptr;
+
+    PIN(iu) = ADC_GetResult16(1) - ctx->u_offset;
+    PIN(iw) = ADC_GetResult16(0) - ctx->w_offset;
+
+    ADC_StartConvert();
 }
 
-int16_t ADC_GetResult16(uint16_t chan) {
-    return (adc_buffer[ADC_NUMBER_OF_CHANNELS - 1 - chan] - ADC_SAR_shift);
-}
+hal_comp_t adc_comp_struct = {
+    .name      = "adc",
+    .nrt       = 0,
+    .rt        = rt_func,
+    .frt       = 0,
+    .nrt_init  = nrt_init,
+    .rt_start  = 0,
+    .frt_start = 0,
+    .rt_stop   = 0,
+    .frt_stop  = 0,
+    .ctx_size  = sizeof(struct adc_ctx_t),
+    .pin_count = sizeof(struct adc_pin_ctx_t) / sizeof(struct hal_pin_inst_t),
+};
