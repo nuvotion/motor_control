@@ -374,6 +374,18 @@
       <Data key="5189a025-d950-4fd2-921f-a4d5a5ddfdb1" value="STEP_DIR_CLK" />
       <Data key="6739ebe7-1072-4150-ba5d-6c33237708e3" value="QUAD_DEC_CLK" />
     </Group>
+    <Group key="Interrupt">
+      <Data key="8ed7b740-aca0-498a-9972-4923c559af2c/b73dcd38-4bce-4cd7-acec-33f53e91ccd6" value="ADC_SAR_IRQ" />
+      <Data key="718621d8-7775-4c64-ac21-62561e0aee08" value="RT_IRQ" />
+      <Data key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/8c70c28a-acdf-4af1-b803-ce0c58edb918" value="USBFS_ep_3" />
+      <Data key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/13a8975c-7fb7-4bb9-91f3-189a6b7c1d86" value="USBFS_ep_1" />
+      <Data key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/52c66e35-efb9-4cb3-a434-6304eda17cd2" value="USBFS_ep_2" />
+      <Data key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/70277391-b927-4e50-8d12-6874a5c53f72" value="USBFS_bus_reset" />
+      <Data key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/bbb6a482-c3d6-4d33-a3c3-aff5d704e3be" value="USBFS_sof_int" />
+      <Data key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/d91ea660-bc91-4817-b29b-2fe86c305500" value="USBFS_arb_int" />
+      <Data key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/dc6da32b-30f7-48b3-b8a1-dbf0214d8c83" value="USBFS_dp_int" />
+      <Data key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/ef9224ec-f8a6-4df0-8a49-e09ce75cefa7" value="USBFS_ep_0" />
+    </Group>
     <Group key="Pin">
       <Data key="1f49bec2-f347-4a72-a93d-bfa0dd3b9cef" value="RS485_RO_1" />
       <Data key="2fdec8e8-4df2-4583-be46-e85ee57f485a/16a808f6-2e13-45b9-bce0-b001c8655113" value="ADC_Bypass" />
@@ -3502,6 +3514,64 @@
       </Group>
       <Group key="1024">
         <Data key="LevelKey" value="00" />
+      </Group>
+    </Group>
+  </Group>
+  <Group key="Interrupt">
+    <Group key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/8c70c28a-acdf-4af1-b803-ce0c58edb918">
+      <Group key="CortexM3">
+        <Data key="Assigned" value="True" />
+        <Data key="Priority" value="3" />
+        <Data key="Vector" value="-1" />
+      </Group>
+    </Group>
+    <Group key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/13a8975c-7fb7-4bb9-91f3-189a6b7c1d86">
+      <Group key="CortexM3">
+        <Data key="Assigned" value="True" />
+        <Data key="Priority" value="3" />
+        <Data key="Vector" value="-1" />
+      </Group>
+    </Group>
+    <Group key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/52c66e35-efb9-4cb3-a434-6304eda17cd2">
+      <Group key="CortexM3">
+        <Data key="Assigned" value="True" />
+        <Data key="Priority" value="3" />
+        <Data key="Vector" value="-1" />
+      </Group>
+    </Group>
+    <Group key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/70277391-b927-4e50-8d12-6874a5c53f72">
+      <Group key="CortexM3">
+        <Data key="Assigned" value="True" />
+        <Data key="Priority" value="3" />
+        <Data key="Vector" value="-1" />
+      </Group>
+    </Group>
+    <Group key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/bbb6a482-c3d6-4d33-a3c3-aff5d704e3be">
+      <Group key="CortexM3">
+        <Data key="Assigned" value="True" />
+        <Data key="Priority" value="3" />
+        <Data key="Vector" value="-1" />
+      </Group>
+    </Group>
+    <Group key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/d91ea660-bc91-4817-b29b-2fe86c305500">
+      <Group key="CortexM3">
+        <Data key="Assigned" value="True" />
+        <Data key="Priority" value="3" />
+        <Data key="Vector" value="-1" />
+      </Group>
+    </Group>
+    <Group key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/dc6da32b-30f7-48b3-b8a1-dbf0214d8c83">
+      <Group key="CortexM3">
+        <Data key="Assigned" value="True" />
+        <Data key="Priority" value="3" />
+        <Data key="Vector" value="-1" />
+      </Group>
+    </Group>
+    <Group key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/ef9224ec-f8a6-4df0-8a49-e09ce75cefa7">
+      <Group key="CortexM3">
+        <Data key="Assigned" value="True" />
+        <Data key="Priority" value="3" />
+        <Data key="Vector" value="-1" />
       </Group>
     </Group>
   </Group>

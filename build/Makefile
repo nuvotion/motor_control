@@ -21,6 +21,7 @@ STMBL_COMPS += $(STMBL_DIR)/shared/comps/curpid.c
 STMBL_COMPS += $(STMBL_DIR)/shared/comps/idq.c
 STMBL_COMPS += $(STMBL_DIR)/shared/comps/svm.c
 STMBL_COMPS += $(TOP_SRCDIR)/adc.c
+STMBL_COMPS += $(TOP_SRCDIR)/pwm.c
 STMBL_COMPS += $(TOP_SRCDIR)/dbg_comp.c
 STMBL_SRC := $(STMBL_COMPS)
 STMBL_SRC += $(STMBL_DIR)/shared/angle.c
@@ -28,7 +29,7 @@ STMBL_SRC += $(STMBL_DIR)/shared/commands.c
 STMBL_SRC += $(STMBL_DIR)/shared/hal.c
 STMBL_SRC += stmbl/src/hal_tbl.c
 
-SRC := main.c print.c adc.c
+SRC := main.c print.c
 OBJ := $(SRC:.c=.o)
 
 ifneq ($(shell uname),Linux)
@@ -38,20 +39,25 @@ ifneq ($(shell uname),Linux)
     WIN_PROJ_FILE := $(subst \,\\,$(shell cygpath -w $(PROJECT_FILE)))
 else
     TOOLCHAIN := $(abspath $(TOP_SRCDIR)/../toolchain)
-    TOOLCHAIN_GCC := $(TOOLCHAIN)/arm-none-eabi-gcc/4.8.3-2014q1/bin
-    CC := $(TOOLCHAIN_GCC)/arm-none-eabi-gcc
-    AS := $(TOOLCHAIN_GCC)/arm-none-eabi-as
+    #TOOLCHAIN_GCC := $(TOOLCHAIN)/arm-none-eabi-gcc/4.8.3-2014q1/bin
+    TOOLCHAIN_GCC := /home/kmtaylor/tmp/toolchain/5.4.1/bin
+    CC := wine $(TOOLCHAIN_GCC)/arm-none-eabi-gcc
+    AS := wine $(TOOLCHAIN_GCC)/arm-none-eabi-as
+    AR := wine $(TOOLCHAIN_GCC)/arm-none-eabi-ar
+    #CC := arm-none-eabi-gcc
+    #AS := arm-none-eabi-as
+    #AR := arm-none-eabi-ar
     CYELFTOOL := wine $(TOOLCHAIN)/cyelftool
 endif
 
 STMBL_INC := -I stmbl/inc -I $(STMBL_DIR)/shared
 INCLUDES  := -I config $(STMBL_INC) -I fix_case
 
-CFLAGS := -mcpu=cortex-m3 -mthumb -g -Wall -std=gnu11
-CFLAGS += -ffunction-sections -ffat-lto-objects -Og
+CFLAGS := -mcpu=cortex-m3 -mthumb -Wall -std=gnu11
+CFLAGS += -ffunction-sections -ffat-lto-objects -O0
 CFLAGS += -D DEBUG -D CY_CORE_ID=0 
 
-ASMFLAGS := -mcpu=cortex-m3 -mthumb -g -W
+ASMFLAGS := -mcpu=cortex-m3 -mthumb -W
 
 DSFIT_ARGS := -.fdswarpdepfile=warp_dependencies.txt
 DSFIT_ARGS += -.fdselabdepfile=elab_dependencies.txt
@@ -64,8 +70,9 @@ WARP_ARGS := -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE
 
 LDFLAGS := -mcpu=cortex-m3 -mthumb -L config -T config/cm3gcc.ld
 LDFLAGS += -Wl,-Map,$(TARGET).map -specs=nano.specs
-LDFLAGS += -Wl,--gc-sections -g -ffunction-sections -Og -ffat-lto-objects
-LDFLAGS += -u _scanf_float -u _printf_float
+LDFLAGS += -Wl,--gc-sections -ffunction-sections -O0
+LDFLAGS += -u _printf_float
+#LDFLAGS += -u _scanf_float
 
 export
 
@@ -80,8 +87,8 @@ $(TARGET).cyacd: $(TARGET).elf
 	    --ee_row_size 16
 	$(CYELFTOOL) -S $<
 
-$(TARGET).elf: lib/$(TARGET).a stmbl/stmbl.a $(OBJ)
-	$(CC) $(LDFLAGS) -Wl,--start-group $^ -lm -Wl,--end-group -o $@
+$(TARGET).elf: $(OBJ) stmbl/stmbl.a lib/$(TARGET).a
+	$(CC) $(LDFLAGS) $(OBJ) stmbl/stmbl.a lib/$(TARGET).a -lm -o $@
 
 lib/$(TARGET).a: config/cyfitter_cfg.c
 	mkdir -p lib
@@ -91,7 +98,7 @@ config/cyfitter_cfg.c: $(CONFIG_DEPS)
 	mkdir -p config
 	cd config ; cydsfit -p $(WIN_PROJ_FILE) $(DSFIT_ARGS) -- $(WARP_ARGS)
 
-%.o: $(TOP_SRCDIR)/%.c
+%.o: $(TOP_SRCDIR)/%.c $(STMBL_TBL)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 include stmbl.mak
