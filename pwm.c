@@ -55,8 +55,8 @@ static void rt_func(float period, volatile void *ctx_ptr, volatile hal_pin_inst_
     PWM_2_WriteCompare(w);
 
     PIN(ou) = u;
-    PIN(ow) = w;
     PIN(ov) = v;
+    PIN(ow) = w;
 }
 
 hal_comp_t pwm_comp_struct = {

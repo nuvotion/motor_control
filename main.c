@@ -1,8 +1,11 @@
 #include <project.h>
+#include <math.h>
 
 #include <hal.h>
 
 #include "print.h"
+
+#define COM_TEST
 
 static int usb_up;
 uint64_t systime;
@@ -41,41 +44,22 @@ CY_ISR(rt_irq_handler) {
     }
 }
 
-/* Todo - move most of this into hal components */
 static void init_io(void) {
-    EN0_Write(1);
+    EN0_Write(0);
     EN1_Write(0);
-    LED_0_Write(0);
-    LED_1_Write(0);
-    RELAY0_Write(1);
+    RELAY0_Write(0);
     RELAY1_Write(0);
-
-    QuadDec_0_Start();
-    QuadDec_2_Start();
 }
 
-/* Move this into a hal component */
-#define PWM_VAL 128
-static void motor_step(void) {
-    static int pos = 0;
-    switch (pos % 3) {
-        case 0:
-            PWM_0_WriteCompare(PWM_VAL);
-            PWM_1_WriteCompare(0);
-            PWM_2_WriteCompare(0);
-            break;
-        case 1:
-            PWM_0_WriteCompare(0);
-            PWM_1_WriteCompare(PWM_VAL);
-            PWM_2_WriteCompare(0);
-            break;
-        default:
-            PWM_0_WriteCompare(0);
-            PWM_1_WriteCompare(0);
-            PWM_2_WriteCompare(PWM_VAL);
-            break;
+static void enable_drive(uint8_t drive) {
+    if (drive == 0) {
+        RELAY0_Write(1);
+        EN0_Write(1);
     }
-    pos++;
+    if (drive == 1) {
+        RELAY1_Write(1);
+        EN1_Write(1);
+    }
 }
 
 static void set_pin_val(NAME comp, uint32_t inst, NAME pin, float val) {
@@ -95,14 +79,7 @@ static void connect_pins(
     sink->source = source;
 }
 
-static void init_hal(void) {
-    hal_set_debug_level(2);
-    hal_init(0.001, 0.001);
-
-    //load_comp("pmsm_limits");
-    //load_comp("pmsm_ttc");
-    //load_comp("fb_switch");
-    load("dbg");
+static void init_cur_pid(void) {
     load("adc");
     load("dq");
     load("curpid");
@@ -117,14 +94,13 @@ static void init_hal(void) {
     set_pin_val("svm",      0, "rt_prio", 5);
     set_pin_val("pwm",      0, "rt_prio", 6);
 
-    //set_pin_val("dq", 0, "pos",  0);
     set_pin_val("dq", 0, "mode", 2); // PHASE_120_3PH
 
     set_pin_val("curpid", 0, "rd",        1.6); // Resistance (ohms) from sm060
     set_pin_val("curpid", 0, "rq",        1.6);
     set_pin_val("curpid", 0, "ld",      0.008); // Inductance (henry) from sm060
     set_pin_val("curpid", 0, "lq",      0.008);
-    set_pin_val("curpid", 0, "psi",     0.055); // default
+    set_pin_val("curpid", 0, "psi",     0.055); // default electrical torque constant [V*s/rad]
     set_pin_val("curpid", 0, "kp",        0.2); // default fudge factor
     set_pin_val("curpid", 0, "ki",     0.0004); // default fudge factor
     set_pin_val("curpid", 0, "max_cur",     1); // Current limit (A)
@@ -132,16 +108,15 @@ static void init_hal(void) {
     set_pin_val("curpid", 0, "en",          1);
     set_pin_val("curpid", 0, "cmd_mode",    1);
 
-    //set_pin_val("idq", 0, "pos",  0);
     set_pin_val("idq", 0, "mode", 2); // PHASE_120_3PH
 
-    set_pin_val("pwm", 0, "udc",  100); // Voltage limit (V)
+    set_pin_val("pwm", 0, "udc",  15); //100); // Voltage limit (V)
 
     connect_pins("dq", 0, "u", "adc", 0, "iu");
     connect_pins("dq", 0, "w", "adc", 0, "iw");
 
-    set_pin_val("curpid", 0, "id_cmd", 0.3); // from pmsm
-    set_pin_val("curpid", 0, "iq_cmd", 0);
+    //set_pin_val("curpid", 0, "id_cmd", 0.3); // from pmsm
+    //set_pin_val("curpid", 0, "iq_cmd", 0);
     connect_pins("curpid", 0, "id_fb", "dq", 0, "d");
     connect_pins("curpid", 0, "iq_fb", "dq", 0, "q");
   
@@ -155,18 +130,62 @@ static void init_hal(void) {
     connect_pins("pwm", 0, "u", "svm", 0, "su");
     connect_pins("pwm", 0, "v", "svm", 0, "sv");
     connect_pins("pwm", 0, "w", "svm", 0, "sw");
+}
 
-    connect_pins("dbg", 0, "in0", "adc", 0, "iu");
-    connect_pins("dbg", 0, "in1", "adc", 0, "iw");
-    connect_pins("dbg", 0, "in2", "dq",  0, "d");
-    connect_pins("dbg", 0, "in3", "dq",  0, "q");
-    connect_pins("dbg", 0, "in4", "pwm", 0, "ou");
-    connect_pins("dbg", 0, "in5", "pwm", 0, "ov");
-    connect_pins("dbg", 0, "in6", "pwm", 0, "ow");
+#ifdef COM_TEST
+static void init_com_test(void) {
+    load("encoder");
+    load("uvw");
+    load("fb_switch");
+    load("dbg");
 
-    /* debug stim */
+    set_pin_val("encoder",      0, "rt_prio", 7);
+    set_pin_val("uvw",          0, "rt_prio", 8);
+    set_pin_val("fb_switch",    0, "rt_prio", 9);
+
+    set_pin_val("fb_switch", 0, "polecount",        2);
+    set_pin_val("fb_switch", 0, "en",               1);
+    set_pin_val("fb_switch", 0, "mot_polecount",    1);
+    set_pin_val("fb_switch", 0, "com_polecount",    2);
+    set_pin_val("fb_switch", 0, "mot_offset",       M_PI/6.0);
+    set_pin_val("fb_switch", 0, "com_offset",       M_PI/6.0);
+    set_pin_val("fb_switch", 0, "com_state",        3);
+
+    connect_pins("uvw", 0, "u", "encoder", 0, "u");
+    connect_pins("uvw", 0, "v", "encoder", 0, "v");
+    connect_pins("uvw", 0, "w", "encoder", 0, "w");
+
+    connect_pins("fb_switch", 0, "com_abs_pos", "uvw",      0, "pos");
+    connect_pins("fb_switch", 0, "mot_abs_pos", "encoder",  0, "mot_abs_pos");
+    connect_pins("fb_switch", 0, "mot_state",   "encoder",  0, "mot_state");
+
+    connect_pins("dbg", 0, "in0", "dbg",        0, "angle");
+    connect_pins("dbg", 0, "in1", "uvw",        0, "pos");
+    connect_pins("dbg", 0, "in2", "encoder",    0, "mot_abs_pos");
+    connect_pins("dbg", 0, "in3", "fb_switch",  0, "com_fb");
+    connect_pins("dbg", 0, "in4", "fb_switch",  0, "current_com_pos");
+
+    /* Stimulus */
     connect_pins("dq",  0, "pos", "dbg", 0, "angle");
     connect_pins("idq", 0, "pos", "dbg", 0, "angle");
+    set_pin_val("curpid", 0, "id_cmd", 0.3);
+    set_pin_val("curpid", 0, "iq_cmd", 0);
+}
+#else
+static void init_pos_pid(void) {
+}
+#endif
+
+static void init_hal(void) {
+    hal_set_debug_level(2);
+    hal_init(0.001, 0.001);
+
+    init_cur_pid();
+#ifdef COM_TEST
+    init_com_test();
+#else
+    init_pos_pid();
+#endif
 
     hal_start();
 }
@@ -181,21 +200,20 @@ int main(void) {
     RT_IRQ_StartEx(rt_irq_handler);
 
     init_hal();
-    //LED_0_Write(1);
 
     CyGlobalIntEnable;
     RT_TIMER_Start();
+    enable_drive(0);
 
     for(;;) {
         //hal_run_frt();
         //hal_run_nrt();
 
-        if (i == 100000) {
+        if (i == 10000) {
             hal_run_nrt();
             i = 0;
             LED_1_Write(toggle);
             toggle = !toggle;
-            //motor_step();
         }
 
         if (rt_deadline_err) LED_0_Write(1);

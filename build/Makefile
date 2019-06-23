@@ -11,7 +11,8 @@ CONFIG_DEPS := $(CYPRESS_DIR)/$(TARGET).cydwr \
 PROJECT_FILE  := $(CYPRESS_DIR)/$(TARGET).cyprj
 
 STMBL_TBL := stmbl/inc/hal_tbl.h stmbl/src/hal_tbl.c
-STMBL_COMPS := $(STMBL_DIR)/shared/comps/fb_switch.c
+STMBL_COMPS := $(STMBL_DIR)/shared/comps/uvw.c
+STMBL_COMPS += $(STMBL_DIR)/shared/comps/fb_switch.c
 STMBL_COMPS += $(STMBL_DIR)/shared/comps/vel.c
 STMBL_COMPS += $(STMBL_DIR)/shared/comps/pid.c
 STMBL_COMPS += $(STMBL_DIR)/shared/comps/pmsm_ttc.c
@@ -22,6 +23,7 @@ STMBL_COMPS += $(STMBL_DIR)/shared/comps/idq.c
 STMBL_COMPS += $(STMBL_DIR)/shared/comps/svm.c
 STMBL_COMPS += $(TOP_SRCDIR)/adc.c
 STMBL_COMPS += $(TOP_SRCDIR)/pwm.c
+STMBL_COMPS += $(TOP_SRCDIR)/encoder.c
 STMBL_COMPS += $(TOP_SRCDIR)/dbg_comp.c
 STMBL_SRC := $(STMBL_COMPS)
 STMBL_SRC += $(STMBL_DIR)/shared/angle.c
@@ -39,8 +41,7 @@ ifneq ($(shell uname),Linux)
     WIN_PROJ_FILE := $(subst \,\\,$(shell cygpath -w $(PROJECT_FILE)))
 else
     TOOLCHAIN := $(abspath $(TOP_SRCDIR)/../toolchain)
-    #TOOLCHAIN_GCC := $(TOOLCHAIN)/arm-none-eabi-gcc/4.8.3-2014q1/bin
-    TOOLCHAIN_GCC := /home/kmtaylor/tmp/toolchain/5.4.1/bin
+    TOOLCHAIN_GCC := $(TOOLCHAIN)/5.4.1/bin
     CC := wine $(TOOLCHAIN_GCC)/arm-none-eabi-gcc
     AS := wine $(TOOLCHAIN_GCC)/arm-none-eabi-as
     AR := wine $(TOOLCHAIN_GCC)/arm-none-eabi-ar

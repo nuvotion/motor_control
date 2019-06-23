@@ -1,3 +1,4 @@
+#include <math.h>
 #include "hal.h"
 #include "print.h"
 #include "angle.h"
@@ -24,29 +25,24 @@ static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
     struct dbg_pin_ctx_t *pins = (struct dbg_pin_ctx_t *)pin_ptr;
 
-    ctx->angle = ctx->angle + 0.03;
+    ctx->angle = ctx->angle + 0.01; // M_PI * 2.0 / 3.0;
 
-    print("iu: ");
+    print("angle: ");
     print(print_float(PIN(in0)));
-    print(", iw: ");
+    print(", com_pos: ");
     print(print_float(PIN(in1)));
-    print(", d: ");
+    print(", mot_pos: ");
     print(print_float(PIN(in2)));
-    print(", q: ");
+    print(", fb_switch: ");
     print(print_float(PIN(in3)));
-    print(", u: ");
+    print(", fb_state: ");
     print(print_float(PIN(in4)));
-    print(", v: ");
-    print(print_float(PIN(in5)));
-    print(", w: ");
-    print(print_float(PIN(in6)));
-    print("\r\n");
+    print("\n");
 
-    PIN(angle) = ctx->angle;
+    PIN(angle) = mod(ctx->angle);
 }
 
 static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
-    print("Hello world - init\r\n");
 }
 
 hal_comp_t dbg_comp_struct = {
