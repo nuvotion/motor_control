@@ -5,7 +5,7 @@
 
 #include "print.h"
 
-#define COM_TEST
+//#define COM_TEST
 
 static int usb_up;
 uint64_t systime;
@@ -79,14 +79,25 @@ static void connect_pins(
     sink->source = source;
 }
 
-static void init_cur_pid(void) {
+#define CONF_R      1.6         // Resistance (ohms) from sm060
+#define CONF_L      0.008       // Inductance (henry) from sm060
+#define CONF_PSI    0.055       // Default electrical torque constant [V*s/rad]
+#define CONF_J      0.00007     // Inertia from sm060 [kg*m^2]
+//#define BUS_DC      100
+#define BUS_DC      15
+#define BUS_3PH     (BUS_DC / M_SQRT3 * 0.95)
+#define MAX_CURRENT 1
+
+static void load_cur_pid(void) {
     load("adc");
     load("dq");
     load("curpid");
     load("idq");
     load("svm");
     load("pwm");
+}
 
+static void init_cur_pid(void) {
     set_pin_val("adc",      0, "rt_prio", 1);
     set_pin_val("dq",       0, "rt_prio", 2);
     set_pin_val("curpid",   0, "rt_prio", 3);
@@ -94,34 +105,34 @@ static void init_cur_pid(void) {
     set_pin_val("svm",      0, "rt_prio", 5);
     set_pin_val("pwm",      0, "rt_prio", 6);
 
-    set_pin_val("dq", 0, "mode", 2); // PHASE_120_3PH
-
-    set_pin_val("curpid", 0, "rd",        1.6); // Resistance (ohms) from sm060
-    set_pin_val("curpid", 0, "rq",        1.6);
-    set_pin_val("curpid", 0, "ld",      0.008); // Inductance (henry) from sm060
-    set_pin_val("curpid", 0, "lq",      0.008);
-    set_pin_val("curpid", 0, "psi",     0.055); // default electrical torque constant [V*s/rad]
-    set_pin_val("curpid", 0, "kp",        0.2); // default fudge factor
-    set_pin_val("curpid", 0, "ki",     0.0004); // default fudge factor
-    set_pin_val("curpid", 0, "max_cur",     1); // Current limit (A)
-    set_pin_val("curpid", 0, "pwm_volt",  100); // Voltage limit (V)
-    set_pin_val("curpid", 0, "en",          1);
-    set_pin_val("curpid", 0, "cmd_mode",    1);
-
+    set_pin_val("dq",  0, "mode", 2); // PHASE_120_3PH
     set_pin_val("idq", 0, "mode", 2); // PHASE_120_3PH
 
-    set_pin_val("pwm", 0, "udc",  15); //100); // Voltage limit (V)
+    set_pin_val("curpid", 0, "rd",            CONF_R);
+    set_pin_val("curpid", 0, "rq",            CONF_R);
+    set_pin_val("curpid", 0, "ld",            CONF_L);
+    set_pin_val("curpid", 0, "lq",            CONF_L);
+    set_pin_val("curpid", 0, "psi",         CONF_PSI);
+    set_pin_val("curpid", 0, "kp",               0.2); // Default fudge factor
+    set_pin_val("curpid", 0, "ki",            0.0004); // From sm060
+    set_pin_val("curpid", 0, "max_cur",  MAX_CURRENT); // Current limit (A)
+    set_pin_val("curpid", 0, "pwm_volt",     BUS_3PH); // Voltage limit (V)
+    set_pin_val("curpid", 0, "en",                 1);
+    set_pin_val("curpid", 0, "cmd_mode",           1);
 
-    connect_pins("dq", 0, "u", "adc", 0, "iu");
-    connect_pins("dq", 0, "w", "adc", 0, "iw");
+    set_pin_val("pwm", 0, "udc", BUS_DC);
 
-    //set_pin_val("curpid", 0, "id_cmd", 0.3); // from pmsm
-    //set_pin_val("curpid", 0, "iq_cmd", 0);
-    connect_pins("curpid", 0, "id_fb", "dq", 0, "d");
-    connect_pins("curpid", 0, "iq_fb", "dq", 0, "q");
+    connect_pins("dq", 0, "pos", "vel", 2, "pos_out");
+    connect_pins("dq", 0, "u",   "adc", 0, "iu");
+    connect_pins("dq", 0, "w",   "adc", 0, "iw");
+
+    connect_pins("curpid", 0, "iq_cmd", "pmsm_ttc", 0, "cur");
+    connect_pins("curpid", 0, "id_fb",  "dq",       0, "d");
+    connect_pins("curpid", 0, "iq_fb",  "dq",       0, "q");
   
-    connect_pins("idq", 0, "d", "curpid", 0, "ud");
-    connect_pins("idq", 0, "q", "curpid", 0, "uq");
+    connect_pins("idq", 0, "pos", "vel",    2, "pos_out");
+    connect_pins("idq", 0, "d",   "curpid", 0, "ud");
+    connect_pins("idq", 0, "q",   "curpid", 0, "uq");
 
     connect_pins("svm", 0, "u", "idq", 0, "u");
     connect_pins("svm", 0, "v", "idq", 0, "v");
@@ -133,23 +144,25 @@ static void init_cur_pid(void) {
 }
 
 #ifdef COM_TEST
-static void init_com_test(void) {
+static void load_com_test(void) {
     load("encoder");
     load("uvw");
     load("fb_switch");
     load("dbg");
+}
 
+static void init_com_test(void) {
     set_pin_val("encoder",      0, "rt_prio", 7);
     set_pin_val("uvw",          0, "rt_prio", 8);
     set_pin_val("fb_switch",    0, "rt_prio", 9);
 
-    set_pin_val("fb_switch", 0, "polecount",        2);
-    set_pin_val("fb_switch", 0, "en",               1);
-    set_pin_val("fb_switch", 0, "mot_polecount",    1);
-    set_pin_val("fb_switch", 0, "com_polecount",    2);
-    set_pin_val("fb_switch", 0, "mot_offset",       M_PI/6.0);
-    set_pin_val("fb_switch", 0, "com_offset",       M_PI/6.0);
-    set_pin_val("fb_switch", 0, "com_state",        3);
+    set_pin_val("fb_switch", 0, "polecount",         2);
+    set_pin_val("fb_switch", 0, "en",                1);
+    set_pin_val("fb_switch", 0, "mot_polecount",     1);
+    set_pin_val("fb_switch", 0, "com_polecount",     2);
+    set_pin_val("fb_switch", 0, "mot_offset", M_PI/6.0);
+    set_pin_val("fb_switch", 0, "com_offset", M_PI/6.0);
+    set_pin_val("fb_switch", 0, "com_state",         3);
 
     connect_pins("uvw", 0, "u", "encoder", 0, "u");
     connect_pins("uvw", 0, "v", "encoder", 0, "v");
@@ -172,7 +185,93 @@ static void init_com_test(void) {
     set_pin_val("curpid", 0, "iq_cmd", 0);
 }
 #else
+static void load_pos_pid(void) {
+    load("encoder");
+    load("uvw");
+    load("fb_switch");
+    load("vel");
+    load("vel");
+    load("vel");
+    load("pid");
+    load("pmsm_limits");
+    load("pmsm_ttc");
+    load("dbg");
+}
+
 static void init_pos_pid(void) {
+    set_pin_val("encoder",      0, "rt_prio",  7);
+    set_pin_val("uvw",          0, "rt_prio",  8);
+    set_pin_val("fb_switch",    0, "rt_prio",  9);
+    set_pin_val("vel",          0, "rt_prio", 10);
+    set_pin_val("vel",          1, "rt_prio", 10);
+    set_pin_val("vel",          2, "rt_prio", 10);
+    set_pin_val("pmsm_limits",  2, "rt_prio", 11);
+    set_pin_val("pid",          2, "rt_prio", 12);
+    set_pin_val("pmsm_ttc",     2, "rt_prio", 13);
+
+    set_pin_val("fb_switch", 0, "en",                1);
+    set_pin_val("fb_switch", 0, "polecount",         2);
+    set_pin_val("fb_switch", 0, "mot_polecount",     1);
+    set_pin_val("fb_switch", 0, "com_polecount",     2);
+    set_pin_val("fb_switch", 0, "mot_offset", M_PI/6.0);
+    set_pin_val("fb_switch", 0, "com_offset", M_PI/6.0);
+    set_pin_val("fb_switch", 0, "com_state",         3);
+
+    set_pin_val("vel", 0, "en", 1);
+    set_pin_val("vel", 1, "en", 1);
+    set_pin_val("vel", 2, "en", 1);
+    set_pin_val("vel", 1, "j",  CONF_J);
+    set_pin_val("vel", 2, "j",  CONF_J);
+
+    set_pin_val("pmsm_limits", 0, "r",            CONF_R);
+    set_pin_val("pmsm_limits", 0, "ld",           CONF_L);
+    set_pin_val("pmsm_limits", 0, "lq",           CONF_L);
+    set_pin_val("pmsm_limits", 0, "psi",        CONF_PSI);
+    set_pin_val("pmsm_limits", 0, "j",            CONF_J);
+    set_pin_val("pmsm_limits", 0, "polecount",         2);
+    set_pin_val("pmsm_limits", 0, "ac_volt",     BUS_3PH);
+
+    set_pin_val("pid", 0, "enable",           1);
+    set_pin_val("pid", 0, "j",           CONF_J);
+    set_pin_val("pid", 0, "pos_p",          100); // Default
+    set_pin_val("pid", 0, "vel_p",         2000); // Default
+    set_pin_val("pid", 0, "vel_i",            5); // Default
+    set_pin_val("pid", 0, "max_usr_vel",    800); // Default
+    set_pin_val("pid", 0, "max_usr_acc",  80000); // Default
+    set_pin_val("pid", 0, "max_usr_torque", 5.7); // From sm060
+
+    set_pin_val("pmsm_ttc", 0, "psi",  CONF_PSI);
+    set_pin_val("pmsm_ttc", 0, "polecount",   2);
+
+    /* These are actually static, since we don't measure the bus voltage */
+    connect_pins("pid", 0, "max_torque", "pmsm_limits", 0, "max_torque");
+    connect_pins("pid", 0, "min_torque", "pmsm_limits", 0, "min_torque");
+    connect_pins("pid", 0, "max_vel",    "pmsm_limits", 0, "abs_max_vel");
+
+    connect_pins("uvw", 0, "u", "encoder", 0, "u");
+    connect_pins("uvw", 0, "v", "encoder", 0, "v");
+    connect_pins("uvw", 0, "w", "encoder", 0, "w");
+
+    /* Commutation feedback switch (changes on detection of encoder index) */
+    connect_pins("fb_switch", 0, "com_abs_pos", "uvw",      0, "pos");
+    connect_pins("fb_switch", 0, "mot_abs_pos", "encoder",  0, "mot_abs_pos");
+    connect_pins("fb_switch", 0, "mot_state",   "encoder",  0, "mot_state");
+
+    /* Commutation motor model - generates position for dq/idq */
+    connect_pins("vel", 2, "pos_in", "fb_switch",   0, "com_fb"); 
+    connect_pins("vel", 2, "torque", "pid",         0, "torque_cor_cmd");
+
+    /* Position motor model, will jump on first index, but should be OK */
+    connect_pins("vel", 1, "pos_in", "encoder", 0, "mot_abs_pos");
+    connect_pins("vel", 1, "torque", "pid",     0, "torque_cor_cmd");
+
+    /* Position PID */
+    // FIXME: Add external command
+    connect_pins("pid", 0, "pos_fb", "encoder", 0, "mot_abs_pos");
+    connect_pins("pid", 0, "vel_fb", "vel",     1, "pos_out");
+
+    /* PMSM torque to current */
+    connect_pins("pmsm_ttc", 0, "torque", "pid", 0, "torque_cor_cmd");
 }
 #endif
 
@@ -180,10 +279,15 @@ static void init_hal(void) {
     hal_set_debug_level(2);
     hal_init(0.001, 0.001);
 
-    init_cur_pid();
 #ifdef COM_TEST
+    load_cur_pid();
+    load_com_test();
+    init_cur_pid();
     init_com_test();
 #else
+    load_cur_pid();
+    load_pos_pid();
+    init_cur_pid();
     init_pos_pid();
 #endif
 

@@ -21,6 +21,7 @@ struct dbg_ctx_t {
     float angle;
 };
 
+#if COM_TEST
 static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
     struct dbg_pin_ctx_t *pins = (struct dbg_pin_ctx_t *)pin_ptr;
@@ -41,6 +42,24 @@ static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
 
     PIN(angle) = mod(ctx->angle);
 }
+#else
+static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
+    //struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
+    struct dbg_pin_ctx_t *pins = (struct dbg_pin_ctx_t *)pin_ptr;
+
+    print("angle: ");
+    print(print_float(PIN(in0)));
+    print(", com_pos: ");
+    print(print_float(PIN(in1)));
+    print(", mot_pos: ");
+    print(print_float(PIN(in2)));
+    print(", fb_switch: ");
+    print(print_float(PIN(in3)));
+    print(", fb_state: ");
+    print(print_float(PIN(in4)));
+    print("\n");
+}
+#endif
 
 static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
 }
