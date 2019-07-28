@@ -44,20 +44,22 @@ static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
 }
 #else
 static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
-    //struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
+    struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
     struct dbg_pin_ctx_t *pins = (struct dbg_pin_ctx_t *)pin_ptr;
 
-    print("angle: ");
+    ctx->angle = ctx->angle + 0.01; // M_PI * 2.0 / 3.0;
+
+    print("in0: ");
     print(print_float(PIN(in0)));
-    print(", com_pos: ");
+    print(", in1: ");
     print(print_float(PIN(in1)));
-    print(", mot_pos: ");
+    print(", in2: ");
     print(print_float(PIN(in2)));
-    print(", fb_switch: ");
+    print(", in3: ");
     print(print_float(PIN(in3)));
-    print(", fb_state: ");
-    print(print_float(PIN(in4)));
     print("\n");
+
+    PIN(angle) = mod(ctx->angle);
 }
 #endif
 
