@@ -34,20 +34,14 @@ STMBL_SRC += stmbl/src/hal_tbl.c
 SRC := main.c print.c
 OBJ := $(SRC:.c=.o)
 
+CC := arm-none-eabi-gcc
+AS := arm-none-eabi-as
+AR := arm-none-eabi-ar
 ifneq ($(shell uname),Linux)
-    CC := arm-none-eabi-gcc
-    AS := arm-none-eabi-as
     CYELFTOOL := cyelftool
     WIN_PROJ_FILE := $(subst \,\\,$(shell cygpath -w $(PROJECT_FILE)))
 else
     TOOLCHAIN := $(abspath $(TOP_SRCDIR)/../toolchain)
-    TOOLCHAIN_GCC := $(TOOLCHAIN)/5.4.1/bin
-    CC := wine $(TOOLCHAIN_GCC)/arm-none-eabi-gcc
-    AS := wine $(TOOLCHAIN_GCC)/arm-none-eabi-as
-    AR := wine $(TOOLCHAIN_GCC)/arm-none-eabi-ar
-    #CC := arm-none-eabi-gcc
-    #AS := arm-none-eabi-as
-    #AR := arm-none-eabi-ar
     CYELFTOOL := wine $(TOOLCHAIN)/cyelftool
 endif
 
@@ -55,7 +49,7 @@ STMBL_INC := -I stmbl/inc -I $(STMBL_DIR)/shared
 INCLUDES  := -I config $(STMBL_INC) -I fix_case
 
 CFLAGS := -mcpu=cortex-m3 -mthumb -Wall -std=gnu11
-CFLAGS += -ffunction-sections -ffat-lto-objects -O0
+CFLAGS += -ffunction-sections -ffat-lto-objects -O2
 CFLAGS += -D DEBUG -D CY_CORE_ID=0 
 
 ASMFLAGS := -mcpu=cortex-m3 -mthumb -W
@@ -71,7 +65,7 @@ WARP_ARGS := -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE
 
 LDFLAGS := -mcpu=cortex-m3 -mthumb -L config -T config/cm3gcc.ld
 LDFLAGS += -Wl,-Map,$(TARGET).map -specs=nano.specs
-LDFLAGS += -Wl,--gc-sections -ffunction-sections -O0
+LDFLAGS += -Wl,--gc-sections -ffunction-sections -ffat-lto-objects -O2
 LDFLAGS += -u _printf_float
 #LDFLAGS += -u _scanf_float
 

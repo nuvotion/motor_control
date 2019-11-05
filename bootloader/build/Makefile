@@ -8,13 +8,20 @@ CONFIG_DEPS := $(CYPRESS_DIR)/$(TARGET).cydwr \
 	       $(CYPRESS_DIR)/TopDesign/TopDesign.cysch
 
 PROJECT_FILE  := $(CYPRESS_DIR)/$(TARGET).cyprj
-WIN_PROJ_FILE := $(subst \,\\,$(shell cygpath -w $(PROJECT_FILE)))
 
 SRC := main.c
 OBJ := $(SRC:.c=.o)
 
 CC := arm-none-eabi-gcc
 AS := arm-none-eabi-as
+AR := arm-none-eabi-ar
+ifneq ($(shell uname),Linux)
+    CYELFTOOL := cyelftool
+    WIN_PROJ_FILE := $(subst \,\\,$(shell cygpath -w $(PROJECT_FILE)))
+else
+    TOOLCHAIN := $(abspath $(TOP_SRCDIR)/../../toolchain)
+    CYELFTOOL := wine $(TOOLCHAIN)/cyelftool
+endif
 
 INCLUDES := -I config
 
@@ -40,13 +47,13 @@ LDFLAGS += -Wl,--gc-sections -g -ffunction-sections -Og -ffat-lto-objects
 export
 
 $(TARGET).hex: $(TARGET).elf
-	cyelftool -P $< \
+	$(CYELFTOOL) -P $< \
 	    --flash_row_size 256 \
 	    --flash_size 262144 \
 	    --flash_offset 0x00000000 \
 	    --size_var_name Bootloader_SizeBytes \
 	    --checksum_var_name Bootloader_Checksum
-	cyelftool -S $<
+	$(CYELFTOOL) -S $<
 
 $(TARGET).elf: lib/$(TARGET).a $(OBJ)
 	$(CC) $(LDFLAGS) $^ -o $@
