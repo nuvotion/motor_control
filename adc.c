@@ -25,17 +25,10 @@ HAL_PIN(iw);
 struct adc_ctx_t {
     float u_offset;
     float w_offset;
+    int init_samples;
 };
 
 static uint16_t adc_buffer[ADC_NUMBER_OF_CHANNELS];
-
-static void ADC_WaitConversion(void) {
-    volatile uint8_t status;
-
-    do {
-        status = ADC_STATUS_REG;
-    } while (status == 0);
-}
 
 static void ADC_StartConvert(void) {
     ADC_CONTROL_REG |= ((uint8_t)(ADC_SOFTWARE_SOC_PULSE));
@@ -115,20 +108,25 @@ static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
 
     CY_GET_REG8(ADC_STATUS_PTR);
 
-    /* Take 64 samples to determine offset */
-    for (flags = 0; flags < 64; flags++) {
-        ADC_StartConvert();
-        ADC_WaitConversion();
-        ctx->u_offset += ADC_GetResult16(1);
-        ctx->w_offset += ADC_GetResult16(0);
-    }
-    ctx->u_offset /= 64;
-    ctx->w_offset /= 64;
+    /* Take 1000 samples to determine offset */
+    ctx->init_samples = 1000;
+    ADC_StartConvert();
 }
 
 static void rt_func(float period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     struct adc_ctx_t *ctx      = (struct adc_ctx_t *) ctx_ptr;
     struct adc_pin_ctx_t *pins = (struct adc_pin_ctx_t *) pin_ptr;
+
+    if (ctx->init_samples) {
+        ctx->u_offset += ADC_GetResult16(1);
+        ctx->w_offset += ADC_GetResult16(0);
+
+        if (ctx->init_samples == 1) {
+            ctx->u_offset /= 1000;
+            ctx->w_offset /= 1000;
+        }
+        ctx->init_samples--;
+    }
 
     PIN(iu) = (ADC_GetResult16(1) - ctx->u_offset) / 860;
     PIN(iw) = (ADC_GetResult16(0) - ctx->w_offset) / 860;

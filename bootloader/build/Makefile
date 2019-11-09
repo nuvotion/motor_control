@@ -12,9 +12,9 @@ PROJECT_FILE  := $(CYPRESS_DIR)/$(TARGET).cyprj
 SRC := main.c
 OBJ := $(SRC:.c=.o)
 
-CC := arm-none-eabi-gcc
-AS := arm-none-eabi-as
-AR := arm-none-eabi-ar
+CC := arm-psoc-eabi-gcc
+AS := arm-psoc-eabi-as
+AR := arm-psoc-eabi-ar
 ifneq ($(shell uname),Linux)
     CYELFTOOL := cyelftool
     WIN_PROJ_FILE := $(subst \,\\,$(shell cygpath -w $(PROJECT_FILE)))

@@ -34,9 +34,9 @@ STMBL_SRC += stmbl/src/hal_tbl.c
 SRC := main.c print.c
 OBJ := $(SRC:.c=.o)
 
-CC := arm-none-eabi-gcc
-AS := arm-none-eabi-as
-AR := arm-none-eabi-ar
+CC := arm-psoc-eabi-gcc
+AS := arm-psoc-eabi-as
+AR := arm-psoc-eabi-ar
 ifneq ($(shell uname),Linux)
     CYELFTOOL := cyelftool
     WIN_PROJ_FILE := $(subst \,\\,$(shell cygpath -w $(PROJECT_FILE)))
@@ -48,8 +48,8 @@ endif
 STMBL_INC := -I stmbl/inc -I $(STMBL_DIR)/shared
 INCLUDES  := -I config $(STMBL_INC) -I fix_case
 
-CFLAGS := -mcpu=cortex-m3 -mthumb -Wall -std=gnu11
-CFLAGS += -ffunction-sections -ffat-lto-objects -O2
+CFLAGS := -mcpu=cortex-m3 -mthumb -Wall -std=gnu11 -g
+CFLAGS += -ffunction-sections -ffat-lto-objects -O3 -flto
 CFLAGS += -D DEBUG -D CY_CORE_ID=0 
 
 ASMFLAGS := -mcpu=cortex-m3 -mthumb -W
@@ -64,8 +64,8 @@ DSFIT_ARGS += -.fdsreffile=referenced_files.txt
 WARP_ARGS := -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE
 
 LDFLAGS := -mcpu=cortex-m3 -mthumb -L config -T config/cm3gcc.ld
-LDFLAGS += -Wl,-Map,$(TARGET).map -specs=nano.specs
-LDFLAGS += -Wl,--gc-sections -ffunction-sections -ffat-lto-objects -O2
+LDFLAGS += -Wl,-Map,$(TARGET).map -specs=nano.specs -flto
+LDFLAGS += -Wl,--gc-sections -ffunction-sections -ffat-lto-objects -O3 -g
 LDFLAGS += -u _printf_float
 #LDFLAGS += -u _scanf_float
 
