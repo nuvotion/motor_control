@@ -17,13 +17,13 @@ HAL_PIN(ou);
 HAL_PIN(ov);
 HAL_PIN(ow);
 
-/*
 struct pwm_ctx_t {
+    int init_samples;
 };
-*/
 
 static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
-    //struct pwm_ctx_t *ctx = (struct pwm_ctx_t *) ctx_ptr;
+    struct pwm_ctx_t *ctx = (struct pwm_ctx_t *) ctx_ptr;
+
     PWM_0_Start();
     PWM_1_Start();
     PWM_2_Start();
@@ -36,11 +36,13 @@ static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     PWM_3_WriteCompare(0);
     PWM_4_WriteCompare1(0);
     PWM_4_WriteCompare2(0);
+
+    ctx->init_samples = 1000;
 }
 
 static void rt_func(float period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     uint8_t u, v, w;
-    //struct pwm_ctx_t *ctx      = (struct pwm_ctx_t *) ctx_ptr;
+    struct pwm_ctx_t *ctx      = (struct pwm_ctx_t *) ctx_ptr;
     struct pwm_pin_ctx_t *pins = (struct pwm_pin_ctx_t *) pin_ptr;
   
     float udc = MAX(PIN(udc), 0.1);
@@ -50,13 +52,17 @@ static void rt_func(float period, volatile void *ctx_ptr, volatile hal_pin_inst_
     v = (uint8_t) (CLAMP(PIN(v), 0.0, udc) / udc * 255);
     w = (uint8_t) (CLAMP(PIN(w), 0.0, udc) / udc * 255);
 
-    PWM_0_WriteCompare(u);
-    PWM_1_WriteCompare(v);
-    PWM_2_WriteCompare(w);
+    if (ctx->init_samples) {
+        ctx->init_samples--;
+    } else {
+        PWM_0_WriteCompare(u);
+        PWM_1_WriteCompare(v);
+        PWM_2_WriteCompare(w);
+    }
 
-    PIN(ou) = u;
-    PIN(ov) = v;
-    PIN(ow) = w;
+    //PIN(ou) = u;
+    //PIN(ov) = v;
+    //PIN(ow) = w;
 }
 
 hal_comp_t pwm_comp_struct = {
@@ -69,6 +75,6 @@ hal_comp_t pwm_comp_struct = {
     .frt_start = 0,
     .rt_stop   = 0,
     .frt_stop  = 0,
-    .ctx_size  = 0, //sizeof(struct pwm_ctx_t),
+    .ctx_size  = sizeof(struct pwm_ctx_t),
     .pin_count = sizeof(struct pwm_pin_ctx_t) / sizeof(struct hal_pin_inst_t),
 };

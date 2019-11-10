@@ -82,7 +82,7 @@ static void rt_func(float period, volatile void *ctx_ptr, volatile hal_pin_inst_
     struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
     struct dbg_pin_ctx_t *pins = (struct dbg_pin_ctx_t *)pin_ptr;
 
-    ctx->angle = ctx->angle + 0.001; // M_PI * 2.0 / 3.0;
+    ctx->angle = ctx->angle + 0.01; // M_PI * 2.0 / 3.0;
     
     ctx->count++;
     if (ctx->count == 500) {

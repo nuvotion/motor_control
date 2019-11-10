@@ -177,7 +177,7 @@ int main(void) {
         //hal_run_frt();
         //hal_run_nrt();
 
-        if (i == 10000) {
+        if (i == 100000) {
             hal_run_nrt();
             i = 0;
             LED_1_Write(toggle);
