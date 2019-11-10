@@ -31,6 +31,10 @@ STMBL_SRC += $(STMBL_DIR)/shared/commands.c
 STMBL_SRC += $(STMBL_DIR)/shared/hal.c
 STMBL_SRC += stmbl/src/hal_tbl.c
 
+SETUPS := $(TOP_SRCDIR)/setup_normal.c
+SETUPS += $(TOP_SRCDIR)/setup_com_test.c
+SETUPS += $(TOP_SRCDIR)/setup_curpid_test.c
+
 SRC := main.c print.c
 OBJ := $(SRC:.c=.o)
 
@@ -51,6 +55,8 @@ INCLUDES  := -I config $(STMBL_INC) -I fix_case
 CFLAGS := -mcpu=cortex-m3 -mthumb -Wall -std=gnu11 -g
 CFLAGS += -ffunction-sections -ffat-lto-objects -O3 -flto
 CFLAGS += -D DEBUG -D CY_CORE_ID=0 
+#CFLAGS += -D COM_TEST
+#CFLAGS += -D CURPID_TEST
 
 ASMFLAGS := -mcpu=cortex-m3 -mthumb -W
 
@@ -94,6 +100,9 @@ config/cyfitter_cfg.c: $(CONFIG_DEPS)
 	cd config ; cydsfit -p $(WIN_PROJ_FILE) $(DSFIT_ARGS) -- $(WARP_ARGS)
 
 %.o: $(TOP_SRCDIR)/%.c $(STMBL_TBL)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+main.o: $(TOP_SRCDIR)/main.c $(STMBL_TBL) $(SETUPS)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 include stmbl.mak

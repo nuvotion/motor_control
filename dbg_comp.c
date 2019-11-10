@@ -14,19 +14,20 @@ HAL_PIN(in5);
 HAL_PIN(in6);
 
 HAL_PIN(angle);
+HAL_PIN(step);
 
 extern void print(char *string);
 
 struct dbg_ctx_t {
     float angle;
+    int count;
+    int step;
 };
 
-#if COM_TEST
+#if defined(COM_TEST)
 static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
-    struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
+    //struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
     struct dbg_pin_ctx_t *pins = (struct dbg_pin_ctx_t *)pin_ptr;
-
-    ctx->angle = ctx->angle + 0.01; // M_PI * 2.0 / 3.0;
 
     print("angle: ");
     print(print_float(PIN(in0)));
@@ -39,15 +40,26 @@ static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     print(", fb_state: ");
     print(print_float(PIN(in4)));
     print("\n");
+}
+#elif defined(CURPID_TEST)
+static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
+    //struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
+    struct dbg_pin_ctx_t *pins = (struct dbg_pin_ctx_t *)pin_ptr;
 
-    PIN(angle) = mod(ctx->angle);
+    print("angle: ");
+    print(print_float(PIN(in0)));
+    print(", step: ");
+    print(print_float(PIN(in1)));
+    print(", d: ");
+    print(print_float(PIN(in2)));
+    print(", q: ");
+    print(print_float(PIN(in3)));
+    print("\n");
 }
 #else
 static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
-    struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
+    //struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
     struct dbg_pin_ctx_t *pins = (struct dbg_pin_ctx_t *)pin_ptr;
-
-    ctx->angle = ctx->angle + 0.01; // M_PI * 2.0 / 3.0;
 
     print("in0: ");
     print(print_float(PIN(in0)));
@@ -57,19 +69,35 @@ static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     print(print_float(PIN(in2)));
     print(", in3: ");
     print(print_float(PIN(in3)));
+    print(", in4: ");
+    print(print_float(PIN(in4)));
     print("\n");
-
-    PIN(angle) = mod(ctx->angle);
 }
 #endif
 
 static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
 }
 
+static void rt_func(float period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
+    struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
+    struct dbg_pin_ctx_t *pins = (struct dbg_pin_ctx_t *)pin_ptr;
+
+    ctx->angle = ctx->angle + 0.001; // M_PI * 2.0 / 3.0;
+    
+    ctx->count++;
+    if (ctx->count == 500) {
+        ctx->count = 0;
+        ctx->step = !ctx->step;
+    }
+
+    PIN(angle) = mod(ctx->angle);
+    PIN(step) = ctx->step ? 0.3 : 0.0; 
+}
+
 hal_comp_t dbg_comp_struct = {
     .name      = "dbg",
     .nrt       = nrt_func,
-    .rt        = 0,
+    .rt        = rt_func,
     .frt       = 0,
     .nrt_init  = nrt_init,
     .rt_start  = 0,
