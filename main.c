@@ -77,12 +77,12 @@ static void connect_pins(
     sink->source = source;
 }
 
-#define CONF_R      0.9         // Resistance (ohms) measured
-#define CONF_L      0.00125     // Inductance (henry) measured
+#define CONF_R      1.85        // Resistance (ohms) measured
+#define CONF_L      0.00520     // Inductance (henry) measured
 #define CONF_PSI    0.055       // Default electrical torque constant [V*s/rad]
 #define CONF_J      0.00007     // Inertia from sm060 [kg*m^2]
-//#define BUS_DC      141
-#define BUS_DC      15
+#define BUS_DC      141
+//#define BUS_DC      31
 #define BUS_3PH     (BUS_DC / M_SQRT3 * 0.95)
 #define MAX_CURRENT 1
 

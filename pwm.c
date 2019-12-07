@@ -30,13 +30,6 @@ static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     PWM_3_Start();
     PWM_4_Start();
 
-    PWM_0_WriteCompare(0); // FIXME: Just set this in the configuration
-    PWM_1_WriteCompare(0);
-    PWM_2_WriteCompare(0);
-    PWM_3_WriteCompare(0);
-    PWM_4_WriteCompare1(0);
-    PWM_4_WriteCompare2(0);
-
     ctx->init_samples = 1000;
 }
 

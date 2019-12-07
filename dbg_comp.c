@@ -22,6 +22,7 @@ struct dbg_ctx_t {
     float angle;
     int count;
     int step;
+    int init_samples;
 };
 
 #if defined(COM_TEST)
@@ -76,22 +77,32 @@ static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
 #endif
 
 static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
+    struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
+
+    ctx->init_samples = 1000;
 }
 
 static void rt_func(float period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
     struct dbg_pin_ctx_t *pins = (struct dbg_pin_ctx_t *)pin_ptr;
 
-    ctx->angle = ctx->angle + 0.01; // M_PI * 2.0 / 3.0;
+    if (ctx->init_samples) {
+        ctx->init_samples--;
+        return;
+    }
+
+    //if (ctx->step) {
+        ctx->angle = ctx->angle + 0.001; // M_PI * 2.0 / 3.0;
+    //}
     
     ctx->count++;
-    if (ctx->count == 500) {
+    if (ctx->count == 1000) {
         ctx->count = 0;
         ctx->step = !ctx->step;
     }
 
     PIN(angle) = mod(ctx->angle);
-    PIN(step) = ctx->step ? 0.3 : 0.0; 
+    PIN(step) = ctx->step ? -0.3 : 0.0; 
 }
 
 hal_comp_t dbg_comp_struct = {

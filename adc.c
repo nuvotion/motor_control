@@ -126,10 +126,10 @@ static void rt_func(float period, volatile void *ctx_ptr, volatile hal_pin_inst_
             ctx->w_offset /= 1000;
         }
         ctx->init_samples--;
+    } else {
+        PIN(iu) = (ADC_GetResult16(1) - ctx->u_offset) / 860;
+        PIN(iw) = (ADC_GetResult16(0) - ctx->w_offset) / 860;
     }
-
-    PIN(iu) = (ADC_GetResult16(1) - ctx->u_offset) / 860;
-    PIN(iw) = (ADC_GetResult16(0) - ctx->w_offset) / 860;
 
     ADC_StartConvert();
 }
