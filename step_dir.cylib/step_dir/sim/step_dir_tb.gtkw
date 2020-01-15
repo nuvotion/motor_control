@@ -1,0 +1,87 @@
+[*]
+[*] GTKWave Analyzer v3.3.68 (w)1999-2016 BSI
+[*] Thu Jan  9 10:09:44 2020
+[*]
+[dumpfile] "/home/kmtaylor/PSoC/modules/step_dir.cylib/step_dir/sim/step_dir_tb.vcd"
+[dumpfile_mtime] "Thu Jan  9 10:09:03 2020"
+[dumpfile_size] 7562516
+[savefile] "/home/kmtaylor/PSoC/modules/step_dir.cylib/step_dir/sim/step_dir_tb.gtkw"
+[timestart] 321807
+[size] 1668 962
+[pos] -1 -1
+*-10.000000 37244 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] step_dir_tb.
+[treeopen] step_dir_tb.step_dir.
+[treeopen] step_dir_tb.step_dir.counterdp.
+[sst_width] 214
+[signals_width] 183
+[sst_expanded] 1
+[sst_vpaned_height] 282
+@28
+step_dir_tb.clk
+step_dir_tb.step
+step_dir_tb.dir
+@24
+step_dir_tb.sim_counter[15:0]
+@200
+-
+@28
+step_dir_tb.step_dir.reload
+step_dir_tb.step_dir.ctrl_enable
+step_dir_tb.step_dir.count_enable
+step_dir_tb.step_dir.cs_addr[2:0]
+@c00022
+#{reg_d0} (0)step_dir_tb.step_dir.counterdp.U1.reg_d0[7:0] (1)step_dir_tb.step_dir.counterdp.U1.reg_d0[7:0] (2)step_dir_tb.step_dir.counterdp.U1.reg_d0[7:0] (3)step_dir_tb.step_dir.counterdp.U1.reg_d0[7:0] (4)step_dir_tb.step_dir.counterdp.U1.reg_d0[7:0] (5)step_dir_tb.step_dir.counterdp.U1.reg_d0[7:0] (6)step_dir_tb.step_dir.counterdp.U1.reg_d0[7:0] (7)step_dir_tb.step_dir.counterdp.U1.reg_d0[7:0] (0)step_dir_tb.step_dir.counterdp.U0.reg_d0[7:0] (1)step_dir_tb.step_dir.counterdp.U0.reg_d0[7:0] (2)step_dir_tb.step_dir.counterdp.U0.reg_d0[7:0] (3)step_dir_tb.step_dir.counterdp.U0.reg_d0[7:0] (4)step_dir_tb.step_dir.counterdp.U0.reg_d0[7:0] (5)step_dir_tb.step_dir.counterdp.U0.reg_d0[7:0] (6)step_dir_tb.step_dir.counterdp.U0.reg_d0[7:0] (7)step_dir_tb.step_dir.counterdp.U0.reg_d0[7:0]
+@28
+(0)step_dir_tb.step_dir.counterdp.U1.reg_d0[7:0]
+(1)step_dir_tb.step_dir.counterdp.U1.reg_d0[7:0]
+(2)step_dir_tb.step_dir.counterdp.U1.reg_d0[7:0]
+(3)step_dir_tb.step_dir.counterdp.U1.reg_d0[7:0]
+(4)step_dir_tb.step_dir.counterdp.U1.reg_d0[7:0]
+(5)step_dir_tb.step_dir.counterdp.U1.reg_d0[7:0]
+(6)step_dir_tb.step_dir.counterdp.U1.reg_d0[7:0]
+(7)step_dir_tb.step_dir.counterdp.U1.reg_d0[7:0]
+(0)step_dir_tb.step_dir.counterdp.U0.reg_d0[7:0]
+(1)step_dir_tb.step_dir.counterdp.U0.reg_d0[7:0]
+(2)step_dir_tb.step_dir.counterdp.U0.reg_d0[7:0]
+(3)step_dir_tb.step_dir.counterdp.U0.reg_d0[7:0]
+(4)step_dir_tb.step_dir.counterdp.U0.reg_d0[7:0]
+(5)step_dir_tb.step_dir.counterdp.U0.reg_d0[7:0]
+(6)step_dir_tb.step_dir.counterdp.U0.reg_d0[7:0]
+(7)step_dir_tb.step_dir.counterdp.U0.reg_d0[7:0]
+@1401200
+-group_end
+@c00022
+#{reg_a0} (0)step_dir_tb.step_dir.counterdp.U1.reg_a0[7:0] (1)step_dir_tb.step_dir.counterdp.U1.reg_a0[7:0] (2)step_dir_tb.step_dir.counterdp.U1.reg_a0[7:0] (3)step_dir_tb.step_dir.counterdp.U1.reg_a0[7:0] (4)step_dir_tb.step_dir.counterdp.U1.reg_a0[7:0] (5)step_dir_tb.step_dir.counterdp.U1.reg_a0[7:0] (6)step_dir_tb.step_dir.counterdp.U1.reg_a0[7:0] (7)step_dir_tb.step_dir.counterdp.U1.reg_a0[7:0] (0)step_dir_tb.step_dir.counterdp.U0.reg_a0[7:0] (1)step_dir_tb.step_dir.counterdp.U0.reg_a0[7:0] (2)step_dir_tb.step_dir.counterdp.U0.reg_a0[7:0] (3)step_dir_tb.step_dir.counterdp.U0.reg_a0[7:0] (4)step_dir_tb.step_dir.counterdp.U0.reg_a0[7:0] (5)step_dir_tb.step_dir.counterdp.U0.reg_a0[7:0] (6)step_dir_tb.step_dir.counterdp.U0.reg_a0[7:0] (7)step_dir_tb.step_dir.counterdp.U0.reg_a0[7:0]
+@28
+(0)step_dir_tb.step_dir.counterdp.U1.reg_a0[7:0]
+(1)step_dir_tb.step_dir.counterdp.U1.reg_a0[7:0]
+(2)step_dir_tb.step_dir.counterdp.U1.reg_a0[7:0]
+(3)step_dir_tb.step_dir.counterdp.U1.reg_a0[7:0]
+(4)step_dir_tb.step_dir.counterdp.U1.reg_a0[7:0]
+(5)step_dir_tb.step_dir.counterdp.U1.reg_a0[7:0]
+(6)step_dir_tb.step_dir.counterdp.U1.reg_a0[7:0]
+(7)step_dir_tb.step_dir.counterdp.U1.reg_a0[7:0]
+(0)step_dir_tb.step_dir.counterdp.U0.reg_a0[7:0]
+(1)step_dir_tb.step_dir.counterdp.U0.reg_a0[7:0]
+(2)step_dir_tb.step_dir.counterdp.U0.reg_a0[7:0]
+(3)step_dir_tb.step_dir.counterdp.U0.reg_a0[7:0]
+(4)step_dir_tb.step_dir.counterdp.U0.reg_a0[7:0]
+(5)step_dir_tb.step_dir.counterdp.U0.reg_a0[7:0]
+(6)step_dir_tb.step_dir.counterdp.U0.reg_a0[7:0]
+(7)step_dir_tb.step_dir.counterdp.U0.reg_a0[7:0]
+@1401200
+-group_end
+@c00029
+step_dir_tb.step_dir.per_equal[1:0]
+@28
+(0)step_dir_tb.step_dir.per_equal[1:0]
+(1)step_dir_tb.step_dir.per_equal[1:0]
+@1401201
+-group_end
+@28
+step_dir_tb.step_dir.per_zero[1:0]
+step_dir_tb.step_dir.overflow
+step_dir_tb.step_dir.underflow
+[pattern_trace] 1
+[pattern_trace] 0
