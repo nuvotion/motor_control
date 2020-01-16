@@ -24,6 +24,7 @@ STMBL_COMPS += $(STMBL_DIR)/shared/comps/svm.c
 STMBL_COMPS += $(TOP_SRCDIR)/adc.c
 STMBL_COMPS += $(TOP_SRCDIR)/pwm.c
 STMBL_COMPS += $(TOP_SRCDIR)/encoder.c
+STMBL_COMPS += $(TOP_SRCDIR)/step_dir.c
 STMBL_COMPS += $(TOP_SRCDIR)/dbg_comp.c
 STMBL_SRC := $(STMBL_COMPS)
 STMBL_SRC += $(STMBL_DIR)/shared/angle.c
