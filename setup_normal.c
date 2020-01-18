@@ -1,5 +1,6 @@
 static void load_pos_pid(void) {
     load("encoder");
+    load("step_dir");
     load("uvw");
     load("fb_switch");
     load("vel");
@@ -13,6 +14,7 @@ static void load_pos_pid(void) {
 
 static void init_pos_pid(void) {
     set_pin_val("encoder",      0, "rt_prio",  7);
+    set_pin_val("step_dir",     0, "rt_prio",  7);
     set_pin_val("uvw",          0, "rt_prio",  8);
     set_pin_val("fb_switch",    0, "rt_prio",  9);
     set_pin_val("vel",          0, "rt_prio", 10);
@@ -90,10 +92,10 @@ static void init_pos_pid(void) {
     connect_pins("vel", 1, "torque", "pid",     0, "torque_cor_cmd");
 
     /* External command */
-    connect_pins("vel", 0, "pos_in", "dbg", 0, "angle");
+    connect_pins("vel", 0, "pos_in", "step_dir", 0, "pos");
 
     /* Position PID */
-    connect_pins("pid", 0, "pos_ext_cmd",   "dbg",      0, "angle");
+    connect_pins("pid", 0, "pos_ext_cmd",   "step_dir", 0, "pos");
     connect_pins("pid", 0, "vel_ext_cmd",   "vel",      0, "vel");
     connect_pins("pid", 0, "pos_fb",        "encoder",  0, "mot_abs_pos");
     connect_pins("pid", 0, "vel_fb",        "vel",      1, "vel");
@@ -107,7 +109,7 @@ static void init_pos_pid(void) {
     connect_pins("idq",    0, "pos",    "vel",      2, "pos_out");
 
     /* Debug */
-    connect_pins("dbg", 0, "in0", "dbg",        0, "angle");
+    connect_pins("dbg", 0, "in0", "step_dir",   0, "pos");
     connect_pins("dbg", 0, "in1", "vel",        0, "vel");
     connect_pins("dbg", 0, "in2", "encoder",    0, "mot_abs_pos");
     connect_pins("dbg", 0, "in3", "vel",        1, "vel");

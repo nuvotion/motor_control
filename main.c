@@ -53,6 +53,7 @@ static void enable_drive(uint8_t drive) {
     if (drive == 0) {
         RELAY0_Write(1);
         EN0_Write(1);
+        EN1_Write(1);
     }
     if (drive == 1) {
         RELAY1_Write(1);
