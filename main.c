@@ -80,10 +80,7 @@ static void connect_pins(
 
 #define CONF_R      1.85        // Resistance (ohms) measured
 #define CONF_L      0.00520     // Inductance (henry) measured
-#define CONF_PSI    0.055       // Default electrical torque constant [V*s/rad]
-#define CONF_J      0.00007     // Inertia from sm060 [kg*m^2]
 #define BUS_DC      141
-//#define BUS_DC      31
 #define BUS_3PH     (BUS_DC / M_SQRT3 * 0.95)
 #define MAX_CURRENT 1
 
@@ -111,7 +108,6 @@ static void init_cur_pid(void) {
     set_pin_val("curpid", 0, "rq",            CONF_R);
     set_pin_val("curpid", 0, "ld",            CONF_L);
     set_pin_val("curpid", 0, "lq",            CONF_L);
-    set_pin_val("curpid", 0, "psi",         CONF_PSI);
     set_pin_val("curpid", 0, "kp",               0.2); // Default fudge factor
     set_pin_val("curpid", 0, "ki",             0.006); // 6 * period
     set_pin_val("curpid", 0, "max_cur",  MAX_CURRENT); // Current limit (A)
