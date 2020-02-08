@@ -58,8 +58,8 @@ static void init_pos_pid(void) {
     connect_pins("vel", 2, "pos_in", "fb_switch",   0, "com_fb"); 
     connect_pins("vel", 2, "torque", "pid",         0, "torque_cor_cmd");
 
-    /* Position motor model, will jump on first index, but should be OK */
-    connect_pins("vel", 1, "pos_in", "encoder", 0, "mot_abs_pos");
+    /* Position motor model */
+    connect_pins("vel", 1, "pos_in", "encoder", 0, "mot_pos");
     connect_pins("vel", 1, "torque", "pid",     0, "torque_cor_cmd");
 
     /* External command */
@@ -68,7 +68,7 @@ static void init_pos_pid(void) {
     /* Position PID */
     connect_pins("pid", 0, "pos_ext_cmd",   "step_dir", 0, "pos");
     connect_pins("pid", 0, "vel_ext_cmd",   "vel",      0, "vel");
-    connect_pins("pid", 0, "pos_fb",        "encoder",  0, "mot_abs_pos");
+    connect_pins("pid", 0, "pos_fb",        "encoder",  0, "mot_pos");
     connect_pins("pid", 0, "vel_fb",        "vel",      1, "vel");
 
     /* Drive curpid loop */
@@ -77,9 +77,17 @@ static void init_pos_pid(void) {
     connect_pins("idq",    0, "pos",    "vel",  2, "pos_out");
 
     /* Debug */
+    
     connect_pins("dbg", 0, "in0", "step_dir",   0, "pos");
     connect_pins("dbg", 0, "in1", "vel",        0, "vel");
-    connect_pins("dbg", 0, "in2", "encoder",    0, "mot_abs_pos");
+    connect_pins("dbg", 0, "in2", "encoder",    0, "mot_pos");
     connect_pins("dbg", 0, "in3", "vel",        1, "vel");
     connect_pins("dbg", 0, "in4", "pid",        0, "torque_cor_cmd");
+    /*
+    connect_pins("dbg", 0, "in0", "pid",        0, "torque_cor_cmd");
+    connect_pins("dbg", 0, "in1", "pid",        0, "cur_cor_cmd");
+    connect_pins("dbg", 0, "in2", "vel",        0, "vel");         
+    connect_pins("dbg", 0, "in3", "vel",        1, "vel");
+    connect_pins("dbg", 0, "in4", "dq",         0, "q");
+    */
 }
