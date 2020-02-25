@@ -32,15 +32,21 @@ static void init_pos_pid(void) {
     set_pin_val("vel", 0, "en", 1);
     set_pin_val("vel", 1, "en", 1);
     set_pin_val("vel", 2, "en", 1);
-    set_pin_val("vel", 0, "w",  200);
-    set_pin_val("vel", 1, "w",  200);
-    set_pin_val("vel", 2, "w",  200);
+    set_pin_val("vel", 0, "w",  1000);
+    set_pin_val("vel", 1, "w",  1000);
+    set_pin_val("vel", 2, "w",  1000);
+    set_pin_val("vel", 0, "d",  0.5);
+    set_pin_val("vel", 1, "d",  0.5);
+    set_pin_val("vel", 2, "d",  0.5);
+    set_pin_val("vel", 0, "lp", 50);
+    set_pin_val("vel", 1, "lp", 50);
+    set_pin_val("vel", 2, "lp", 50);
 
     set_pin_val("pid", 0, "enable",             1);
     set_pin_val("pid", 0, "pos_p",             10);
     set_pin_val("pid", 0, "vel_p",            100);
     set_pin_val("pid", 0, "vel_i",              0);
-    set_pin_val("pid", 0, "cur_gain",      420e-6); // From sm060
+    set_pin_val("pid", 0, "cur_gain",      4.0e-3);
     set_pin_val("pid", 0, "max_usr_vel",      800); // Default
     set_pin_val("pid", 0, "max_usr_acc",    80000); // Default
     set_pin_val("pid", 0, "max_usr_torque", 80000); // Default

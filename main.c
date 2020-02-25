@@ -140,6 +140,7 @@ static void init_cur_pid(void) {
 #elif defined(CURPID_TEST)
     #include "setup_curpid_test.c"
 #else
+    //#include "setup_cur_gain.c"
     #include "setup_normal.c"
 #endif
 

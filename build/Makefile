@@ -35,6 +35,7 @@ STMBL_SRC += stmbl/src/hal_tbl.c
 SETUPS := $(TOP_SRCDIR)/setup_normal.c
 SETUPS += $(TOP_SRCDIR)/setup_com_test.c
 SETUPS += $(TOP_SRCDIR)/setup_curpid_test.c
+SETUPS += $(TOP_SRCDIR)/setup_cur_gain.c
 
 SRC := main.c print.c
 OBJ := $(SRC:.c=.o)
