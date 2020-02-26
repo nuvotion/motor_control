@@ -1,4 +1,3 @@
-#include <math.h>
 #include "hal.h"
 #include "print.h"
 #include "angle.h"
@@ -92,7 +91,7 @@ static void rt_func(sat accum period, volatile void *ctx_ptr, volatile hal_pin_i
     }
 
     //if (ctx->step) {
-        ctx->angle = ctx->angle + 0.001; // M_PI * 2.0 / 3.0;
+        ctx->angle = ctx->angle - 0.001; // M_PI * 2.0 / 3.0;
     //}
     
     ctx->count++;

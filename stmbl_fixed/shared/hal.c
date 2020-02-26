@@ -105,7 +105,7 @@ uint32_t load_comp(hal_comp_t *comp) {
   if(hal.pin_inst_count + comp->pin_count >= HAL_MAX_PINS - 1) {
     return (0);
   }
-  uint32_t ctx_size = ((uint32_t)ceil((comp->ctx_size / 4.0))) * 4;
+  uint32_t ctx_size = (((comp->ctx_size + 3) / 4) * 4);
   if(hal.ctx_count + ctx_size >= HAL_MAX_CTX - 1) {
     return (0);
   }

@@ -1,5 +1,4 @@
 #include <project.h>
-#include <math.h>
 
 #include <hal.h>
 
@@ -81,7 +80,7 @@ static void connect_pins(
 #define CONF_R      1.85        // Resistance (ohms) measured
 #define CONF_L      0.00520     // Inductance (henry) measured
 #define BUS_DC      141
-#define BUS_3PH     (BUS_DC / M_SQRT3 * 0.95)
+//#define BUS_3PH     (BUS_DC / M_SQRT3 * 0.95)
 #define MAX_CURRENT 1
 
 static void load_cur_pid(void) {
@@ -111,7 +110,7 @@ static void init_cur_pid(void) {
     set_pin_val("curpid", 0, "kp",               0.2); // Default fudge factor
     set_pin_val("curpid", 0, "ki",             0.006); // 6 * period
     set_pin_val("curpid", 0, "max_cur",  MAX_CURRENT); // Current limit (A)
-    set_pin_val("curpid", 0, "pwm_volt",     BUS_3PH); // Voltage limit (V)
+//    set_pin_val("curpid", 0, "pwm_volt",     BUS_3PH); // Voltage limit (V)
     set_pin_val("curpid", 0, "en",                 1);
     set_pin_val("curpid", 0, "cmd_mode",           1);
 

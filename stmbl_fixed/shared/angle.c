@@ -18,10 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <math.h>
+#include <string.h>
+#include <stdfix.h>
 #include "angle.h"
 #include "defines.h"
 
+/*
 const float sintab[257] = {
     0.000000, 0.006136, 0.012272, 0.018407, 0.024541, 0.030675, 0.036807, 0.042938,
     0.049068, 0.055195, 0.061321, 0.067444, 0.073565, 0.079682, 0.085797, 0.091909,
@@ -95,8 +97,9 @@ void sincos_fast(float x, float *sin, float *cos) {
       break;
   }
 }
+*/
 
-inline float minus(float a, float b) {
+inline accum minus(accum a, accum b) {
   if(ABS(a - b) < M_PI) {
     return (a - b);
   } else if(a > b) {
@@ -106,42 +109,15 @@ inline float minus(float a, float b) {
   }
 }
 
-inline float mod(float a) {
-  if(a + M_PI < 0.0f) {
-    return -(fmodf(-(a + M_PI), M_PI * 2.0) - M_PI);
-  } else {
-    return fmodf(a + M_PI, M_PI * 2.0) - M_PI;
-  }
+inline accum mod(accum a) {
+  int arg;
+  accum retval;
+  memcpy(&arg, &a, sizeof(int));
+  arg += 102944;
+  arg %= 205888;
+  if (arg < 0) arg += 102944;
+  else arg -= 102944;
+  memcpy(&retval, &arg, sizeof(int));
+  return retval;
 }
 
-int quadrant(float a) {
-  if(a >= 0) {
-    if(a < M_PI / 2.0) {
-      return 1;
-    } else {
-      return 2;
-    }
-  } else {
-    if(a < -M_PI / 2.0) {
-      return 3;
-    } else {
-      return 4;
-    }
-  }
-  return (0);
-}
-
-float err_filter(float *ctx, float max, float dens, float err) {
-  if(err > 0.0) {
-    *ctx += 1.0;
-  } else {
-    *ctx -= dens;
-  }
-
-  *ctx = CLAMP(*ctx, 0.0, max);
-
-  if(*ctx < max * 0.99) {
-    return (0.0);
-  }
-  return (1.0);
-}

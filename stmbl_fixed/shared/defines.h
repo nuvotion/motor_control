@@ -19,13 +19,13 @@
  */
 
 #pragma once
-#include <math.h>
 #include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#define M_PI 3.14159265358979323844K
 #define NO 0
 #define YES 1
 #define ABS(a) (((a) < 0.0) ? -(a) : (a))
