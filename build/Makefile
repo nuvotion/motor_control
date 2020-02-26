@@ -25,12 +25,11 @@ STMBL_TBL := stmbl/inc/hal_tbl.h stmbl/src/hal_tbl.c
 #STMBL_COMPS += $(TOP_SRCDIR)/pwm.c
 #STMBL_COMPS += $(TOP_SRCDIR)/encoder.c
 #STMBL_COMPS += $(TOP_SRCDIR)/step_dir.c
-#STMBL_COMPS += $(TOP_SRCDIR)/dbg_comp.c
-#STMBL_SRC := $(STMBL_COMPS)
-#STMBL_SRC += $(STMBL_DIR)/shared/angle.c
-#STMBL_SRC += $(STMBL_DIR)/shared/commands.c
+STMBL_COMPS += $(TOP_SRCDIR)/dbg_comp.c
+STMBL_SRC := $(STMBL_COMPS)
+STMBL_SRC += $(STMBL_DIR)/shared/angle.c
+STMBL_SRC += stmbl/src/hal_tbl.c
 STMBL_SRC += $(STMBL_DIR)/shared/hal.c
-#STMBL_SRC += stmbl/src/hal_tbl.c
 
 SETUPS := $(TOP_SRCDIR)/setup_normal.c
 SETUPS += $(TOP_SRCDIR)/setup_com_test.c

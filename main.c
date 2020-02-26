@@ -139,8 +139,9 @@ static void init_cur_pid(void) {
     #include "setup_com_test.c"
 #elif defined(CURPID_TEST)
     #include "setup_curpid_test.c"
+#elif defined(FIXED_POINT_TEST)
+    #include "setup_fixed_test.c"
 #else
-    //#include "setup_cur_gain.c"
     #include "setup_normal.c"
 #endif
 
@@ -148,9 +149,9 @@ static void init_hal(void) {
     hal_set_debug_level(2);
     hal_init(0.001, 0.001);
 
-    load_cur_pid();
+    //load_cur_pid();
     load_pos_pid();
-    init_cur_pid();
+    //init_cur_pid();
     init_pos_pid();
 
     hal_start();

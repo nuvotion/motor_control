@@ -52,29 +52,6 @@ extern "C" {
 #define STRINGIFY(x) STRINGIFY_(x)
 
 extern volatile uint64_t systime;
-#define BLINK(N)                                           \
-  ({                                                       \
-    int t = (systime / 300) % (2 * (unsigned int)(N) + 2); \
-    if(t < 2) {                                            \
-      t = 0;                                               \
-    } else {                                               \
-      t = t % 2;                                           \
-    }                                                      \
-    t;                                                     \
-  })
-
-//TODO: change type to typeof()
-//TODO: change __old_val__ to something more useful
-//BUG: fails with multiple comps TODO: move to ctx
-
-#define RISING_EDGE(sig) \
-  ({static float __old_val__ = 0.0; uint8_t ret = (sig) > __old_val__; __old_val__ = (sig); ret; })
-
-#define FALLING_EDGE(sig) \
-  ({static float __old_val__ = 0.0; uint8_t ret = (sig) < __old_val__; __old_val__ = (sig); ret; })
-
-#define EDGE(sig) \
-  ({static float __old_val__ = 0.0; uint8_t ret = (sig) != __old_val__; __old_val__ = (sig); ret; })
 
 #define LP_HZ(a) (((a) <= 0.0) ? (1.0) : (1.0 / (1.0 / period / ((a)*M_PI * 2.0) + 1.0)))
 

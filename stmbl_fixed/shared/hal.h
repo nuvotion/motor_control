@@ -20,11 +20,8 @@
 
 #pragma once
 #include <stdint.h>
+#include <stdfix.h>
 #include <stdio.h>
-
-//#define HAL_CALC_TIME
-//#define HAL_COMP_CALC_TIME
-//#define HAL_WATCHDOG
 
 #ifndef HAL_MAX_PINS
 #define HAL_MAX_PINS 1024
@@ -45,23 +42,21 @@
 extern uint32_t hal_get_systick_value();
 extern uint32_t hal_get_systick_reload();
 extern uint32_t hal_get_systick_freq();
-extern void hal_init_watchdog(float time);
-extern void hal_reset_watchdog();
 
 typedef char NAME[32];
 
 typedef NAME const pin_t;
 
 typedef struct hal_pin_inst_t {
-  volatile float value;
+  volatile sat accum value;
   volatile struct hal_pin_inst_t *source;
 } hal_pin_inst_t;
 
 typedef const struct {
   NAME name;
   void (*nrt)(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr);
-  void (*rt)(float period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr);
-  void (*frt)(float period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr);
+  void (*rt)(sat accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr);
+  void (*frt)(sat accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr);
 
   void (*nrt_init)(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr);
   void (*hw_init)(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr);
@@ -156,8 +151,8 @@ typedef struct {
   volatile uint32_t frt_max_ticks;
   volatile uint32_t nrt_max_ticks;
 
-  volatile float rt_period;
-  volatile float frt_period;
+  volatile sat accum rt_period;
+  volatile sat accum frt_period;
 
   hal_error_t error_info;
 
@@ -180,8 +175,7 @@ pin_t *pin_by_pin_inst(volatile hal_pin_inst_t *p);
 volatile hal_comp_inst_t *comp_inst_by_pin_inst(volatile hal_pin_inst_t *p);
 void hal_print_pin(volatile hal_pin_inst_t *p);
 
-void hal_init(float rt_period, float frt_period);
-// void hal_init_nrt();
+void hal_init(sat accum rt_period, sat accum frt_period);
 void hal_start();
 void hal_stop();
 void hal_run_rt();
