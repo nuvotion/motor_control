@@ -23,8 +23,7 @@
 #include "angle.h"
 #include "defines.h"
 
-/*
-const float sintab[257] = {
+const accum sintab[257] = {
     0.000000, 0.006136, 0.012272, 0.018407, 0.024541, 0.030675, 0.036807, 0.042938,
     0.049068, 0.055195, 0.061321, 0.067444, 0.073565, 0.079682, 0.085797, 0.091909,
     0.098017, 0.104122, 0.110222, 0.116319, 0.122411, 0.128498, 0.134581, 0.140658,
@@ -59,20 +58,23 @@ const float sintab[257] = {
     0.998795, 0.999078, 0.999322, 0.999529, 0.999699, 0.999831, 0.999925, 0.999981,
     1.000000};
 
-void sincos_fast(float x, float *sin, float *cos) {
-  extern const float sintab[257];
+void sincos_fast(accum x, accum *sin, accum *cos) {
+  short y, i;
+  accum ya, f, s, c;
 
-  x = x * 256 / (M_PI / 2);
+  x = x * 256K / (M_PI / 2K);
+  y = (short) x;
 
-  int y = (int)x;
   if(y < 0)
     y -= 1;
 
-  float f = x - y;
-  int i   = y & 255;
+  ya = (accum) y;
 
-  float s = (1 - f) * sintab[i] + f * sintab[i + 1];
-  float c = (1 - f) * sintab[256 - i] + f * sintab[255 - i];
+  f = x - ya;
+  i = y & 255;
+
+  s = (1K - f) * sintab[i] + f * sintab[i + 1];
+  c = (1K - f) * sintab[256 - i] + f * sintab[255 - i];
 
   switch((y >> 8) & 3) {
     case 0:
@@ -92,20 +94,19 @@ void sincos_fast(float x, float *sin, float *cos) {
       *cos = s;
       break;
     default:
-      *sin = 0;
-      *cos = 0;
+      *sin = 0K;
+      *cos = 0K;
       break;
   }
 }
-*/
 
 inline accum minus(accum a, accum b) {
   if(ABS(a - b) < M_PI) {
     return (a - b);
   } else if(a > b) {
-    return (a - b - 2.0 * M_PI);
+    return (a - b - 2K * M_PI);
   } else {
-    return (a - b + 2.0 * M_PI);
+    return (a - b + 2K * M_PI);
   }
 }
 

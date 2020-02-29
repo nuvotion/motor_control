@@ -13,6 +13,7 @@ HAL_PIN(in5);
 HAL_PIN(in6);
 
 HAL_PIN(angle);
+HAL_PIN(angle_sin);
 HAL_PIN(step);
 
 extern void print(char *string);
@@ -85,13 +86,15 @@ static void rt_func(sat accum period, volatile void *ctx_ptr, volatile hal_pin_i
     struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
     struct dbg_pin_ctx_t *pins = (struct dbg_pin_ctx_t *)pin_ptr;
 
+    accum sin, cos;
+
     if (ctx->init_samples) {
         ctx->init_samples--;
         return;
     }
 
     //if (ctx->step) {
-        ctx->angle = ctx->angle - 0.001; // M_PI * 2.0 / 3.0;
+        ctx->angle = ctx->angle - 0.001K; // M_PI * 2.0 / 3.0;
     //}
     
     ctx->count++;
@@ -100,8 +103,11 @@ static void rt_func(sat accum period, volatile void *ctx_ptr, volatile hal_pin_i
         ctx->step = !ctx->step;
     }
 
+    sincos_fast(ctx->angle, &sin, &cos);
+
     PIN(angle) = mod(ctx->angle);
-    PIN(step) = ctx->step ? 30 : 0.0; 
+    PIN(angle_sin) = sin;
+    PIN(step) = ctx->step ? 30 : 0; 
 }
 
 hal_comp_t dbg_comp_struct = {

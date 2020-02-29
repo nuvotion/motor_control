@@ -134,7 +134,7 @@ uint32_t load_comp(hal_comp_t *comp) {
 
   // load pins
   for(int i = hal.pin_inst_count; i < hal.pin_inst_count + comp->pin_count; i++) {
-    hal.pin_insts[i].value  = 0.0;
+    hal.pin_insts[i].value  = 0;
     hal.pin_insts[i].source = &hal.pin_insts[i];
   }
   hal.pin_inst_count += comp->pin_count;
@@ -331,24 +331,10 @@ void load(char *ptr) {
   load_comp(comp_by_name(ptr));
 }
 
-void show(char *ptr) {
-  int j          = 0;
-  int pin_offset = 0;
-  for(int i = 0; i < comp_count; i++) {
-    printf("%s\n", comps[i]->name);
-    printf("#pins: %lu\n", comps[i]->pin_count);
-    printf("#ctx: %lu byte\n", comps[i]->ctx_size);
-    for(; j < pin_offset + comps[i]->pin_count; j++) {
-      printf("- %s\n", pins[j]);
-    }
-    pin_offset += comps[i]->pin_count;
-  }
-}
-
 void sort_rt() {
-  sat accum min = SACCUM_MAX;
+  accum min = SACCUM_MAX;
   int min_index = -1;
-  sat accum rt_prio = 0.0;
+  accum rt_prio = 0K;
   char added[HAL_MAX_COMPS];
   struct pin_ctx_t *pins;
 
@@ -363,7 +349,7 @@ void sort_rt() {
     for(int j = hal.comp_inst_count - 1; j >= 0; j--) {
       pins    = (struct pin_ctx_t *)(hal.comp_insts[j].pin_insts);
       rt_prio = PIN(rt_prio);
-      if(rt_prio <= min && added[j] == 0 && rt_prio > 0.0 && hal.comp_insts[j].comp->rt != 0) {
+      if(rt_prio <= min && added[j] == 0 && rt_prio > 0K && hal.comp_insts[j].comp->rt != 0) {
         min       = rt_prio;
         min_index = j;
       }
@@ -376,9 +362,9 @@ void sort_rt() {
 }
 
 void sort_frt() {
-  sat accum min = SACCUM_MAX;
+  accum min = SACCUM_MAX;
   int min_index = -1;
-  sat accum frt_prio = 0.0;
+  accum frt_prio = 0K;
   char added[HAL_MAX_COMPS];
   struct pin_ctx_t *pins;
 
@@ -393,7 +379,7 @@ void sort_frt() {
     for(int j = hal.comp_inst_count - 1; j >= 0; j--) {
       pins     = (struct pin_ctx_t *)(hal.comp_insts[j].pin_insts);
       frt_prio = PIN(frt_prio);
-      if(frt_prio <= min && added[j] == 0 && frt_prio > 0.0 && hal.comp_insts[j].comp->frt != 0) {
+      if(frt_prio <= min && added[j] == 0 && frt_prio > 0K && hal.comp_insts[j].comp->frt != 0) {
         min       = frt_prio;
         min_index = j;
       }
@@ -414,8 +400,8 @@ void start_rt() {
     hal.rt_comps[i]->rt_max_ticks = 0;
   }
 
-  hal.rt_ticks     = 0.0;
-  hal.rt_max_ticks = 0.0;
+  hal.rt_ticks     = 0;
+  hal.rt_max_ticks = 0;
 
   hal.rt_state = RT_SLEEP;
 }
@@ -429,8 +415,8 @@ void start_frt() {
     hal.frt_comps[i]->frt_max_ticks = 0;
   }
 
-  hal.frt_ticks     = 0.0;
-  hal.frt_max_ticks = 0.0;
+  hal.frt_ticks     = 0;
+  hal.frt_max_ticks = 0;
 
   hal.frt_state = RT_SLEEP;
 }
@@ -470,7 +456,7 @@ void hal_stop() {
   stop_frt();
 }
 
-void hal_init(sat accum rt_period, sat accum frt_period) {
+void hal_init(accum rt_period, accum frt_period) {
   hal.rt_state  = RT_STOP;
   hal.frt_state = RT_STOP;
 
@@ -493,16 +479,16 @@ void hal_init(sat accum rt_period, sat accum frt_period) {
   hal.active_frt_func = -1;
   hal.active_nrt_func = -1;
 
-  hal.rt_ticks      = 0.0;
-  hal.rt_max_ticks  = 0.0;
-  hal.frt_ticks     = 0.0;
-  hal.frt_max_ticks = 0.0;
-  hal.nrt_ticks     = 0.0;
-  hal.nrt_max_ticks = 0.0;
+  hal.rt_ticks      = 0;
+  hal.rt_max_ticks  = 0;
+  hal.frt_ticks     = 0;
+  hal.frt_max_ticks = 0;
+  hal.nrt_ticks     = 0;
+  hal.nrt_max_ticks = 0;
   hal.rt_period     = rt_period;
   hal.frt_period    = frt_period;
-  hal.nrt_ticks     = 0.0;
-  hal.nrt_max_ticks = 0.0;
+  hal.nrt_ticks     = 0;
+  hal.nrt_max_ticks = 0;
 }
 
 void hal_set_debug_level(uint32_t debug_level) {

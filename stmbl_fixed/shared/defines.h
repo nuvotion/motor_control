@@ -28,16 +28,16 @@ extern "C" {
 #define M_PI 3.14159265358979323844K
 #define NO 0
 #define YES 1
-#define ABS(a) (((a) < 0.0) ? -(a) : (a))
+#define ABS(a) (((a) < 0.0K) ? -(a) : (a))
 #define LIMIT(x, lowhigh) (((x) > (lowhigh)) ? (lowhigh) : (((x) < (-lowhigh)) ? (-lowhigh) : (x)))
-#define SAT(x, lowhigh) (((x) > (lowhigh)) ? (1.0) : (((x) < (-lowhigh)) ? (-1.0) : (0.0)))
-#define SAT2(x, low, high) (((x) > (high)) ? (1.0) : (((x) < (low)) ? (-1.0) : (0.0)))
+#define SAT(x, lowhigh) (((x) > (lowhigh)) ? (1.0K) : (((x) < (-lowhigh)) ? (-1.0K) : (0.0K)))
+#define SAT2(x, low, high) (((x) > (high)) ? (1.0K) : (((x) < (low)) ? (-1.0K) : (0.0K)))
 #define STEP(from, to, step) (((from) < (to)) ? (MIN((from) + (step), (to))) : (MAX((from) - (step), (to))))
-#define DEG(a) ((a)*M_PI / 180.0)
-#define RAD(a) ((a)*180.0 / M_PI)
-#define SIGN(a) (((a) < 0.0) ? (-1.0) : (((a) > 0.0) ? (1.0) : (0.0)))
+#define DEG(a) ((a)*M_PI / 180.0K)
+#define RAD(a) ((a)*180.0K / M_PI)
+#define SIGN(a) (((a) < 0.0K) ? (-1.0K) : (((a) > 0.0K) ? (1.0K) : (0.0K)))
 #define CLAMP(x, low, high) (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
-#define SCALE(value, high, max) MIN(MAX(((max) - (value)) / ((max) - (high)), 0.0), 1.0)
+#define SCALE(value, high, max) MIN(MAX(((max) - (value)) / ((max) - (high)), 0.0K), 1.0K)
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #define MIN3(a, b, c) MIN(a, MIN(b, c))
@@ -53,7 +53,7 @@ extern "C" {
 
 extern volatile uint64_t systime;
 
-#define LP_HZ(a) (((a) <= 0.0) ? (1.0) : (1.0 / (1.0 / period / ((a)*M_PI * 2.0) + 1.0)))
+#define LP_HZ(a) (((a) <= 0.0K) ? (1.0K) : (1.0K / (1.0K / period / ((a)*M_PI * 2.0K) + 1.0K)))
 
 #ifdef __cplusplus
 }

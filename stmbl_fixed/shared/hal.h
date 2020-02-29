@@ -55,8 +55,8 @@ typedef struct hal_pin_inst_t {
 typedef const struct {
   NAME name;
   void (*nrt)(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr);
-  void (*rt)(sat accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr);
-  void (*frt)(sat accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr);
+  void (*rt)(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr);
+  void (*frt)(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr);
 
   void (*nrt_init)(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr);
   void (*hw_init)(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr);
@@ -151,8 +151,8 @@ typedef struct {
   volatile uint32_t frt_max_ticks;
   volatile uint32_t nrt_max_ticks;
 
-  volatile sat accum rt_period;
-  volatile sat accum frt_period;
+  volatile accum rt_period;
+  volatile accum frt_period;
 
   hal_error_t error_info;
 
@@ -175,7 +175,7 @@ pin_t *pin_by_pin_inst(volatile hal_pin_inst_t *p);
 volatile hal_comp_inst_t *comp_inst_by_pin_inst(volatile hal_pin_inst_t *p);
 void hal_print_pin(volatile hal_pin_inst_t *p);
 
-void hal_init(sat accum rt_period, sat accum frt_period);
+void hal_init(accum rt_period, accum frt_period);
 void hal_start();
 void hal_stop();
 void hal_run_rt();
