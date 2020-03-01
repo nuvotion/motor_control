@@ -30,7 +30,9 @@ uint32_t hal_get_systick_freq() {
 }
 
 CY_ISR(rt_irq_handler) {
+    EN0_Write(1);
     hal_run_rt();
+    EN0_Write(0);
 
     /* RT_TIMER is free running. If the interrupt bit is set at the end of the
      * ISR then the ISR routine has missed the realtime deadline. */
@@ -168,6 +170,7 @@ int main(void) {
 
     CyGlobalIntEnable;
     RT_TIMER_Start();
+    RT_TIMER_WritePeriod(49);
     enable_drive(0);
 
     for(;;) {
