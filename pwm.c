@@ -12,11 +12,6 @@ HAL_PIN(w);
 // Supply voltage to scale PWM
 HAL_PIN(udc);
 
-// Debug
-HAL_PIN(ou);
-HAL_PIN(ov);
-HAL_PIN(ow);
-
 struct pwm_ctx_t {
     int init_samples;
 };
@@ -33,29 +28,32 @@ static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     ctx->init_samples = 1000;
 }
 
-static void rt_func(float period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
-    uint8_t u, v, w;
+static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
+    uint8_t u_pwm, v_pwm, w_pwm;
     struct pwm_ctx_t *ctx      = (struct pwm_ctx_t *) ctx_ptr;
     struct pwm_pin_ctx_t *pins = (struct pwm_pin_ctx_t *) pin_ptr;
   
-    float udc = MAX(PIN(udc), 0.1);
+    accum udc = PIN(udc);
+    accum u = PIN(u);
+    accum v = PIN(v);
+    accum w = PIN(w);
+
+    u = CLAMP(u, 0.0K, udc);
+    v = CLAMP(v, 0.0K, udc);
+    w = CLAMP(w, 0.0K, udc);
 
     //convert voltages to PWM output compare values
-    u = (uint8_t) (CLAMP(PIN(u), 0.0, udc) / udc * 255);
-    v = (uint8_t) (CLAMP(PIN(v), 0.0, udc) / udc * 255);
-    w = (uint8_t) (CLAMP(PIN(w), 0.0, udc) / udc * 255);
+    u_pwm = (uint8_t) (u / udc * 255K);
+    v_pwm = (uint8_t) (v / udc * 255K);
+    w_pwm = (uint8_t) (w / udc * 255K);
 
     if (ctx->init_samples) {
         ctx->init_samples--;
     } else {
-        PWM_0_WriteCompare(u);
-        PWM_1_WriteCompare(v);
-        PWM_2_WriteCompare(w);
+        PWM_0_WriteCompare(u_pwm);
+        PWM_1_WriteCompare(v_pwm);
+        PWM_2_WriteCompare(w_pwm);
     }
-
-    //PIN(ou) = u;
-    //PIN(ov) = v;
-    //PIN(ow) = w;
 }
 
 hal_comp_t pwm_comp_struct = {

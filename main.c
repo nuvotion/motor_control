@@ -1,11 +1,11 @@
 #include <project.h>
 
 #include <hal.h>
+#include <defines.h>
 
 #include "print.h"
 
 static int usb_up;
-uint64_t systime;
 volatile int rt_deadline_err;
 
 extern void load(char *); // found in ../../stmbl/shared/hal.c line: 517
@@ -60,7 +60,7 @@ static void enable_drive(uint8_t drive) {
     }
 }
 
-static void set_pin_val(NAME comp, uint32_t inst, NAME pin, float val) {
+static void set_pin_val(NAME comp, uint32_t inst, NAME pin, accum val) {
     volatile hal_pin_inst_t *sink;
     sink = pin_inst_by_name(comp, inst, pin);
     sink->value  = val;
@@ -77,10 +77,11 @@ static void connect_pins(
     sink->source = source;
 }
 
+#define PERIOD      0.001
 #define CONF_R      1.85        // Resistance (ohms) measured
 #define CONF_L      0.00520     // Inductance (henry) measured
 #define BUS_DC      141
-//#define BUS_3PH     (BUS_DC / M_SQRT3 * 0.95)
+#define BUS_3PH     (BUS_DC / M_SQRT3 * 0.95)
 #define MAX_CURRENT 1
 
 static void load_cur_pid(void) {
@@ -103,14 +104,12 @@ static void init_cur_pid(void) {
     set_pin_val("dq",  0, "mode", 2); // PHASE_120_3PH
     set_pin_val("idq", 0, "mode", 2); // PHASE_120_3PH
 
-    set_pin_val("curpid", 0, "rd",            CONF_R);
-    set_pin_val("curpid", 0, "rq",            CONF_R);
-    set_pin_val("curpid", 0, "ld",            CONF_L);
-    set_pin_val("curpid", 0, "lq",            CONF_L);
+    set_pin_val("curpid", 0, "r",             CONF_R);
+    set_pin_val("curpid", 0, "l",             CONF_L);
     set_pin_val("curpid", 0, "kp",               0.2); // Default fudge factor
     set_pin_val("curpid", 0, "ki",             0.006); // 6 * period
     set_pin_val("curpid", 0, "max_cur",  MAX_CURRENT); // Current limit (A)
-//    set_pin_val("curpid", 0, "pwm_volt",     BUS_3PH); // Voltage limit (V)
+    set_pin_val("curpid", 0, "pwm_volt",     BUS_3PH); // Voltage limit (V)
     set_pin_val("curpid", 0, "en",                 1);
     set_pin_val("curpid", 0, "cmd_mode",           1);
 
@@ -146,11 +145,11 @@ static void init_cur_pid(void) {
 
 static void init_hal(void) {
     hal_set_debug_level(2);
-    hal_init(0.001, 0.001);
+    hal_init(PERIOD, PERIOD);
 
-    //load_cur_pid();
+    load_cur_pid();
     load_pos_pid();
-    //init_cur_pid();
+    init_cur_pid();
     init_pos_pid();
 
     hal_start();
