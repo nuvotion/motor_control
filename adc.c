@@ -23,8 +23,10 @@ HAL_PIN(iu);
 HAL_PIN(iw);
 
 struct adc_ctx_t {
-    float u_offset;
-    float w_offset;
+    int u_average;
+    int w_average;
+    accum u_offset;
+    accum w_offset;
     int init_samples;
 };
 
@@ -113,22 +115,24 @@ static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     ADC_StartConvert();
 }
 
-static void rt_func(float period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
+static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     struct adc_ctx_t *ctx      = (struct adc_ctx_t *) ctx_ptr;
     struct adc_pin_ctx_t *pins = (struct adc_pin_ctx_t *) pin_ptr;
 
     if (ctx->init_samples) {
-        ctx->u_offset += ADC_GetResult16(1);
-        ctx->w_offset += ADC_GetResult16(0);
+        ctx->u_average += ADC_GetResult16(1);
+        ctx->w_average += ADC_GetResult16(0);
 
         if (ctx->init_samples == 1) {
-            ctx->u_offset /= 1000;
-            ctx->w_offset /= 1000;
+            ctx->u_average /= 1000;
+            ctx->w_average /= 1000;
+            ctx->u_offset = (accum) ctx->u_average;
+            ctx->w_offset = (accum) ctx->w_average;
         }
         ctx->init_samples--;
     } else {
-        PIN(iu) = (ADC_GetResult16(1) - ctx->u_offset) / 860;
-        PIN(iw) = (ADC_GetResult16(0) - ctx->w_offset) / 860;
+        PIN(iu) = ((accum) ADC_GetResult16(1) - ctx->u_offset) * (1K/860K);
+        PIN(iw) = ((accum) ADC_GetResult16(0) - ctx->w_offset) * (1K/860K);
     }
 
     ADC_StartConvert();

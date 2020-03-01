@@ -48,7 +48,7 @@ typedef char NAME[32];
 typedef NAME const pin_t;
 
 typedef struct hal_pin_inst_t {
-  volatile sat accum value;
+  volatile accum value;
   volatile struct hal_pin_inst_t *source;
 } hal_pin_inst_t;
 

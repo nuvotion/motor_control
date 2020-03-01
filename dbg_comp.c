@@ -19,7 +19,7 @@ HAL_PIN(step);
 extern void print(char *string);
 
 struct dbg_ctx_t {
-    sat accum angle;
+    accum angle;
     int count;
     int step;
     int init_samples;
@@ -82,7 +82,7 @@ static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     ctx->init_samples = 2000;
 }
 
-static void rt_func(sat accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
+static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
     struct dbg_pin_ctx_t *pins = (struct dbg_pin_ctx_t *)pin_ptr;
 
