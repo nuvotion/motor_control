@@ -79,7 +79,7 @@ static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
 static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
 
-    ctx->init_samples = 2000;
+    ctx->init_samples = 5000*20;
 }
 
 static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
@@ -107,7 +107,7 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
 
     PIN(angle) = mod(ctx->angle);
     PIN(angle_sin) = sin;
-    PIN(step) = ctx->step ? 30 : 0; 
+    PIN(step) = 0.3K; //ctx->step ? 0.3K : 0K; 
 }
 
 hal_comp_t dbg_comp_struct = {

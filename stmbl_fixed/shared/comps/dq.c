@@ -29,8 +29,8 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
 
   accum pos = PIN(pos);
 
-  accum si = 0.0K;
-  accum co = 0.0K;
+  accum si;
+  accum co;
   sincos_fast(pos, &si, &co);
 
   //park transformation
