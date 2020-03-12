@@ -20,14 +20,14 @@ static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     StepDir_1_Setup(2000);
 }
 
-static void rt_func(float period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
+static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     //struct step_dir_ctx_t *ctx      = (struct step_dir_ctx_t *) ctx_ptr;
     struct step_dir_pin_ctx_t *pins = (struct step_dir_pin_ctx_t *) pin_ptr;
     int count;
   
     count = StepDir_0_Read();
 
-    PIN(pos) = mod(((float) count / 2000.0) * 2 * M_PI);
+    PIN(pos) = mod(((accum) count / 2000K) * 2K * M_PI);
 }
 
 hal_comp_t step_dir_comp_struct = {

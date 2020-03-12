@@ -32,7 +32,7 @@ static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     PIN(mot_state) = 1.0;
 }
 
-static void rt_func(float period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
+static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     struct encoder_ctx_t *ctx      = (struct encoder_ctx_t *) ctx_ptr;
     struct encoder_pin_ctx_t *pins = (struct encoder_pin_ctx_t *) pin_ptr;
     int count;
@@ -54,11 +54,11 @@ static void rt_func(float period, volatile void *ctx_ptr, volatile hal_pin_inst_
     count = QuadDec_0_ReadCounter() - 0x8000;
     count = (count <= 0) ? -count : 2000 - count;
 
-    PIN(mot_abs_pos) = mod(((float) count / 2000.0) * 2 * M_PI);
+    PIN(mot_abs_pos) = mod(((accum) count / 2000K) * 2K * M_PI);
 
     count += ctx->index_offset;
 
-    PIN(mot_pos) = mod(((float) count / 2000.0) * 2 * M_PI);
+    PIN(mot_pos) = mod(((accum) count / 2000K) * 2K * M_PI);
 }
 
 hal_comp_t encoder_comp_struct = {
