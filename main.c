@@ -91,7 +91,6 @@ static void load_cur_pid(void) {
     load("dq");
     load("curpid");
     load("idq");
-    load("svm");
     load("pwm");
 }
 
@@ -100,7 +99,6 @@ static void init_cur_pid(void) {
     set_pin_val("dq",       0, "rt_prio", 2);
     set_pin_val("curpid",   0, "rt_prio", 3);
     set_pin_val("idq",      0, "rt_prio", 4);
-    set_pin_val("svm",      0, "rt_prio", 5);
     set_pin_val("pwm",      0, "rt_prio", 6);
 
     set_pin_val("curpid", 0, "r",             CONF_R);
@@ -121,13 +119,9 @@ static void init_cur_pid(void) {
     connect_pins("idq", 0, "d",   "curpid", 0, "ud");
     connect_pins("idq", 0, "q",   "curpid", 0, "uq");
 
-    connect_pins("svm", 0, "u", "idq", 0, "u");
-    connect_pins("svm", 0, "v", "idq", 0, "v");
-    connect_pins("svm", 0, "w", "idq", 0, "w");
-
-    connect_pins("pwm", 0, "u", "svm", 0, "su");
-    connect_pins("pwm", 0, "v", "svm", 0, "sv");
-    connect_pins("pwm", 0, "w", "svm", 0, "sw");
+    connect_pins("pwm", 0, "u", "idq", 0, "u");
+    connect_pins("pwm", 0, "v", "idq", 0, "v");
+    connect_pins("pwm", 0, "w", "idq", 0, "w");
 }
 
 #if defined(COM_TEST)

@@ -17,7 +17,6 @@ STMBL_COMPS += $(STMBL_DIR)/shared/comps/pid.c
 STMBL_COMPS += $(STMBL_DIR)/shared/comps/dq.c
 STMBL_COMPS += $(STMBL_DIR)/shared/comps/curpid.c
 STMBL_COMPS += $(STMBL_DIR)/shared/comps/idq.c
-STMBL_COMPS += $(STMBL_DIR)/shared/comps/svm.c
 STMBL_COMPS += $(TOP_SRCDIR)/adc.c
 STMBL_COMPS += $(TOP_SRCDIR)/pwm.c
 STMBL_COMPS += $(TOP_SRCDIR)/encoder.c

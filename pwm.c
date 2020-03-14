@@ -38,6 +38,12 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
     accum v = PIN(v);
     accum w = PIN(w);
 
+    accum offset = MIN3(u, v, w); // SVM
+
+    u -= offset;
+    v -= offset;
+    w -= offset;
+
     u = CLAMP(u, 0.0K, udc);
     v = CLAMP(v, 0.0K, udc);
     w = CLAMP(w, 0.0K, udc);
