@@ -40,7 +40,7 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
         0, 0, 2K*M_PI/3K,  M_PI/3K, 
              -2K*M_PI/3K, -M_PI/3K, -M_PI, 0};
   
-    idx = (QUAD1_W_Read() << 2) | (QUAD1_V_Read() << 1) | (QUAD1_U_Read() << 0);
+    idx = (QUAD1_U_Read() << 2) | (QUAD1_V_Read() << 1) | (QUAD1_W_Read() << 0);
 
     PIN(com_abs_pos) = t[idx];
 

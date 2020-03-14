@@ -26,8 +26,7 @@ static void init_pos_pid(void) {
     connect_pins("dbg", 0, "in4", "fb_switch",  0, "current_com_pos");
 
     /* Stimulus */
-    connect_pins("dq",  0, "pos", "dbg", 0, "angle");
-    connect_pins("idq", 0, "pos", "dbg", 0, "angle");
-    set_pin_val("curpid", 0, "id_cmd", 0.3);
-    set_pin_val("curpid", 0, "iq_cmd", 0);
+    connect_pins("dq",     0, "pos",    "dbg", 0, "angle");
+    connect_pins("idq",    0, "pos",    "dbg", 0, "angle");
+    connect_pins("curpid", 0, "id_cmd", "dbg", 0, "step");
 }
