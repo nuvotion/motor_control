@@ -16,7 +16,6 @@ HAL_PIN(mot_state);  // 0 = disabled, 1 = inc, 2 = start abs, 3 = abs
 HAL_PIN(com_abs_pos);
 HAL_PIN(com_polecount);
 HAL_PIN(com_offset);
-HAL_PIN(com_state);
 
 HAL_PIN(current_com_pos);
 

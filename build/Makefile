@@ -11,7 +11,6 @@ CONFIG_DEPS := $(CYPRESS_DIR)/$(TARGET).cydwr \
 PROJECT_FILE  := $(CYPRESS_DIR)/$(TARGET).cyprj
 
 STMBL_TBL := stmbl/inc/hal_tbl.h stmbl/src/hal_tbl.c
-STMBL_COMPS := $(STMBL_DIR)/shared/comps/uvw.c
 STMBL_COMPS += $(STMBL_DIR)/shared/comps/fb_switch.c
 STMBL_COMPS += $(STMBL_DIR)/shared/comps/vel.c
 STMBL_COMPS += $(STMBL_DIR)/shared/comps/pid.c
@@ -55,7 +54,7 @@ CFLAGS := -mcpu=cortex-m3 -mthumb -Wall -std=gnu11 -g
 CFLAGS += -ffunction-sections -ffat-lto-objects -O3 -flto
 CFLAGS += -D DEBUG -D CY_CORE_ID=0 
 #CFLAGS += -D COM_TEST
-CFLAGS += -D CURPID_TEST
+#CFLAGS += -D CURPID_TEST
 #CFLAGS += -D FIXED_POINT_TEST
 
 ASMFLAGS := -mcpu=cortex-m3 -mthumb -W

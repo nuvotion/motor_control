@@ -80,8 +80,8 @@ static void connect_pins(
 }
 
 #define PERIOD      0.0002
-#define CONF_R      1.85        // Resistance (ohms) measured
-#define CONF_L      0.00520     // Inductance (henry) measured
+#define CONF_R      1.70        // Resistance (ohms) measured
+#define CONF_L      0.0026      // Inductance (henry) measured
 #define BUS_DC      141
 #define BUS_3PH     (BUS_DC / M_SQRT3 * 0.95)
 #define MAX_CURRENT 1
@@ -103,16 +103,12 @@ static void init_cur_pid(void) {
     set_pin_val("svm",      0, "rt_prio", 5);
     set_pin_val("pwm",      0, "rt_prio", 6);
 
-    set_pin_val("dq",  0, "mode", 2); // PHASE_120_3PH
-    set_pin_val("idq", 0, "mode", 2); // PHASE_120_3PH
-
     set_pin_val("curpid", 0, "r",             CONF_R);
     set_pin_val("curpid", 0, "l",             CONF_L);
     set_pin_val("curpid", 0, "kp",              1.0K); // These values seem
     set_pin_val("curpid", 0, "ki",            0.001K); // to work well
     set_pin_val("curpid", 0, "max_cur",  MAX_CURRENT); // Current limit (A)
     set_pin_val("curpid", 0, "pwm_volt",     BUS_3PH); // Voltage limit (V)
-    set_pin_val("curpid", 0, "en",                 1);
 
     set_pin_val("pwm", 0, "udc", BUS_DC);
 
@@ -176,14 +172,19 @@ int main(void) {
         //hal_run_frt();
         //hal_run_nrt();
 
-        if (i == 100000) {
+        if (i == 10000) {
             hal_run_nrt();
             i = 0;
             LED_1_Write(toggle);
             toggle = !toggle;
-        }
 
-        if (rt_deadline_err) LED_0_Write(1);
+            if (rt_deadline_err) {
+                rt_deadline_err--;
+                LED_0_Write(1);
+            } else {
+                LED_0_Write(0);
+            }
+        }
 
         usb_poll();
         i++;

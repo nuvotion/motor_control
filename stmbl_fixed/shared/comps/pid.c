@@ -46,14 +46,13 @@ HAL_PIN(max_usr_acc);     // (rad/s^2)
 HAL_PIN(max_usr_torque);  // (Nm)
 
 struct pid_ctx_t {
-  accum torque_sum;  //integrator
+  sat accum torque_sum;  //integrator
 };
 
 static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
-  struct pid_ctx_t *ctx      = (struct pid_ctx_t *)ctx_ptr;
+  //struct pid_ctx_t *ctx      = (struct pid_ctx_t *)ctx_ptr;
   struct pid_pin_ctx_t *pins = (struct pid_pin_ctx_t *)pin_ptr;
 
-  ctx->torque_sum = 0.0;
   PIN(pos_p)      = 100.0;   // (1/s)
   PIN(vel_p)      = 2000.0;  // (1/s)
   PIN(vel_i)      = 10.0;
@@ -65,18 +64,16 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
 
   accum torque_min     = -PIN(max_usr_torque);
   accum torque_max     =  PIN(max_usr_torque);
-  accum torque_cmd;
+  sat accum torque_cmd;
 
-  accum acc_min     = -PIN(max_usr_acc);
-  accum acc_max     = PIN(max_usr_acc);
-  accum acc_cmd;
+  sat accum acc_max    = PIN(max_usr_acc);
+  sat accum acc_cmd;
 
   accum vel_ext_cmd = PIN(vel_ext_cmd);
   accum vel_fb      = PIN(vel_fb);
-  accum vel_min     = -PIN(max_usr_vel);
-  accum vel_max     =  PIN(max_usr_vel);
+  accum vel_max     = PIN(max_usr_vel);
   accum vel_cmd;
-  accum vel_error;
+  sat accum vel_error;
 
   accum pos_ext_cmd = PIN(pos_ext_cmd);
   accum pos_fb      = PIN(pos_fb);
@@ -90,12 +87,12 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
   pos_error = minus(pos_ext_cmd, pos_fb);
   vel_cmd = pos_error * pos_p;
   vel_cmd += vel_ext_cmd;
-  vel_cmd = CLAMP(vel_cmd, vel_min, vel_max);
+  vel_cmd = LIMIT(vel_cmd, vel_max);
 
   // vel -> acc
   vel_error = vel_cmd - vel_fb;
   acc_cmd = vel_error * vel_p;
-  acc_cmd = CLAMP(acc_cmd, acc_min, acc_max);
+  acc_cmd = LIMIT(acc_cmd, acc_max);
 
   // acc -> torque
   torque_cmd = acc_cmd;

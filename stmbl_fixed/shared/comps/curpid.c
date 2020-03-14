@@ -46,32 +46,25 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
   accum idc     = PIN(id_cmd);
   accum iqc     = PIN(iq_cmd);
 
+  idc = LIMIT(idc, max_cur);
+  iqc = LIMIT(iqc, max_cur);
+
   sat accum max_volt = PIN(pwm_volt);
 
   accum id = PIN(id_fb);
   accum iq = PIN(iq_fb);
 
-  accum k;
-  sat accum abscur;
-  
-  abscur = idc * idc + iqc * iqc; // clamp cmd
-  if (abscur > max_cur * max_cur) {
-    k = max_cur * max_cur / abscur;
-    idc *= k;
-    iqc *= k;
-  }
-
   sat accum id_error = idc - id;
   sat accum iq_error = iqc - iq;
 
-  sat accum ud = LIMIT(kp * id_error, max_volt);
-  sat accum uq = LIMIT(kp * iq_error, max_volt);
+  ctx->id_error_sum = ctx->id_error_sum + kp * ki * id_error;
+  ctx->iq_error_sum = ctx->iq_error_sum + kp * ki * iq_error;
 
-  ctx->id_error_sum = LIMIT(ctx->id_error_sum + kp * ki * id_error, max_volt - ud);
-  ctx->iq_error_sum = LIMIT(ctx->iq_error_sum + kp * ki * iq_error, max_volt - uq);
+  sat accum ud = kp * id_error + ctx->id_error_sum;
+  sat accum uq = kp * iq_error + ctx->iq_error_sum;
 
-  ud += ctx->id_error_sum;
-  uq += ctx->iq_error_sum;
+  uq = LIMIT(uq, max_volt); 
+  ud = LIMIT(ud, max_volt); 
 
   PIN(ud) = ud;
   PIN(uq) = uq;
