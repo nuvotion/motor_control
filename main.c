@@ -79,12 +79,12 @@ static void connect_pins(
     sink->source = source;
 }
 
-#define PERIOD      0.0002
-#define CONF_R      1.70        // Resistance (ohms) measured
-#define CONF_L      0.0026      // Inductance (henry) measured
-#define BUS_DC      141
-#define BUS_3PH     (BUS_DC / M_SQRT3 * 0.95)
-#define MAX_CURRENT 1
+#define PERIOD      0.0002K
+#define CONF_R      1.70K       // Resistance (ohms) measured
+#define CONF_L      0.0026K     // Inductance (henry) measured
+#define BUS_DC      62.0K
+#define BUS_3PH     (BUS_DC / M_SQRT3 * 0.95K)
+#define MAX_CURRENT 1.0K
 
 static void load_cur_pid(void) {
     load("adc");
@@ -166,7 +166,7 @@ int main(void) {
         //hal_run_frt();
         //hal_run_nrt();
 
-        if (i == 10000) {
+        if (i == 100000) {
             hal_run_nrt();
             i = 0;
             LED_1_Write(toggle);

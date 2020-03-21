@@ -29,7 +29,7 @@ static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     QuadDec_0_WriteCounter(0x8000);
     //QuadDec_2_WriteCounter(0x8000);
 
-    PIN(mot_state) = 1.0;
+    PIN(mot_state) = 1.0K;
 }
 
 static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
@@ -50,7 +50,7 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
         count = (count <= 0) ? -count : 2000 - count;
         ctx->index_offset = count;
         ctx->index_found = 1;
-        PIN(mot_state) = 3.0;
+        PIN(mot_state) = 3.0K;
     }
 
     count = QuadDec_0_ReadCounter() - 0x8000;

@@ -53,9 +53,9 @@ static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
   //struct pid_ctx_t *ctx      = (struct pid_ctx_t *)ctx_ptr;
   struct pid_pin_ctx_t *pins = (struct pid_pin_ctx_t *)pin_ptr;
 
-  PIN(pos_p)      = 100.0;   // (1/s)
-  PIN(vel_p)      = 2000.0;  // (1/s)
-  PIN(vel_i)      = 10.0;
+  PIN(pos_p)      = 100.0K;   // (1/s)
+  PIN(vel_p)      = 2000.0K;  // (1/s)
+  PIN(vel_i)      = 10.0K;
 }
 
 static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {

@@ -19,23 +19,21 @@ static void init_pos_pid(void) {
     set_pin_val("pid",          0, "rt_prio", 12);
     set_pin_val("dbg",          0, "rt_prio", 14);
 
-    set_pin_val("fb_switch", 0, "polecount",         2);
-    set_pin_val("fb_switch", 0, "mot_polecount",     1);
-    set_pin_val("fb_switch", 0, "com_polecount",     2);
-    set_pin_val("fb_switch", 0, "mot_offset", M_PI/6.0);
-    set_pin_val("fb_switch", 0, "com_offset", M_PI/6.0);
-    set_pin_val("fb_switch", 0, "com_state",         3);
+    set_pin_val("fb_switch", 0, "polecount",          2);
+    set_pin_val("fb_switch", 0, "mot_polecount",      1);
+    set_pin_val("fb_switch", 0, "com_polecount",      2);
+    set_pin_val("fb_switch", 0, "mot_offset", M_PI/6.0K);
+    set_pin_val("fb_switch", 0, "com_offset", M_PI/6.0K);
 
     set_pin_val("vel", 0, "w",  200);
     set_pin_val("vel", 1, "w",  0);
-    set_pin_val("vel", 1, "lp",  0.00001);
+    set_pin_val("vel", 1, "lp",  LP_HZ(0.00001K));
     set_pin_val("vel", 2, "w",  200);
 
-    set_pin_val("pid", 0, "enable",             1);
-    set_pin_val("pid", 0, "pos_p",              0);
-    set_pin_val("pid", 0, "vel_p",              0);
-    set_pin_val("pid", 0, "vel_i",              0);
-    set_pin_val("pid", 0, "cur_gain",      4.0e-3); // From sm060
+    set_pin_val("pid", 0, "pos_p",              0K);
+    set_pin_val("pid", 0, "vel_p",              0K);
+    set_pin_val("pid", 0, "vel_i",              0K);
+    set_pin_val("pid", 0, "cur_gain",      4.0e-3K); // From sm060
     set_pin_val("pid", 0, "max_usr_vel",      800); // Default
     set_pin_val("pid", 0, "max_usr_acc",    80000); // Default
     set_pin_val("pid", 0, "max_usr_torque", 80000); // Default
