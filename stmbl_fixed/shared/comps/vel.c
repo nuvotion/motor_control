@@ -5,13 +5,11 @@
 HAL_COMP(vel);
 
 HAL_PIN(pos_in);
+HAL_PIN(torque);
 HAL_PIN(pos_out);
 HAL_PIN(vel);
-HAL_PIN(w);
-HAL_PIN(d);
-HAL_PIN(lp);
-HAL_PIN(torque);
-HAL_PIN(vel_ff);
+
+HAL_PIN(dbg);
 
 struct vel_ctx_t {
   accum last_acc;
@@ -19,40 +17,27 @@ struct vel_ctx_t {
   sat accum vel_sum;
 };
 
-static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
-  // struct vel_ctx_t * ctx = (struct vel_ctx_t *)ctx_ptr;
-  struct vel_pin_ctx_t *pins = (struct vel_pin_ctx_t *)pin_ptr;
-
-  PIN(w)  = 1000.0;
-  PIN(d)  = 0.9;
-  PIN(lp) = 50.0;
-}
-
 static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
   struct vel_ctx_t *ctx      = (struct vel_ctx_t *)ctx_ptr;
   struct vel_pin_ctx_t *pins = (struct vel_pin_ctx_t *)pin_ptr;
 
-  ctx->vel_sum += ctx->acc_sum * period;  // ff
+  ctx->vel_sum += (ctx->acc_sum * period) + ACCUM_EPSILON;  // ff
 
   accum pos_error = minus(PIN(pos_in), ctx->vel_sum);
-  accum w         = PIN(w);
-  accum d         = PIN(d);
-  accum lp        = LP_HZ(PIN(lp));
-  accum acc       = PIN(torque);
+  accum acc       = PIN(torque) * period;
 
+  const accum lp = LP_HZ(50.0, 0.0002);
   ctx->last_acc = acc * lp + (1K - lp) * ctx->last_acc;
 
   sat accum acc_ff = acc - ctx->last_acc;
 
-  acc_ff += pos_error * w * w;
+  acc_ff += pos_error * 200K;
 
-  ctx->acc_sum += acc_ff * period;
+  ctx->acc_sum += acc_ff;
 
   PIN(vel) = ctx->acc_sum;
 
-  accum vel_ff = 2K * d * w * pos_error;
-
-  ctx->vel_sum += vel_ff * period;
+  ctx->vel_sum += pos_error * 0.36K;
   ctx->vel_sum = mod(ctx->vel_sum);
 
   PIN(pos_out)   = ctx->vel_sum;
@@ -63,7 +48,7 @@ hal_comp_t vel_comp_struct = {
     .nrt       = 0,
     .rt        = rt_func,
     .frt       = 0,
-    .nrt_init  = nrt_init,
+    .nrt_init  = 0,
     .rt_start  = 0,
     .frt_start = 0,
     .rt_stop   = 0,
