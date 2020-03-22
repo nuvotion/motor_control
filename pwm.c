@@ -46,9 +46,9 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
     w = CLAMP(w, 0.0K, BUS_DC);
 
     //convert voltages to PWM output compare values
-    u_pwm = (uint8_t) (u / BUS_DC * 255K);
-    v_pwm = (uint8_t) (v / BUS_DC * 255K);
-    w_pwm = (uint8_t) (w / BUS_DC * 255K);
+    u_pwm = (uint8_t) (u * (255K / BUS_DC));
+    v_pwm = (uint8_t) (v * (255K / BUS_DC));
+    w_pwm = (uint8_t) (w * (255K / BUS_DC));
 
     if (ctx->init_samples) {
         ctx->init_samples--;

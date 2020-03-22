@@ -11,7 +11,6 @@ CONFIG_DEPS := $(CYPRESS_DIR)/$(TARGET).cydwr \
 PROJECT_FILE  := $(CYPRESS_DIR)/$(TARGET).cyprj
 
 STMBL_TBL := stmbl/inc/hal_tbl.h stmbl/src/hal_tbl.c
-STMBL_COMPS += $(STMBL_DIR)/shared/comps/fb_switch.c
 STMBL_COMPS += $(STMBL_DIR)/shared/comps/vel.c
 STMBL_COMPS += $(STMBL_DIR)/shared/comps/pid.c
 STMBL_COMPS += $(STMBL_DIR)/shared/comps/dq.c

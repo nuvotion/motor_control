@@ -48,16 +48,16 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
     count = QuadDec_0_ReadCounter() - 0x8000;
     count = (count <= 0) ? -count : 2000 - count;
 
-    mot_abs_pos = mod(((accum) count / 2000K) * 2K * M_PI);
+    mot_abs_pos = mod((accum) count * (M_PI / 1000K));
 
     if (ctx->index_found) {
-        PIN(com_pos) = mod((com_abs_pos + FB_COM_OFFSET) * FB_POLECOUNT / FB_COM_POLECOUNT);
+        PIN(com_pos) = mod((com_abs_pos + FB_COM_OFFSET) * (FB_POLECOUNT / FB_COM_POLECOUNT));
     } else {
-        PIN(com_pos) = mod((mot_abs_pos + FB_MOT_OFFSET) * FB_POLECOUNT / FB_MOT_POLECOUNT);
+        PIN(com_pos) = mod((mot_abs_pos + FB_MOT_OFFSET) * (FB_POLECOUNT / FB_MOT_POLECOUNT));
     }
 
     count += ctx->index_offset;
-    PIN(mot_pos) = mod(((accum) count / 2000K) * 2K * M_PI);
+    PIN(mot_pos) = mod((accum) count * (M_PI / 1000K));
 }
 
 hal_comp_t encoder_comp_struct = {

@@ -27,7 +27,7 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
   
     count = StepDir_0_Read();
 
-    PIN(pos) = mod(((accum) count / 2000K) * 2K * M_PI);
+    PIN(pos) = mod((accum) count * (M_PI / 1000K));
 }
 
 hal_comp_t step_dir_comp_struct = {
