@@ -21,6 +21,7 @@
 #include "hal.h"
 #include "defines.h"
 #include "angle.h"
+#include "constants.h"
 
 HAL_COMP(pid);
 
@@ -31,47 +32,21 @@ HAL_PIN(vel_ext_cmd);  // cmd in (rad/s)
 HAL_PIN(vel_fb);       // feedback in (rad/s)
 
 HAL_PIN(torque_cor_cmd);  // corrected cmd out (Nm)
-
-HAL_PIN(cur_gain);    // Gain from torque to current
 HAL_PIN(cur_cor_cmd); // Current for PMSM
-
-HAL_PIN(pos_p);  // (1/s)
-
-HAL_PIN(vel_p);  // (1/s)
-HAL_PIN(vel_i);
-
-// user limits
-HAL_PIN(max_usr_vel);     // (rad/s)
-HAL_PIN(max_usr_acc);     // (rad/s^2)
-HAL_PIN(max_usr_torque);  // (Nm)
 
 struct pid_ctx_t {
   sat accum torque_sum;  //integrator
 };
 
-static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
-  //struct pid_ctx_t *ctx      = (struct pid_ctx_t *)ctx_ptr;
-  struct pid_pin_ctx_t *pins = (struct pid_pin_ctx_t *)pin_ptr;
-
-  PIN(pos_p)      = 100.0K;   // (1/s)
-  PIN(vel_p)      = 2000.0K;  // (1/s)
-  PIN(vel_i)      = 10.0K;
-}
-
 static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
   struct pid_ctx_t *ctx      = (struct pid_ctx_t *)ctx_ptr;
   struct pid_pin_ctx_t *pins = (struct pid_pin_ctx_t *)pin_ptr;
 
-  accum torque_min     = -PIN(max_usr_torque);
-  accum torque_max     =  PIN(max_usr_torque);
   sat accum torque_cmd;
-
-  sat accum acc_max    = PIN(max_usr_acc);
   sat accum acc_cmd;
 
   accum vel_ext_cmd = PIN(vel_ext_cmd);
   accum vel_fb      = PIN(vel_fb);
-  accum vel_max     = PIN(max_usr_vel);
   accum vel_cmd;
   sat accum vel_error;
 
@@ -79,30 +54,26 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
   accum pos_fb      = PIN(pos_fb);
   accum pos_error;
 
-  accum pos_p = PIN(pos_p);
-  accum vel_p = PIN(vel_p);
-  accum vel_i = PIN(vel_i);
-
   // pos -> vel
   pos_error = minus(pos_ext_cmd, pos_fb);
-  vel_cmd = pos_error * pos_p;
+  vel_cmd = pos_error * PID_POS_P;
   vel_cmd += vel_ext_cmd;
-  vel_cmd = LIMIT(vel_cmd, vel_max);
+  vel_cmd = LIMIT(vel_cmd, PID_MAX_VEL);
 
   // vel -> acc
   vel_error = vel_cmd - vel_fb;
-  acc_cmd = vel_error * vel_p;
-  acc_cmd = LIMIT(acc_cmd, acc_max);
+  acc_cmd = vel_error * PID_VEL_P;
+  acc_cmd = LIMIT(acc_cmd, (sat accum) PID_MAX_ACC);
 
   // acc -> torque
   torque_cmd = acc_cmd;
-  ctx->torque_sum += vel_error * period * vel_i;
+  ctx->torque_sum += vel_error * (accum) PID_VEL_I_PERIOD;
   ctx->torque_sum = // dynamic integral clamping 
-    CLAMP(ctx->torque_sum, torque_min - torque_cmd, torque_max - torque_cmd);
+    CLAMP(ctx->torque_sum, -PID_MAX_TORQUE - torque_cmd, PID_MAX_TORQUE - torque_cmd);
   torque_cmd += ctx->torque_sum;
 
   PIN(torque_cor_cmd) = torque_cmd;
-  PIN(cur_cor_cmd) = torque_cmd * PIN(cur_gain);
+  PIN(cur_cor_cmd) = torque_cmd * PID_CUR_GAIN;
 }
 
 hal_comp_t pid_comp_struct = {
@@ -110,7 +81,7 @@ hal_comp_t pid_comp_struct = {
     .nrt       = 0,
     .rt        = rt_func,
     .frt       = 0,
-    .nrt_init  = nrt_init,
+    .nrt_init  = 0,
     .rt_start  = 0,
     .frt_start = 0,
     .rt_stop   = 0,

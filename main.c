@@ -3,6 +3,8 @@
 #include <hal.h>
 #include <defines.h>
 
+#include "constants.h"
+
 #include "print.h"
 
 static int usb_up;
@@ -79,13 +81,6 @@ static void connect_pins(
     sink->source = source;
 }
 
-#define PERIOD      0.0002K
-#define CONF_R      1.70K       // Resistance (ohms) measured
-#define CONF_L      0.0026K     // Inductance (henry) measured
-#define BUS_DC      62.0K
-#define BUS_3PH     (BUS_DC / M_SQRT3 * 0.95K)
-#define MAX_CURRENT 1.0K
-
 static void load_cur_pid(void) {
     load("adc");
     load("dq");
@@ -100,15 +95,6 @@ static void init_cur_pid(void) {
     set_pin_val("curpid",   0, "rt_prio", 3);
     set_pin_val("idq",      0, "rt_prio", 4);
     set_pin_val("pwm",      0, "rt_prio", 6);
-
-    set_pin_val("curpid", 0, "r",             CONF_R);
-    set_pin_val("curpid", 0, "l",             CONF_L);
-    set_pin_val("curpid", 0, "kp",              1.0K); // These values seem
-    set_pin_val("curpid", 0, "ki",            0.001K); // to work well
-    set_pin_val("curpid", 0, "max_cur",  MAX_CURRENT); // Current limit (A)
-    set_pin_val("curpid", 0, "pwm_volt",     BUS_3PH); // Voltage limit (V)
-
-    set_pin_val("pwm", 0, "udc", BUS_DC);
 
     connect_pins("dq", 0, "u",   "adc", 0, "iu");
     connect_pins("dq", 0, "w",   "adc", 0, "iw");

@@ -9,12 +9,6 @@ static void init_pos_pid(void) {
     set_pin_val("fb_switch", 0, "rt_prio", 9);
     set_pin_val("dbg",       0, "rt_prio", 14);
 
-    set_pin_val("fb_switch", 0, "polecount",          2);
-    set_pin_val("fb_switch", 0, "mot_polecount",      1);
-    set_pin_val("fb_switch", 0, "com_polecount",      2);
-    set_pin_val("fb_switch", 0, "mot_offset", M_PI/6.0K);
-    set_pin_val("fb_switch", 0, "com_offset", M_PI/6.0K);
-
     connect_pins("fb_switch", 0, "com_abs_pos", "encoder",  0, "com_abs_pos");
     connect_pins("fb_switch", 0, "mot_abs_pos", "encoder",  0, "mot_abs_pos");
     connect_pins("fb_switch", 0, "mot_state",   "encoder",  0, "mot_state");

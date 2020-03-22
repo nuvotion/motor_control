@@ -1,6 +1,7 @@
 #include "hal.h"
 #include "defines.h"
 #include "angle.h"
+#include "constants.h"
 
 HAL_COMP(vel);
 
@@ -26,18 +27,18 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
   accum pos_error = minus(PIN(pos_in), ctx->vel_sum);
   accum acc       = PIN(torque) * period;
 
-  const accum lp = LP_HZ(50.0, 0.0002);
+  const accum lp = VEL_ACC_LP;
   ctx->last_acc = acc * lp + (1K - lp) * ctx->last_acc;
 
   sat accum acc_ff = acc - ctx->last_acc;
 
-  acc_ff += pos_error * 200K;
+  acc_ff += pos_error * (accum) VEL_ACC_FF_GAIN;
 
   ctx->acc_sum += acc_ff;
 
   PIN(vel) = ctx->acc_sum;
 
-  ctx->vel_sum += pos_error * 0.36K;
+  ctx->vel_sum += pos_error * (accum) VEL_VEL_FF_GAIN;
   ctx->vel_sum = mod(ctx->vel_sum);
 
   PIN(pos_out)   = ctx->vel_sum;

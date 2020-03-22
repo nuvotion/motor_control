@@ -1,21 +1,16 @@
 #include "hal.h"
 #include "defines.h"
 #include "angle.h"
+#include "constants.h"
 
 HAL_COMP(fb_switch);
-
-HAL_PIN(polecount);
 
 HAL_PIN(com_fb);
 
 HAL_PIN(mot_abs_pos);
-HAL_PIN(mot_polecount);
-HAL_PIN(mot_offset);
 HAL_PIN(mot_state);  // 0 = disabled, 1 = inc, 2 = start abs, 3 = abs
 
 HAL_PIN(com_abs_pos);
-HAL_PIN(com_polecount);
-HAL_PIN(com_offset);
 
 HAL_PIN(current_com_pos);
 
@@ -37,20 +32,17 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
   accum mot_abs_pos   = PIN(mot_abs_pos);
   accum com_abs_pos   = PIN(com_abs_pos);
 
-  accum mot_offset   = PIN(mot_offset);
-  accum com_offset   = PIN(com_offset);
-
   if(PIN(mot_state) >= 2K) {
     ctx->current_com_pos = 1; // mot fb absolute
   }
 
   switch(ctx->current_com_pos) {
     case 2:
-      PIN(com_fb) = mod((com_abs_pos + com_offset) * PIN(polecount) / PIN(com_polecount));
+      PIN(com_fb) = mod((com_abs_pos + FB_COM_OFFSET) * FB_POLECOUNT / FB_COM_POLECOUNT);
       break;
 
     case 1:
-      PIN(com_fb) = mod((mot_abs_pos + mot_offset) * PIN(polecount) / PIN(mot_polecount));
+      PIN(com_fb) = mod((mot_abs_pos + FB_MOT_OFFSET) * FB_POLECOUNT / FB_MOT_POLECOUNT);
       break;
   }
   PIN(current_com_pos) = ctx->current_com_pos;

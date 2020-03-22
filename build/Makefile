@@ -47,7 +47,7 @@ else
 endif
 
 STMBL_INC := -I stmbl/inc -I $(STMBL_DIR)/shared
-INCLUDES  := -I config $(STMBL_INC) -I fix_case
+INCLUDES  := -I config $(STMBL_INC) -I fix_case -I $(TOP_SRCDIR)
 
 CFLAGS := -mcpu=cortex-m3 -mthumb -Wall -std=gnu11 -g
 CFLAGS += -ffunction-sections -ffat-lto-objects -O3 -flto

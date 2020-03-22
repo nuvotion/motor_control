@@ -1,6 +1,7 @@
 #include "hal.h"
 #include "defines.h"
 #include "angle.h"
+#include "constants.h"
 
 HAL_COMP(curpid);
 
@@ -16,17 +17,6 @@ HAL_PIN(iq_fb);
 HAL_PIN(ud);
 HAL_PIN(uq);
 
-// maximum output current and voltage
-HAL_PIN(max_cur);
-HAL_PIN(pwm_volt);
-
-// d, q resistance and inductance
-HAL_PIN(r);
-HAL_PIN(l);
-
-HAL_PIN(kp);
-HAL_PIN(ki);
-
 struct curpid_ctx_t {
   sat accum id_error_sum;
   sat accum iq_error_sum;
@@ -36,20 +26,11 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
   struct curpid_ctx_t *ctx      = (struct curpid_ctx_t *)ctx_ptr;
   struct curpid_pin_ctx_t *pins = (struct curpid_pin_ctx_t *)pin_ptr;
 
-  accum r = PIN(r);
-  accum l = PIN(l);
-
-  accum kp  = l * PIN(kp) / period / 2.0K;
-  accum ki  = r * PIN(ki) / l;
-
-  accum max_cur = PIN(max_cur);
   accum idc     = PIN(id_cmd);
   accum iqc     = PIN(iq_cmd);
 
-  idc = LIMIT(idc, max_cur);
-  iqc = LIMIT(iqc, max_cur);
-
-  sat accum max_volt = PIN(pwm_volt);
+  idc = LIMIT(idc, CURPID_MAX_CURRENT);
+  iqc = LIMIT(iqc, CURPID_MAX_CURRENT);
 
   accum id = PIN(id_fb);
   accum iq = PIN(iq_fb);
@@ -57,14 +38,14 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
   sat accum id_error = idc - id;
   sat accum iq_error = iqc - iq;
 
-  ctx->id_error_sum = ctx->id_error_sum + kp * ki * id_error;
-  ctx->iq_error_sum = ctx->iq_error_sum + kp * ki * iq_error;
+  ctx->id_error_sum += ((accum) (CURPID_X_KP * CURPID_X_KI)) * id_error;
+  ctx->iq_error_sum += ((accum) (CURPID_X_KP * CURPID_X_KI)) * iq_error;
 
-  sat accum ud = kp * id_error + ctx->id_error_sum;
-  sat accum uq = kp * iq_error + ctx->iq_error_sum;
+  sat accum ud = ((accum) CURPID_X_KP) * id_error + ctx->id_error_sum;
+  sat accum uq = ((accum) CURPID_X_KP) * iq_error + ctx->iq_error_sum;
 
-  uq = LIMIT(uq, max_volt); 
-  ud = LIMIT(ud, max_volt); 
+  uq = LIMIT(uq, (sat accum) CURPID_BUS_3PH); 
+  ud = LIMIT(ud, (sat accum) CURPID_BUS_3PH); 
 
   PIN(ud) = ud;
   PIN(uq) = uq;

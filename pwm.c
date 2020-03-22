@@ -1,6 +1,7 @@
 #include <project.h>
 #include "hal.h"
 #include "defines.h"
+#include "constants.h"
 
 HAL_COMP(pwm);
 
@@ -8,9 +9,6 @@ HAL_COMP(pwm);
 HAL_PIN(u);
 HAL_PIN(v);
 HAL_PIN(w);
-
-// Supply voltage to scale PWM
-HAL_PIN(udc);
 
 struct pwm_ctx_t {
     int init_samples;
@@ -33,7 +31,6 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
     struct pwm_ctx_t *ctx      = (struct pwm_ctx_t *) ctx_ptr;
     struct pwm_pin_ctx_t *pins = (struct pwm_pin_ctx_t *) pin_ptr;
   
-    accum udc = PIN(udc);
     accum u = PIN(u);
     accum v = PIN(v);
     accum w = PIN(w);
@@ -44,14 +41,14 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
     v -= offset;
     w -= offset;
 
-    u = CLAMP(u, 0.0K, udc);
-    v = CLAMP(v, 0.0K, udc);
-    w = CLAMP(w, 0.0K, udc);
+    u = CLAMP(u, 0.0K, BUS_DC);
+    v = CLAMP(v, 0.0K, BUS_DC);
+    w = CLAMP(w, 0.0K, BUS_DC);
 
     //convert voltages to PWM output compare values
-    u_pwm = (uint8_t) (u / udc * 255K);
-    v_pwm = (uint8_t) (v / udc * 255K);
-    w_pwm = (uint8_t) (w / udc * 255K);
+    u_pwm = (uint8_t) (u / BUS_DC * 255K);
+    v_pwm = (uint8_t) (v / BUS_DC * 255K);
+    w_pwm = (uint8_t) (w / BUS_DC * 255K);
 
     if (ctx->init_samples) {
         ctx->init_samples--;
