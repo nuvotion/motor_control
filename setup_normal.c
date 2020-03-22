@@ -1,7 +1,6 @@
 static void load_pos_pid(void) {
     load("encoder");
     load("step_dir");
-    load("fb_switch");
     load("vel");
     load("vel");
     load("vel");
@@ -12,20 +11,14 @@ static void load_pos_pid(void) {
 static void init_pos_pid(void) {
     set_pin_val("encoder",      0, "rt_prio",  7);
     set_pin_val("step_dir",     0, "rt_prio",  7);
-    set_pin_val("fb_switch",    0, "rt_prio",  9);
     set_pin_val("vel",          0, "rt_prio", 10);
     set_pin_val("vel",          1, "rt_prio", 10);
     set_pin_val("vel",          2, "rt_prio", 10);
     set_pin_val("pid",          0, "rt_prio", 12);
     set_pin_val("dbg",          0, "rt_prio", 14);
 
-    /* Commutation feedback switch (changes on detection of encoder index) */
-    connect_pins("fb_switch", 0, "com_abs_pos", "encoder",  0, "com_abs_pos");
-    connect_pins("fb_switch", 0, "mot_abs_pos", "encoder",  0, "mot_abs_pos");
-    connect_pins("fb_switch", 0, "mot_state",   "encoder",  0, "mot_state");
-
     /* Commutation motor model - generates position for dq/idq */
-    connect_pins("vel", 2, "pos_in", "fb_switch",   0, "com_fb"); 
+    connect_pins("vel", 2, "pos_in", "encoder",     0, "com_pos"); 
     connect_pins("vel", 2, "torque", "pid",         0, "torque_cor_cmd");
 
     /* Position motor model */

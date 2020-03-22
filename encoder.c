@@ -2,18 +2,12 @@
 #include "hal.h"
 #include "defines.h"
 #include "angle.h"
+#include "constants.h"
 
 HAL_COMP(encoder);
 
-// U V W output
-HAL_PIN(u);
-HAL_PIN(v);
-HAL_PIN(w);
-
-HAL_PIN(com_abs_pos);
-HAL_PIN(mot_abs_pos);
+HAL_PIN(com_pos);
 HAL_PIN(mot_pos);
-HAL_PIN(mot_state);
 
 struct encoder_ctx_t {
     int index_offset;
@@ -22,27 +16,26 @@ struct encoder_ctx_t {
 
 static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     //struct encoder_ctx_t *ctx = (struct encoder_ctx_t *) ctx_ptr;
-    struct encoder_pin_ctx_t *pins = (struct encoder_pin_ctx_t *) pin_ptr;
+    //struct encoder_pin_ctx_t *pins = (struct encoder_pin_ctx_t *) pin_ptr;
 
     QuadDec_0_Start();
     //QuadDec_2_Start();
     QuadDec_0_WriteCounter(0x8000);
     //QuadDec_2_WriteCounter(0x8000);
-
-    PIN(mot_state) = 1.0K;
 }
 
 static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     struct encoder_ctx_t *ctx      = (struct encoder_ctx_t *) ctx_ptr;
     struct encoder_pin_ctx_t *pins = (struct encoder_pin_ctx_t *) pin_ptr;
     int count, idx;
+    accum com_abs_pos, mot_abs_pos;
     const accum t[8] = {
         0, 0, 2K*M_PI/3K,  M_PI/3K, 
              -2K*M_PI/3K, -M_PI/3K, -M_PI, 0};
   
     idx = (QUAD1_U_Read() << 2) | (QUAD1_V_Read() << 1) | (QUAD1_W_Read() << 0);
 
-    PIN(com_abs_pos) = t[idx];
+    com_abs_pos = t[idx];
 
     if (!ctx->index_found &&
             QuadDec_0_ReadStatusRegister() & QuadDec_0_STATUS_CAPTURE) {
@@ -50,16 +43,20 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
         count = (count <= 0) ? -count : 2000 - count;
         ctx->index_offset = count;
         ctx->index_found = 1;
-        PIN(mot_state) = 3.0K;
     }
 
     count = QuadDec_0_ReadCounter() - 0x8000;
     count = (count <= 0) ? -count : 2000 - count;
 
-    PIN(mot_abs_pos) = mod(((accum) count / 2000K) * 2K * M_PI);
+    mot_abs_pos = mod(((accum) count / 2000K) * 2K * M_PI);
+
+    if (ctx->index_found) {
+        PIN(com_pos) = mod((com_abs_pos + FB_COM_OFFSET) * FB_POLECOUNT / FB_COM_POLECOUNT);
+    } else {
+        PIN(com_pos) = mod((mot_abs_pos + FB_MOT_OFFSET) * FB_POLECOUNT / FB_MOT_POLECOUNT);
+    }
 
     count += ctx->index_offset;
-
     PIN(mot_pos) = mod(((accum) count / 2000K) * 2K * M_PI);
 }
 
