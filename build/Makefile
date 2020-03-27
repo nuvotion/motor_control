@@ -23,6 +23,7 @@ STMBL_COMPS += $(TOP_SRCDIR)/step_dir.c
 STMBL_COMPS += $(TOP_SRCDIR)/dbg_comp.c
 STMBL_SRC := $(STMBL_COMPS)
 STMBL_SRC += $(STMBL_DIR)/shared/angle.c
+STMBL_SRC += $(STMBL_DIR)/shared/mac.c
 STMBL_SRC += stmbl/src/hal_tbl.c
 STMBL_SRC += $(STMBL_DIR)/shared/hal.c
 
@@ -30,6 +31,7 @@ SETUPS := $(TOP_SRCDIR)/setup_normal.c
 SETUPS += $(TOP_SRCDIR)/setup_com_test.c
 SETUPS += $(TOP_SRCDIR)/setup_curpid_test.c
 SETUPS += $(TOP_SRCDIR)/setup_cur_gain.c
+SETUPS += $(TOP_SRCDIR)/setup_fixed_test.c
 
 SRC := main.c print.c
 OBJ := $(SRC:.c=.o)
