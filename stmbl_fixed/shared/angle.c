@@ -62,7 +62,7 @@ void sincos_fast(accum x, accum *sin, accum *cos) {
   short y, i;
   accum ya, f, s, c;
 
-  x *= 256K / M_PI / 2K;
+  x *= 256K * 2K / M_PI;
   y = (short) x;
 
   if(y < 0)
