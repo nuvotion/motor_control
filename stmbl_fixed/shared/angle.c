@@ -110,14 +110,20 @@ inline accum minus(accum a, accum b) {
   }
 }
 
+static inline int cast_accum_int(const accum val) {
+  int int_val;
+  memcpy(&int_val, &val, sizeof(int));
+  return int_val;
+}
+
 inline accum mod(accum a) {
   int arg;
   accum retval;
   memcpy(&arg, &a, sizeof(int));
-  arg += 102944;
-  arg %= 205888;
-  if (arg < 0) arg += 102944;
-  else arg -= 102944;
+  arg += cast_accum_int(M_PI);
+  arg %= cast_accum_int(2K*M_PI);
+  if (arg < 0) arg += cast_accum_int(M_PI);
+  else arg -= cast_accum_int(M_PI);
   memcpy(&retval, &arg, sizeof(int));
   return retval;
 }

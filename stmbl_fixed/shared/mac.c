@@ -1,6 +1,7 @@
 #include <stdfix.h>
 #include <stdint.h>
 #include <string.h>
+#include "defines.h"
 
 int64_t mac(int64_t acc, accum a, accum b) {
     int32_t x, y;
@@ -21,10 +22,18 @@ accum read_mac(int64_t acc) {
     return r;
 }
 
+static inline int64_t cast_accum_mac(const accum val) {
+    int int_val;
+    int64_t long_val;
+    memcpy(&int_val, &val, sizeof(int));
+    long_val = (int64_t) int_val;
+    return long_val << 15;
+}
+
 int64_t mod_mac(int64_t acc) {
-    acc += 3373259426L;
-    acc %= 6746518852L;
-    if (acc < 0) acc += 3373259426L;
-    else acc -= 3373259426L;
+    acc += cast_accum_mac(M_PI);
+    acc %= cast_accum_mac(2K*M_PI);
+    if (acc < 0) acc += cast_accum_mac(M_PI);
+    else acc -= cast_accum_mac(M_PI);
     return acc;
 }
