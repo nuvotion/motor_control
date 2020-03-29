@@ -10,6 +10,8 @@ static void init_pos_pid(void) {
     connect_pins("dbg", 0, "in0", "dbg",        0, "angle");
     connect_pins("dbg", 0, "in1", "encoder",    0, "com_pos");
     connect_pins("dbg", 0, "in2", "encoder",    0, "mot_pos");
+    connect_pins("dbg", 0, "in3", "dq",         0, "d");
+    connect_pins("dbg", 0, "in4", "curpid",     0, "ud");
 
     /* Stimulus */
     connect_pins("dq",     0, "pos",    "dbg", 0, "angle");

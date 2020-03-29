@@ -25,8 +25,8 @@
 extern "C" {
 #endif
 
-#define M_PI 3.14159265358979323844K
-#define M_SQRT3 1.73205080756887729352K
+#define M_PI    3.14332K
+#define M_SQRT3 1.73206K
 #define NO 0
 #define YES 1
 #define ABS(a) (((a) < 0.0K) ? -(a) : (a))

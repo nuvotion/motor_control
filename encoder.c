@@ -50,7 +50,7 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
 
     mot_abs_pos = mod((accum) count * (M_PI / 1000K));
 
-    if (ctx->index_found) {
+    if (!ctx->index_found) {
         PIN(com_pos) = mod((com_abs_pos + FB_COM_OFFSET) * (FB_POLECOUNT / FB_COM_POLECOUNT));
     } else {
         PIN(com_pos) = mod((mot_abs_pos + FB_MOT_OFFSET) * (FB_POLECOUNT / FB_MOT_POLECOUNT));

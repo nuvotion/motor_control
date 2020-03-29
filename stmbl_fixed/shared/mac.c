@@ -22,9 +22,9 @@ accum read_mac(int64_t acc) {
 }
 
 int64_t mod_mac(int64_t acc) {
-  acc += 3373259426L;
-  acc %= 6746518852L;
-  if (acc < 0) acc += 3373259426L;
-  else acc -= 3373259426L;
-  return acc;
+    acc += 3373259426L;
+    acc %= 6746518852L;
+    if (acc < 0) acc += 3373259426L;
+    else acc -= 3373259426L;
+    return acc;
 }
