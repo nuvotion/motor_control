@@ -11,8 +11,8 @@
 #define CONF_X_R            1.70        // Resistance (ohms) measured
 #define CONF_X_L            0.0026      // Inductance (henry) measured
 
-#define CURPID_X_KP         (CONF_X_L * 1.0   / PERIOD / 2.0)
-#define CURPID_X_KI         (CONF_X_R * 0.001 / CONF_X_L)
+#define CURPID_X_KP         (1.000 * CONF_X_L / PERIOD / 2.0)
+#define CURPID_X_KI         (1.000 * CONF_X_R * PERIOD / CONF_X_L)
 
 #define FB_POLECOUNT        2K
 #define FB_MOT_POLECOUNT    1K

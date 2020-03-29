@@ -2,6 +2,7 @@
 #include "defines.h"
 #include "angle.h"
 #include "constants.h"
+#include "mac.h"
 
 HAL_COMP(curpid);
 
@@ -18,8 +19,8 @@ HAL_PIN(ud);
 HAL_PIN(uq);
 
 struct curpid_ctx_t {
-  sat accum id_error_sum;
-  sat accum iq_error_sum;
+  int64_t id_error_sum;
+  int64_t iq_error_sum;
 };
 
 static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
@@ -32,20 +33,22 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
   idc = LIMIT(idc, CURPID_MAX_CURRENT);
   iqc = LIMIT(iqc, CURPID_MAX_CURRENT);
 
-  accum id = PIN(id_fb);
-  accum iq = PIN(iq_fb);
+  accum id_error = idc - PIN(id_fb);
+  accum iq_error = iqc - PIN(iq_fb);
 
-  sat accum id_error = idc - id;
-  sat accum iq_error = iqc - iq;
+  ctx->id_error_sum = mac(ctx->id_error_sum, 
+                            id_error, CURPID_X_KP * CURPID_X_KI);
+  ctx->iq_error_sum = mac(ctx->iq_error_sum,
+                            iq_error, CURPID_X_KP * CURPID_X_KI);
 
-  ctx->id_error_sum += ((accum) (CURPID_X_KP * CURPID_X_KI)) * id_error;
-  ctx->iq_error_sum += ((accum) (CURPID_X_KP * CURPID_X_KI)) * iq_error;
+  accum ud = read_mac(ctx->id_error_sum);
+  accum uq = read_mac(ctx->iq_error_sum);
 
-  sat accum ud = ((accum) CURPID_X_KP) * id_error + ctx->id_error_sum;
-  sat accum uq = ((accum) CURPID_X_KP) * iq_error + ctx->iq_error_sum;
+  ud += id_error * ((accum) CURPID_X_KP);
+  uq += iq_error * ((accum) CURPID_X_KP);
 
-  uq = LIMIT(uq, (sat accum) CURPID_BUS_3PH); 
-  ud = LIMIT(ud, (sat accum) CURPID_BUS_3PH); 
+  uq = LIMIT(uq, (accum) CURPID_BUS_3PH); 
+  ud = LIMIT(ud, (accum) CURPID_BUS_3PH); 
 
   PIN(ud) = ud;
   PIN(uq) = uq;
