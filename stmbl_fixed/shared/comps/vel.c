@@ -24,14 +24,13 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
   struct vel_pin_ctx_t *pins = (struct vel_pin_ctx_t *)pin_ptr;
 
   accum pos_error = minus(PIN(pos_in), read_mac(ctx->vel_sum));
-  accum acc       = PIN(torque) * period;
+  accum acc_delta = PIN(torque) - ctx->last_acc;
 
   ctx->vel_sum = mac(ctx->vel_sum, read_mac(ctx->acc_sum), period);
 
-  const accum lp = VEL_ACC_LP;
-  ctx->last_acc = acc * lp + (1K - lp) * ctx->last_acc;
+  ctx->last_acc += acc_delta * (accum) VEL_ACC_LP;
 
-  ctx->acc_sum = mac(ctx->acc_sum, acc - ctx->last_acc, 1K);
+  ctx->acc_sum = mac(ctx->acc_sum, acc_delta, period);
   ctx->acc_sum = mac(ctx->acc_sum, pos_error, (accum) VEL_ACC_FF_GAIN);
 
   ctx->vel_sum = mac(ctx->vel_sum, pos_error, (accum) VEL_VEL_FF_GAIN);

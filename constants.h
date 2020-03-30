@@ -25,5 +25,5 @@
 #define PID_VEL_I_PERIOD    (0K * PERIOD)
 #define PID_CUR_GAIN        4.0e-3K
 #define PID_MAX_VEL         800K
-#define PID_MAX_ACC         60000K
-#define PID_MAX_TORQUE      60000K
+#define PID_MAX_ACC         8000K
+#define PID_MAX_TORQUE      8000K
