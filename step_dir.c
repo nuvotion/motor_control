@@ -5,7 +5,8 @@
 
 HAL_COMP(step_dir);
 
-HAL_PIN(pos);
+HAL_PIN(pos_x);
+HAL_PIN(pos_y);
 
 /*
 struct step_dir_ctx_t {
@@ -23,11 +24,13 @@ static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
 static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     //struct step_dir_ctx_t *ctx      = (struct step_dir_ctx_t *) ctx_ptr;
     struct step_dir_pin_ctx_t *pins = (struct step_dir_pin_ctx_t *) pin_ptr;
-    int count;
+    int count_x, count_y;
   
-    count = StepDir_0_Read();
+    count_x = StepDir_0_Read();
+    count_y = StepDir_1_Read();
 
-    PIN(pos) = mod((accum) count * (M_PI / 1000K));
+    PIN(pos_x) = mod((accum) count_x * (M_PI / 1000K));
+    PIN(pos_y) = mod((accum) count_y * (M_PI / 1000K));
 }
 
 hal_comp_t step_dir_comp_struct = {

@@ -60,6 +60,7 @@ static void enable_drive(uint8_t drive) {
     }
     if (drive == 1) {
         RELAY1_Write(1);
+        EN0_Write(1);
         EN1_Write(1);
     }
 }
@@ -96,8 +97,8 @@ static void init_cur_pid(void) {
     set_pin_val("idq",      0, "rt_prio", 4);
     set_pin_val("pwm",      0, "rt_prio", 6);
 
-    connect_pins("dq", 0, "u",   "adc", 0, "iu");
-    connect_pins("dq", 0, "w",   "adc", 0, "iw");
+    connect_pins("dq", 0, "u",   "adc", 0, "iu_y");
+    connect_pins("dq", 0, "w",   "adc", 0, "iw_y");
 
     connect_pins("curpid", 0, "id_fb",  "dq", 0, "d");
     connect_pins("curpid", 0, "iq_fb",  "dq", 0, "q");
@@ -105,9 +106,9 @@ static void init_cur_pid(void) {
     connect_pins("idq", 0, "d",   "curpid", 0, "ud");
     connect_pins("idq", 0, "q",   "curpid", 0, "uq");
 
-    connect_pins("pwm", 0, "u", "idq", 0, "u");
-    connect_pins("pwm", 0, "v", "idq", 0, "v");
-    connect_pins("pwm", 0, "w", "idq", 0, "w");
+    connect_pins("pwm", 0, "u_y", "idq", 0, "u");
+    connect_pins("pwm", 0, "v_y", "idq", 0, "v");
+    connect_pins("pwm", 0, "w_y", "idq", 0, "w");
 }
 
 #if defined(COM_TEST)
@@ -147,6 +148,7 @@ int main(void) {
     RT_TIMER_Start();
     RT_TIMER_WritePeriod(49);
     enable_drive(0);
+    enable_drive(1);
 
     for(;;) {
         //hal_run_frt();

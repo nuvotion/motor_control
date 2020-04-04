@@ -19,14 +19,20 @@
 HAL_COMP(adc);
 
 //phase current
-HAL_PIN(iu);
-HAL_PIN(iw);
+HAL_PIN(iu_x);
+HAL_PIN(iw_x);
+HAL_PIN(iu_y);
+HAL_PIN(iw_y);
 
 struct adc_ctx_t {
-    int u_average;
-    int w_average;
-    accum u_offset;
-    accum w_offset;
+    int u_average_x;
+    int w_average_x;
+    accum u_offset_x;
+    accum w_offset_x;
+    int u_average_y;
+    int w_average_y;
+    accum u_offset_y;
+    accum w_offset_y;
     int init_samples;
 };
 
@@ -120,19 +126,27 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
     struct adc_pin_ctx_t *pins = (struct adc_pin_ctx_t *) pin_ptr;
 
     if (ctx->init_samples) {
-        ctx->u_average += ADC_GetResult16(1);
-        ctx->w_average += ADC_GetResult16(0);
+        ctx->u_average_x += ADC_GetResult16(1);
+        ctx->w_average_x += ADC_GetResult16(0);
+        ctx->u_average_y += ADC_GetResult16(3);
+        ctx->w_average_y += ADC_GetResult16(2);
 
         if (ctx->init_samples == 1) {
-            ctx->u_average /= 1000;
-            ctx->w_average /= 1000;
-            ctx->u_offset = (accum) ctx->u_average;
-            ctx->w_offset = (accum) ctx->w_average;
+            ctx->u_average_x /= 1000;
+            ctx->w_average_x /= 1000;
+            ctx->u_offset_x = (accum) ctx->u_average_x;
+            ctx->w_offset_x = (accum) ctx->w_average_x;
+            ctx->u_average_y /= 1000;
+            ctx->w_average_y /= 1000;
+            ctx->u_offset_y = (accum) ctx->u_average_y;
+            ctx->w_offset_y = (accum) ctx->w_average_y;
         }
         ctx->init_samples--;
     } else {
-        PIN(iu) = ((accum) ADC_GetResult16(1) - ctx->u_offset) * (1K/860K);
-        PIN(iw) = ((accum) ADC_GetResult16(0) - ctx->w_offset) * (1K/860K);
+        PIN(iu_x) = ((accum) ADC_GetResult16(1) - ctx->u_offset_x) * (1K/860K);
+        PIN(iw_x) = ((accum) ADC_GetResult16(0) - ctx->w_offset_x) * (1K/860K);
+        PIN(iu_y) = ((accum) ADC_GetResult16(3) - ctx->u_offset_y) * (1K/860K);
+        PIN(iw_y) = ((accum) ADC_GetResult16(2) - ctx->w_offset_y) * (1K/860K);
     }
 
     ADC_StartConvert();

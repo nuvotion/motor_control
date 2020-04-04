@@ -18,20 +18,20 @@ static void init_pos_pid(void) {
     set_pin_val("dbg",          0, "rt_prio", 14);
 
     /* Commutation motor model - generates position for dq/idq */
-    connect_pins("vel", 2, "pos_in", "encoder",     0, "com_pos"); 
+    connect_pins("vel", 2, "pos_in", "encoder",     0, "com_pos_y"); 
     connect_pins("vel", 2, "torque", "pid",         0, "torque_cor_cmd");
 
     /* Position motor model */
-    connect_pins("vel", 1, "pos_in", "encoder", 0, "mot_pos");
+    connect_pins("vel", 1, "pos_in", "encoder", 0, "mot_pos_y");
     connect_pins("vel", 1, "torque", "pid",     0, "torque_cor_cmd");
 
     /* External command */
-    connect_pins("vel", 0, "pos_in", "step_dir", 0, "pos");
+    connect_pins("vel", 0, "pos_in", "step_dir", 0, "pos_y");
 
     /* Position PID */
-    connect_pins("pid", 0, "pos_ext_cmd",   "step_dir", 0, "pos");
+    connect_pins("pid", 0, "pos_ext_cmd",   "step_dir", 0, "pos_y");
     connect_pins("pid", 0, "vel_ext_cmd",   "vel",      0, "vel");
-    connect_pins("pid", 0, "pos_fb",        "encoder",  0, "mot_pos");
+    connect_pins("pid", 0, "pos_fb",        "encoder",  0, "mot_pos_y");
     connect_pins("pid", 0, "vel_fb",        "vel",      1, "vel");
 
     /* Drive curpid loop */
@@ -40,9 +40,9 @@ static void init_pos_pid(void) {
     connect_pins("idq",    0, "pos",    "vel",  2, "pos_out");
 
     /* Debug */
-    connect_pins("dbg", 0, "in0", "step_dir",   0, "pos");
+    connect_pins("dbg", 0, "in0", "step_dir",   0, "pos_y");
     connect_pins("dbg", 0, "in1", "vel",        0, "vel");
-    connect_pins("dbg", 0, "in2", "encoder",    0, "mot_pos");
+    connect_pins("dbg", 0, "in2", "encoder",    0, "mot_pos_y");
     connect_pins("dbg", 0, "in3", "vel",        1, "vel");
     connect_pins("dbg", 0, "in4", "pid",        0, "torque_cor_cmd");
     /*
