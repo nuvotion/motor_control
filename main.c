@@ -152,14 +152,14 @@ int main(void) {
         //hal_run_frt();
         //hal_run_nrt();
 
-        if (i == 100000) {
+        if (i == 10000) {
             hal_run_nrt();
             i = 0;
             LED_1_Write(toggle);
             toggle = !toggle;
 
             if (rt_deadline_err) {
-                rt_deadline_err--;
+                //rt_deadline_err--;
                 LED_0_Write(1);
             } else {
                 LED_0_Write(0);

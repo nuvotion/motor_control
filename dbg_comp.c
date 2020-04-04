@@ -36,9 +36,9 @@ static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     print(print_float(PIN(in1)));
     print(", mot_pos: ");
     print(print_float(PIN(in2)));
-    print(", fb_switch: ");
+    print(", d_meas: ");
     print(print_float(PIN(in3)));
-    print(", fb_state: ");
+    print(", d_cmd: ");
     print(print_float(PIN(in4)));
     print("\n");
 }
@@ -55,6 +55,8 @@ static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     print(print_float(PIN(in2)));
     print(", q: ");
     print(print_float(PIN(in3)));
+    print(", ud: ");
+    print(print_float(PIN(in4)));
     print("\n");
 }
 #else
@@ -79,7 +81,7 @@ static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
 static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
 
-    ctx->init_samples = 5000*20;
+    ctx->init_samples = 5000*1; //5000*20;
 }
 
 static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
@@ -98,16 +100,16 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
     //}
     
     ctx->count++;
-    if (ctx->count == 1000) {
+    if (ctx->count == 5000) {
         ctx->count = 0;
         ctx->step = !ctx->step;
     }
 
     sincos_fast(ctx->angle, &sin, &cos);
-
+ 
     PIN(angle) = mod(ctx->angle);
     PIN(angle_sin) = sin;
-    PIN(step) = 0.3K; //ctx->step ? 0.3K : 0K; 
+    PIN(step) = ctx->step ? 0.3K : 0K; 
 }
 
 hal_comp_t dbg_comp_struct = {
