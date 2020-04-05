@@ -54,7 +54,8 @@ extern "C" {
 
 extern volatile uint64_t systime;
 
-#define LP_HZ(a, period) (((a) <= 0.0) ? (1.0) : (1.0 / (1.0 / (period) / ((a)*M_PI * 2.0) + 1.0)))
+extern float expf(float x);
+#define LP_HZ(a, period) (1.0 - expf(-2.0 * M_PI * period * (a)))
 
 #ifdef __cplusplus
 }

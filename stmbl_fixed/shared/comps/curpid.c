@@ -18,6 +18,10 @@ HAL_PIN(iq_fb);
 HAL_PIN(ud);
 HAL_PIN(uq);
 
+// Constants
+HAL_PIN(kp);
+HAL_PIN(kp_ki);
+
 struct curpid_ctx_t {
   accum id_error_sum;
   accum iq_error_sum;
@@ -36,11 +40,11 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
   accum id_error = idc - PIN(id_fb);
   accum iq_error = iqc - PIN(iq_fb);
 
-  accum ud = LIMIT(id_error * ((accum) CURPID_X_KP), (accum) CURPID_BUS_3PH);
-  accum uq = LIMIT(iq_error * ((accum) CURPID_X_KP), (accum) CURPID_BUS_3PH);
+  accum ud = LIMIT(id_error * PIN(kp), (accum) CURPID_BUS_3PH);
+  accum uq = LIMIT(iq_error * PIN(kp), (accum) CURPID_BUS_3PH);
 
-  ctx->id_error_sum += mul_rnd(id_error, CURPID_X_KP * CURPID_X_KI);
-  ctx->iq_error_sum += mul_rnd(iq_error, CURPID_X_KP * CURPID_X_KI);
+  ctx->id_error_sum += mul_rnd(id_error, PIN(kp_ki));
+  ctx->iq_error_sum += mul_rnd(iq_error, PIN(kp_ki));
 
   ctx->id_error_sum = id_error >= 0K ? 
       MIN(ctx->id_error_sum,  CURPID_BUS_3PH - ud) :

@@ -34,6 +34,11 @@ HAL_PIN(vel_fb);       // feedback in (rad/s)
 HAL_PIN(torque_cor_cmd);  // corrected cmd out (Nm)
 HAL_PIN(cur_cor_cmd); // Current for PMSM
 
+HAL_PIN(pos_p);
+HAL_PIN(vel_p);
+HAL_PIN(vel_i);
+HAL_PIN(cur_gain);
+
 struct pid_ctx_t {
   sat accum torque_sum;  //integrator
 };
@@ -56,24 +61,24 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
 
   // pos -> vel
   pos_error = minus(pos_ext_cmd, pos_fb);
-  vel_cmd = pos_error * PID_POS_P;
+  vel_cmd = pos_error * PIN(pos_p);
   vel_cmd += vel_ext_cmd;
   vel_cmd = LIMIT(vel_cmd, PID_MAX_VEL);
 
   // vel -> acc
   vel_error = vel_cmd - vel_fb;
-  acc_cmd = vel_error * PID_VEL_P;
+  acc_cmd = vel_error * PIN(vel_p);
   acc_cmd = LIMIT(acc_cmd, (sat accum) PID_MAX_ACC);
 
   // acc -> torque
   torque_cmd = acc_cmd;
-  ctx->torque_sum += vel_error * (accum) PID_VEL_I_PERIOD;
+  ctx->torque_sum += vel_error * PIN(vel_i);
   ctx->torque_sum = // dynamic integral clamping 
     CLAMP(ctx->torque_sum, -PID_MAX_TORQUE - torque_cmd, PID_MAX_TORQUE - torque_cmd);
   torque_cmd += ctx->torque_sum;
 
   PIN(torque_cor_cmd) = torque_cmd;
-  PIN(cur_cor_cmd) = torque_cmd * PID_CUR_GAIN;
+  PIN(cur_cor_cmd) = torque_cmd * PIN(cur_gain);
 }
 
 hal_comp_t pid_comp_struct = {
