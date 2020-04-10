@@ -7,6 +7,8 @@
 #define BUS_DC              62.0K
 #define CURPID_BUS_3PH      (BUS_DC / M_SQRT3 * 0.95K)
 #define CURPID_MAX_CURRENT  1.0K
+#define CURPID_SAT_VOLTAGE  (0.33K*0.33K * CURPID_BUS_3PH*CURPID_BUS_3PH)
+#define CURPID_SAT_TIME     (0.33K)
 
 #define CONF_X_R            1.70        // Resistance (ohms) measured
 #define CONF_X_L            0.0026      // Inductance (henry) measured

@@ -22,9 +22,13 @@ HAL_PIN(uq);
 HAL_PIN(kp);
 HAL_PIN(kp_ki);
 
+HAL_PIN(error);
+HAL_PIN(dbg_sat);
+
 struct curpid_ctx_t {
   accum id_error_sum;
   accum iq_error_sum;
+  sat unsigned accum u_sat;
 };
 
 static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
@@ -56,8 +60,25 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
   ud += ctx->id_error_sum;
   uq += ctx->iq_error_sum;
 
-  PIN(ud) = ud;
-  PIN(uq) = uq;
+  if ((ud*ud + uq*uq) > CURPID_SAT_VOLTAGE) {
+    ctx->u_sat += (unsigned accum) PERIOD; 
+  } else {
+    ctx->u_sat -= (unsigned accum) PERIOD;
+  }
+
+  if (ctx->u_sat > CURPID_SAT_TIME) {
+    PIN(error) = 1K;
+  }
+
+  PIN(dbg_sat) = ctx->u_sat;
+
+  if (PIN(error) == 0K) {
+    PIN(ud) = ud;
+    PIN(uq) = uq;
+  } else {
+    PIN(ud) = 0K;
+    PIN(uq) = 0K;
+  }
 }
 
 hal_comp_t curpid_comp_struct = {
