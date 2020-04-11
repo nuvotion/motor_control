@@ -120,8 +120,8 @@ static void init_cur_pid(void) {
     connect_pins("curpid", 1, "iq_fb",  "dq", 1, "q");
   
     connect_pins("idq", 0, "d",   "curpid", 0, "ud");
-    connect_pins("idq", 0, "d",   "curpid", 0, "ud");
-    connect_pins("idq", 1, "q",   "curpid", 1, "uq");
+    connect_pins("idq", 0, "q",   "curpid", 0, "uq");
+    connect_pins("idq", 1, "d",   "curpid", 1, "ud");
     connect_pins("idq", 1, "q",   "curpid", 1, "uq");
 
     connect_pins("pwm", 0, "u_x", "idq", 0, "u");
