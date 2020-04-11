@@ -11,22 +11,15 @@ HAL_PIN(mot_pos_x);
 HAL_PIN(com_pos_y);
 HAL_PIN(mot_pos_y);
 
+HAL_PIN(enable);
+
 struct encoder_ctx_t {
     int index_offset_x;
     int index_found_x;
     int index_offset_y;
     int index_found_y;
+    int running;
 };
-
-static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
-    //struct encoder_ctx_t *ctx = (struct encoder_ctx_t *) ctx_ptr;
-    //struct encoder_pin_ctx_t *pins = (struct encoder_pin_ctx_t *) pin_ptr;
-
-    QuadDec_0_Start();
-    QuadDec_2_Start();
-    QuadDec_0_WriteCounter(0x8000);
-    QuadDec_2_WriteCounter(0x8000);
-}
 
 static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     struct encoder_ctx_t *ctx      = (struct encoder_ctx_t *) ctx_ptr;
@@ -36,6 +29,16 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
     const accum t[8] = {
         0, 0, 2K*M_PI/3K,  M_PI/3K, 
              -2K*M_PI/3K, -M_PI/3K, -M_PI, 0};
+
+    if (PIN(enable) == 0K) return;
+
+    if (!ctx->running) {
+        QuadDec_0_Start();
+        QuadDec_2_Start();
+        QuadDec_0_WriteCounter(0x8000);
+        QuadDec_2_WriteCounter(0x8000);
+        ctx->running = 1;
+    }
   
     idx_x = (QUAD1_U_Read() << 2) | (QUAD1_V_Read() << 1) | (QUAD1_W_Read() << 0);
     idx_y = (QUAD3_U_Read() << 2) | (QUAD3_V_Read() << 1) | (QUAD3_W_Read() << 0);
@@ -91,7 +94,7 @@ hal_comp_t encoder_comp_struct = {
     .nrt       = 0,
     .rt        = rt_func,
     .frt       = 0,
-    .nrt_init  = nrt_init,
+    .nrt_init  = 0,
     .rt_start  = 0,
     .frt_start = 0,
     .rt_stop   = 0,

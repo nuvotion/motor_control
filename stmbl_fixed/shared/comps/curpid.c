@@ -22,6 +22,7 @@ HAL_PIN(uq);
 HAL_PIN(kp);
 HAL_PIN(kp_ki);
 
+HAL_PIN(enable);
 HAL_PIN(error);
 HAL_PIN(dbg_sat);
 
@@ -34,6 +35,8 @@ struct curpid_ctx_t {
 static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
   struct curpid_ctx_t *ctx      = (struct curpid_ctx_t *)ctx_ptr;
   struct curpid_pin_ctx_t *pins = (struct curpid_pin_ctx_t *)pin_ptr;
+
+  if (PIN(enable) == 0K) return;
 
   accum idc     = PIN(id_cmd);
   accum iqc     = PIN(iq_cmd);

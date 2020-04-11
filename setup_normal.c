@@ -34,6 +34,11 @@ static void init_pos_pid(void) {
     set_pin_val("pid",  1, "vel_p",     PID_VEL_P_Y);
     set_pin_val("pid",  1, "vel_i",     PID_VEL_I_PERIOD_Y);
     set_pin_val("pid",  1, "cur_gain",  PID_CUR_GAIN_Y);
+    
+    /* Start up condition */
+    connect_pins("curpid",  0, "enable", "step_dir", 0, "enable");
+    connect_pins("curpid",  1, "enable", "step_dir", 0, "enable");
+    connect_pins("encoder", 0, "enable", "step_dir", 0, "enable");
 
     /* Commutation motor model - generates position for dq/idq */
     connect_pins("vel", 2, "pos_in", "encoder",     0, "com_pos_x"); 
@@ -70,23 +75,25 @@ static void init_pos_pid(void) {
     connect_pins("idq",    1, "pos",    "vel",  5, "pos_out");
 
     /* Debug */
+#if 1
     connect_pins("dbg", 0, "in0", "step_dir",   0, "pos_y");
     connect_pins("dbg", 0, "in1", "vel",        3, "vel");
     connect_pins("dbg", 0, "in2", "encoder",    0, "mot_pos_y");
     connect_pins("dbg", 0, "in3", "vel",        4, "vel");
     connect_pins("dbg", 0, "in4", "pid",        1, "torque_cor_cmd");
-    /*
-    connect_pins("dbg", 0, "in0", "dbg",        0, "angle");
-    connect_pins("dbg", 0, "in1", "dbg",        0, "step");
-    connect_pins("dbg", 0, "in2", "vel",        1, "vel");
-    connect_pins("dbg", 0, "in3", "vel",        1, "pos_out");
-    connect_pins("dbg", 0, "in4", "vel",        1, "dbg");
-    */
-    /*
-    connect_pins("dbg", 0, "in0", "pid",        0, "torque_cor_cmd");
-    connect_pins("dbg", 0, "in1", "pid",        0, "cur_cor_cmd");
-    connect_pins("dbg", 0, "in2", "vel",        0, "vel");         
+#endif
+#if 0
+    connect_pins("dbg", 0, "in0", "step_dir",   0, "pos_x");
+    connect_pins("dbg", 0, "in1", "vel",        0, "vel");
+    connect_pins("dbg", 0, "in2", "encoder",    0, "mot_pos_x");
     connect_pins("dbg", 0, "in3", "vel",        1, "vel");
-    connect_pins("dbg", 0, "in4", "dq",         0, "q");
-    */
+    connect_pins("dbg", 0, "in4", "pid",        0, "torque_cor_cmd");
+#endif
+#if 0
+    connect_pins("dbg", 0, "in0", "curpid",     0, "iq_cmd");
+    connect_pins("dbg", 0, "in1", "curpid",     0, "iq_fb");
+    connect_pins("dbg", 0, "in2", "curpid",     0, "error");
+    connect_pins("dbg", 0, "in3", "curpid",     0, "dbg_sat");
+    connect_pins("dbg", 0, "in4", "curpid",     0, "uq");
+#endif
 }
