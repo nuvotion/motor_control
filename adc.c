@@ -126,10 +126,10 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
     struct adc_pin_ctx_t *pins = (struct adc_pin_ctx_t *) pin_ptr;
 
     if (ctx->init_samples) {
-        ctx->u_average_x += ADC_GetResult16(1);
-        ctx->w_average_x += ADC_GetResult16(0);
-        ctx->u_average_y += ADC_GetResult16(3);
-        ctx->w_average_y += ADC_GetResult16(2);
+        ctx->u_average_x += ADC_GetResult16(0);
+        ctx->w_average_x += ADC_GetResult16(1);
+        ctx->u_average_y += ADC_GetResult16(2);
+        ctx->w_average_y += ADC_GetResult16(3);
 
         if (ctx->init_samples == 1) {
             ctx->u_average_x /= 1000;
@@ -143,10 +143,10 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
         }
         ctx->init_samples--;
     } else {
-        PIN(iu_x) = ((accum) ADC_GetResult16(1) - ctx->u_offset_x) * (1K/860K);
-        PIN(iw_x) = ((accum) ADC_GetResult16(0) - ctx->w_offset_x) * (1K/860K);
-        PIN(iu_y) = ((accum) ADC_GetResult16(3) - ctx->u_offset_y) * (1K/860K);
-        PIN(iw_y) = ((accum) ADC_GetResult16(2) - ctx->w_offset_y) * (1K/860K);
+        PIN(iu_x) = ((accum) ADC_GetResult16(0) - ctx->u_offset_x) * (1K/860K);
+        PIN(iw_x) = ((accum) ADC_GetResult16(1) - ctx->w_offset_x) * (1K/860K);
+        PIN(iu_y) = ((accum) ADC_GetResult16(2) - ctx->u_offset_y) * (1K/860K);
+        PIN(iw_y) = ((accum) ADC_GetResult16(3) - ctx->w_offset_y) * (1K/860K);
     }
 
     ADC_StartConvert();
