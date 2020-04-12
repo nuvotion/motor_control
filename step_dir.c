@@ -5,12 +5,16 @@
 
 HAL_COMP(step_dir);
 
-HAL_PIN(pos);
+HAL_PIN(pos_x);
+HAL_PIN(pos_y);
 
-/*
+HAL_PIN(enable);
+
 struct step_dir_ctx_t {
+    int offset_x;
+    int offset_y;
+    int running;
 };
-*/
 
 static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     //struct step_dir_ctx_t *ctx = (struct step_dir_ctx_t *) ctx_ptr;
@@ -20,14 +24,25 @@ static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     StepDir_1_Setup(2000);
 }
 
-static void rt_func(float period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
-    //struct step_dir_ctx_t *ctx      = (struct step_dir_ctx_t *) ctx_ptr;
+static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
+    struct step_dir_ctx_t *ctx      = (struct step_dir_ctx_t *) ctx_ptr;
     struct step_dir_pin_ctx_t *pins = (struct step_dir_pin_ctx_t *) pin_ptr;
-    int count;
+    int count_x, count_y;
   
-    count = StepDir_0_Read();
+    count_x = StepDir_0_Read();
+    count_y = StepDir_1_Read();
 
-    PIN(pos) = mod(((float) count / 2000.0) * 2 * M_PI);
+    if (!ctx->running) {
+        if (count_x > 100 && count_x < 1900) {
+            ctx->offset_x = count_x;
+            ctx->offset_y = count_y;
+            ctx->running = 1;
+            PIN(enable) = 1K;
+        } else return;
+    }
+
+    PIN(pos_x) = mod((accum) (count_x - ctx->offset_x) * (M_PI / 1000K));
+    PIN(pos_y) = mod((accum) (count_y - ctx->offset_y) * (M_PI / 1000K));
 }
 
 hal_comp_t step_dir_comp_struct = {

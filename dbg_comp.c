@@ -1,4 +1,3 @@
-#include <math.h>
 #include "hal.h"
 #include "print.h"
 #include "angle.h"
@@ -19,7 +18,7 @@ HAL_PIN(step);
 extern void print(char *string);
 
 struct dbg_ctx_t {
-    float angle;
+    accum angle;
     int count;
     int step;
     int init_samples;
@@ -36,9 +35,9 @@ static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     print(print_float(PIN(in1)));
     print(", mot_pos: ");
     print(print_float(PIN(in2)));
-    print(", fb_switch: ");
+    print(", d_meas: ");
     print(print_float(PIN(in3)));
-    print(", fb_state: ");
+    print(", d_cmd: ");
     print(print_float(PIN(in4)));
     print("\n");
 }
@@ -55,6 +54,8 @@ static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     print(print_float(PIN(in2)));
     print(", q: ");
     print(print_float(PIN(in3)));
+    print(", ud: ");
+    print(print_float(PIN(in4)));
     print("\n");
 }
 #else
@@ -79,10 +80,10 @@ static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
 static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
 
-    ctx->init_samples = 20000;
+    ctx->init_samples = 5000*1; //5000*20;
 }
 
-static void rt_func(float period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
+static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
     struct dbg_pin_ctx_t *pins = (struct dbg_pin_ctx_t *)pin_ptr;
 
@@ -92,17 +93,17 @@ static void rt_func(float period, volatile void *ctx_ptr, volatile hal_pin_inst_
     }
 
     //if (ctx->step) {
-        ctx->angle = ctx->angle + 0.001; // M_PI * 2.0 / 3.0;
+        ctx->angle = ctx->angle - 0.001K; // M_PI * 2.0 / 3.0;
     //}
     
     ctx->count++;
-    if (ctx->count == 1000) {
+    if (ctx->count == 5000) {
         ctx->count = 0;
         ctx->step = !ctx->step;
     }
 
     PIN(angle) = mod(ctx->angle);
-    PIN(step) = ctx->step ? 30 : 0.0; 
+    PIN(step) = ctx->step ? 10.0K : -10.0K; 
 }
 
 hal_comp_t dbg_comp_struct = {
