@@ -18,7 +18,7 @@ struct step_dir_ctx_t {
 
 static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     //struct step_dir_ctx_t *ctx = (struct step_dir_ctx_t *) ctx_ptr;
-    struct step_dir_pin_ctx_t *pins = (struct step_dir_pin_ctx_t *) pin_ptr;
+    //struct step_dir_pin_ctx_t *pins = (struct step_dir_pin_ctx_t *) pin_ptr;
 
     StepDir_0_Setup(2000);
     StepDir_1_Setup(2000);

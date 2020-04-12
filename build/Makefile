@@ -18,6 +18,7 @@ STMBL_COMPS += $(STMBL_DIR)/shared/comps/curpid.c
 STMBL_COMPS += $(STMBL_DIR)/shared/comps/idq.c
 STMBL_COMPS += $(TOP_SRCDIR)/adc.c
 STMBL_COMPS += $(TOP_SRCDIR)/pwm.c
+STMBL_COMPS += $(TOP_SRCDIR)/pwm_dc.c
 STMBL_COMPS += $(TOP_SRCDIR)/encoder.c
 STMBL_COMPS += $(TOP_SRCDIR)/step_dir.c
 STMBL_COMPS += $(TOP_SRCDIR)/dbg_comp.c
@@ -27,7 +28,11 @@ STMBL_SRC += $(STMBL_DIR)/shared/mac.c
 STMBL_SRC += stmbl/src/hal_tbl.c
 STMBL_SRC += $(STMBL_DIR)/shared/hal.c
 
-SETUPS := $(TOP_SRCDIR)/setup_normal.c
+SETUPS := $(TOP_SRCDIR)/constants.h
+SETUPS += $(TOP_SRCDIR)/setup_ac.c
+SETUPS += $(TOP_SRCDIR)/setup_ac_pid.c
+SETUPS += $(TOP_SRCDIR)/setup_dc.c
+SETUPS += $(TOP_SRCDIR)/setup_dc_pid.c
 SETUPS += $(TOP_SRCDIR)/setup_com_test.c
 SETUPS += $(TOP_SRCDIR)/setup_curpid_test.c
 SETUPS += $(TOP_SRCDIR)/setup_cur_gain.c
@@ -53,6 +58,7 @@ INCLUDES  := -I config $(STMBL_INC) -I fix_case -I $(TOP_SRCDIR)
 CFLAGS := -mcpu=cortex-m3 -mthumb -Wall -std=gnu11 -g
 CFLAGS += -ffunction-sections -ffat-lto-objects -O3 -flto
 CFLAGS += -D DEBUG -D CY_CORE_ID=0 
+CFLAGS += -D DC_SERVO
 #CFLAGS += -D COM_TEST
 #CFLAGS += -D CURPID_TEST
 #CFLAGS += -D FIXED_POINT_TEST
