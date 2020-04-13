@@ -35,8 +35,6 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
     if (!ctx->running) {
         QuadDec_0_Start();
         QuadDec_2_Start();
-        QuadDec_0_WriteCounter(0x8000);
-        QuadDec_2_WriteCounter(0x8000);
         ctx->running = 1;
     }
   

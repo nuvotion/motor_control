@@ -23,6 +23,7 @@ static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     PWM_2_Start();
     PWM_3_Start();
     PWM_4_Start();
+    PWM_5_Start();
 
     ctx->init_samples = 1000;
 }
@@ -63,8 +64,8 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
         PWM_3_WriteCompare(u_pwm_5);
         PWM_4_WriteCompare1(u_pwm_6);
         PWM_4_WriteCompare2(u_pwm_7);
-        //PWM_5_WriteCompare1(u_pwm_0);
-        //PWM_5_WriteCompare2(u_pwm_4);
+        PWM_5_WriteCompare1(u_pwm_0);
+        PWM_5_WriteCompare2(u_pwm_4);
     }
 }
 

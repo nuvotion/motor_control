@@ -22,6 +22,9 @@ HAL_PIN(uq);
 HAL_PIN(kp);
 HAL_PIN(kp_ki);
 
+HAL_PIN(bus_voltage);
+HAL_PIN(sat_voltage);
+
 HAL_PIN(enable);
 HAL_PIN(error);
 HAL_PIN(dbg_sat);
@@ -38,6 +41,8 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
 
   if (PIN(enable) == 0K) return;
 
+  const accum u_bus = PIN(bus_voltage);
+
   accum idc     = PIN(id_cmd);
   accum iqc     = PIN(iq_cmd);
 
@@ -47,23 +52,23 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
   accum id_error = idc - PIN(id_fb);
   accum iq_error = iqc - PIN(iq_fb);
 
-  accum ud = LIMIT(id_error * PIN(kp), (accum) CURPID_BUS_3PH);
-  accum uq = LIMIT(iq_error * PIN(kp), (accum) CURPID_BUS_3PH);
+  accum ud = LIMIT(id_error * PIN(kp), u_bus);
+  accum uq = LIMIT(iq_error * PIN(kp), u_bus);
 
   ctx->id_error_sum += mul_rnd(id_error, PIN(kp_ki));
   ctx->iq_error_sum += mul_rnd(iq_error, PIN(kp_ki));
 
   ctx->id_error_sum = id_error >= 0K ? 
-      MIN(ctx->id_error_sum,  CURPID_BUS_3PH - ud) :
-      MAX(ctx->id_error_sum, -CURPID_BUS_3PH - ud);
+      MIN(ctx->id_error_sum,  u_bus - ud) :
+      MAX(ctx->id_error_sum, -u_bus - ud);
   ctx->iq_error_sum = iq_error >= 0K ? 
-      MIN(ctx->iq_error_sum,  CURPID_BUS_3PH - uq) :
-      MAX(ctx->iq_error_sum, -CURPID_BUS_3PH - uq);
+      MIN(ctx->iq_error_sum,  u_bus - uq) :
+      MAX(ctx->iq_error_sum, -u_bus - uq);
 
   ud += ctx->id_error_sum;
   uq += ctx->iq_error_sum;
 
-  if ((ud*ud + uq*uq) > CURPID_SAT_VOLTAGE) {
+  if ((ud*ud + uq*uq) > PIN(sat_voltage)) {
     ctx->u_sat += (unsigned accum) PERIOD; 
   } else {
     ctx->u_sat -= (unsigned accum) PERIOD;
@@ -75,13 +80,13 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
 
   PIN(dbg_sat) = ctx->u_sat;
 
-  if (PIN(error) == 0K) {
+  //if (PIN(error) == 0K) {
     PIN(ud) = ud;
     PIN(uq) = uq;
-  } else {
-    PIN(ud) = 0K;
-    PIN(uq) = 0K;
-  }
+  //} else {
+  //  PIN(ud) = 0K;
+  //  PIN(uq) = 0K;
+  //}
 }
 
 hal_comp_t curpid_comp_struct = {

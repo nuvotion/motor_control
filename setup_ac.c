@@ -19,11 +19,15 @@ static void init_cur_pid(void) {
     set_pin_val("idq",      1, "rt_prio", 4);
     set_pin_val("pwm",      0, "rt_prio", 6);
 
-    set_pin_val("curpid",   0, "kp",    CURPID_X_KP);
-    set_pin_val("curpid",   0, "kp_ki", CURPID_X_KP * CURPID_X_KI);
+    set_pin_val("curpid",   0, "bus_voltage",   BUS_3PH);
+    set_pin_val("curpid",   0, "sat_voltage",   SAT_VOLTAGE_3PH);
+    set_pin_val("curpid",   0, "kp",            CURPID_X_KP);
+    set_pin_val("curpid",   0, "kp_ki",         CURPID_X_KP * CURPID_X_KI);
 
-    set_pin_val("curpid",   1, "kp",    CURPID_Y_KP);
-    set_pin_val("curpid",   1, "kp_ki", CURPID_Y_KP * CURPID_Y_KI);
+    set_pin_val("curpid",   1, "bus_voltage",   BUS_3PH);
+    set_pin_val("curpid",   1, "sat_voltage",   SAT_VOLTAGE_3PH);
+    set_pin_val("curpid",   1, "kp",            CURPID_Y_KP);
+    set_pin_val("curpid",   1, "kp_ki",         CURPID_Y_KP * CURPID_Y_KI);
 
     connect_pins("dq", 0, "u",   "adc", 0, "iu_x");
     connect_pins("dq", 0, "w",   "adc", 0, "iw_x");

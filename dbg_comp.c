@@ -103,7 +103,7 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
     }
 
     PIN(angle) = mod(ctx->angle);
-    PIN(step) = ctx->step ? 10.0K : -10.0K; 
+    PIN(step) = 0.1K; //ctx->step ? 10.0K : -10.0K; 
 }
 
 hal_comp_t dbg_comp_struct = {
