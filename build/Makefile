@@ -45,13 +45,11 @@ OBJ := $(SRC:.c=.o)
 CC := arm-psoc-eabi-gcc
 AS := arm-psoc-eabi-as
 AR := arm-psoc-eabi-ar
-ifneq ($(shell uname),Linux)
-    CYELFTOOL := cyelftool
-    WIN_PROJ_FILE := $(subst \,\\,$(shell cygpath -w $(PROJECT_FILE)))
-else
-    TOOLCHAIN := $(abspath $(TOP_SRCDIR)/../toolchain)
-    CYELFTOOL := wine $(TOOLCHAIN)/cyelftool
-endif
+
+WINEPREFIX := ~/.local/share/wineprefixes/psoc_font
+PC_BIN     := drive_c/Program\ Files/Cypress/PSoC\ Creator/4.2/PSoC\ Creator/bin
+CYELFTOOL  := WINEPREFIX=$(WINEPREFIX) wine $(WINEPREFIX)/$(PC_BIN)/cyelftool
+CYDSFIT	   := WINEPREFIX=$(WINEPREFIX) wine $(WINEPREFIX)/$(PC_BIN)/cydsfit
 
 STMBL_INC := -I stmbl/inc -I $(STMBL_DIR)/shared
 INCLUDES  := -I config $(STMBL_INC) -I fix_case -I $(TOP_SRCDIR)
@@ -91,8 +89,8 @@ $(TARGET).cyacd: $(TARGET).elf
 	    --flash_array_size 65536 \
 	    --ee_array 64 \
 	    --ee_array_size 2048 \
-	    --ee_row_size 16
-	$(CYELFTOOL) -S $<
+	    --ee_row_size 16 2>/dev/null
+	$(CYELFTOOL) -S $< 2>/dev/null
 
 $(TARGET).elf: $(OBJ) stmbl/stmbl.a lib/$(TARGET).a
 	$(CC) $(LDFLAGS) $(OBJ) stmbl/stmbl.a lib/$(TARGET).a -lm -o $@
@@ -103,12 +101,13 @@ lib/$(TARGET).a: config/cyfitter_cfg.c
 
 config/cyfitter_cfg.c: $(CONFIG_DEPS)
 	mkdir -p config
-	cd config ; cydsfit -p $(WIN_PROJ_FILE) $(DSFIT_ARGS) -- $(WARP_ARGS)
+	cd config ; $(CYDSFIT) -p $(abspath $(PROJECT_FILE)) \
+	    $(DSFIT_ARGS) -- $(WARP_ARGS) 2>/dev/null
 
-%.o: $(TOP_SRCDIR)/%.c $(STMBL_TBL)
+%.o: $(TOP_SRCDIR)/%.c $(STMBL_TBL) lib/$(TARGET).a
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-main.o: $(TOP_SRCDIR)/main.c $(STMBL_TBL) $(SETUPS)
+main.o: $(TOP_SRCDIR)/main.c $(STMBL_TBL) $(SETUPS) lib/$(TARGET).a
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 include stmbl.mak
