@@ -48,7 +48,6 @@ AR := arm-psoc-eabi-ar
 
 WINEPREFIX := ~/.local/share/wineprefixes/psoc_font
 PC_BIN     := drive_c/Program\ Files/Cypress/PSoC\ Creator/4.2/PSoC\ Creator/bin
-CYELFTOOL  := WINEPREFIX=$(WINEPREFIX) wine $(WINEPREFIX)/$(PC_BIN)/cyelftool
 CYDSFIT	   := WINEPREFIX=$(WINEPREFIX) wine $(WINEPREFIX)/$(PC_BIN)/cydsfit
 
 STMBL_INC := -I stmbl/inc -I $(STMBL_DIR)/shared
@@ -82,15 +81,15 @@ LDFLAGS += -u _printf_float
 export
 
 $(TARGET).cyacd: $(TARGET).elf
-	$(CYELFTOOL) -B $< \
+	cyelftool -B $< \
 	    --flash_row_size 256 \
 	    --flash_size 262144 \
 	    --flash_offset 0x00000000 \
 	    --flash_array_size 65536 \
 	    --ee_array 64 \
 	    --ee_array_size 2048 \
-	    --ee_row_size 16 2>/dev/null
-	$(CYELFTOOL) -S $< 2>/dev/null
+	    --ee_row_size 16
+	cyelftool -S $<
 
 $(TARGET).elf: $(OBJ) stmbl/stmbl.a lib/$(TARGET).a
 	$(CC) $(LDFLAGS) $(OBJ) stmbl/stmbl.a lib/$(TARGET).a -lm -o $@

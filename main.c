@@ -39,17 +39,9 @@ CY_ISR(rt_irq_handler) {
     /* RT_TIMER is free running. If the interrupt bit is set at the end of the
      * ISR then the ISR routine has missed the realtime deadline. */
     if (*RT_IRQ_INTC_SET_PD & RT_IRQ__INTC_MASK) {
-        RT_RESET_Write(1);
         rt_deadline_err++;
         RT_IRQ_ClearPending();
     }
-}
-
-static void init_io(void) {
-    EN0_Write(0);
-    EN1_Write(0);
-    RELAY0_Write(0);
-    RELAY1_Write(0);
 }
 
 static void enable_drive(uint8_t drive) {
@@ -108,22 +100,27 @@ static void init_hal(void) {
     hal_start();
 }
 
+static void override_en_pins(void) {
+    EN0_BYP &= ~(1 << EN0_SHIFT);
+}
+
 int main(void) {
     int i = 0;
     int toggle = 0;
 
-    init_io();
-
     USBFS_Start(0, USBFS_DWR_VDDD_OPERATION);
-    RT_IRQ_StartEx(rt_irq_handler);
 
     init_hal();
-
-    CyGlobalIntEnable;
-    RT_TIMER_Start();
-    RT_TIMER_WritePeriod(49);
     enable_drive(0);
     enable_drive(1);
+
+    RT_TIMER_Start();
+    RT_TIMER_WritePeriod(49);
+    RT_IRQ_StartEx(rt_irq_handler);
+
+    override_en_pins();
+
+    CyGlobalIntEnable;
 
     for(;;) {
         //hal_run_frt();

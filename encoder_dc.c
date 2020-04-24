@@ -16,8 +16,12 @@ HAL_PIN(enable);
 struct encoder_dc_ctx_t {
     int index_offset_0;
     int index_found_0;
+    int index_offset_1;
+    int index_found_1;
     int index_offset_2;
     int index_found_2;
+    int index_offset_3;
+    int index_found_3;
     int running;
 };
 
@@ -44,12 +48,28 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
         ctx->index_found_0 = 1;
     }
 
+    if (!ctx->index_found_1 &&
+            QuadDec_1_ReadStatusRegister() & QuadDec_1_STATUS_CAPTURE) {
+        count_1 = QuadDec_1_ReadCapture() - 0x8000;
+        count_1 = (count_1 <= 0) ? -count_1 : 2000 - count_1;
+        ctx->index_offset_1 = count_1;
+        ctx->index_found_1 = 1;
+    }
+
     if (!ctx->index_found_2 &&
             QuadDec_2_ReadStatusRegister() & QuadDec_2_STATUS_CAPTURE) {
         count_2 = QuadDec_2_ReadCapture() - 0x8000;
         count_2 = (count_2 <= 0) ? -count_2 : 2000 - count_2;
         ctx->index_offset_2 = count_2;
         ctx->index_found_2 = 1;
+    }
+
+    if (!ctx->index_found_3 &&
+            QuadDec_3_ReadStatusRegister() & QuadDec_3_STATUS_CAPTURE) {
+        count_3 = QuadDec_3_ReadCapture() - 0x8000;
+        count_3 = (count_3 <= 0) ? -count_3 : 2000 - count_3;
+        ctx->index_offset_3 = count_3;
+        ctx->index_found_3 = 1;
     }
 
     count_0 = QuadDec_0_ReadCounter() - 0x8000;
@@ -62,7 +82,9 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
     count_3 = (count_3 <= 0) ? -count_3 : 1000 - count_3;
 
     count_0 += ctx->index_offset_0;
+    count_1 += ctx->index_offset_1;
     count_2 += ctx->index_offset_2;
+    count_3 += ctx->index_offset_3;
 
     PIN(mot_pos_0) = mod((accum) count_0 * (M_PI / 500K));
     PIN(mot_pos_1) = mod((accum) count_1 * (M_PI / 500K));
