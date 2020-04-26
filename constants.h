@@ -5,7 +5,7 @@
 #define VEL_VEL_FF_GAIN     (2*0.9*1000.0*PERIOD)
 
 //#define BUS_DC              141.0K
-#define BUS_DC              15.0K
+#define BUS_DC              62.0K
 #define BUS_3PH             (BUS_DC / M_SQRT3 * 0.95K)
 #define SAT_FACTOR          1.0K
 #define SAT_VOLTAGE_DC      (SAT_FACTOR*SAT_FACTOR * BUS_DC*BUS_DC)
@@ -41,7 +41,13 @@
 #define PID_VEL_P_X         2K
 #define PID_VEL_I_PERIOD_X  (0K * PERIOD)
 #define PID_CUR_GAIN_X      4.0e-3K
+
 #define PID_POS_P_Y         100K
 #define PID_VEL_P_Y         2K
 #define PID_VEL_I_PERIOD_Y  (0K * PERIOD)
 #define PID_CUR_GAIN_Y      4.0e-3K
+
+#define PID_POS_P_Z         100K
+#define PID_VEL_P_Z         5K
+#define PID_VEL_I_PERIOD_Z  (5K * PERIOD)
+#define PID_CUR_GAIN_Z      4.0e-3K

@@ -80,13 +80,13 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
 
   PIN(dbg_sat) = ctx->u_sat;
 
-  //if (PIN(error) == 0K) {
+  if (PIN(error) == 0K) {
     PIN(ud) = ud;
     PIN(uq) = uq;
-  //} else {
-  //  PIN(ud) = 0K;
-  //  PIN(uq) = 0K;
-  //}
+  } else {
+    PIN(ud) = 0K;
+    PIN(uq) = 0K;
+  }
 }
 
 hal_comp_t curpid_comp_struct = {

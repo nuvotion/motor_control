@@ -24,7 +24,7 @@ static void init_cur_pid(void) {
     connect_pins("curpid",  0, "id_fb", "adc", 0, "iu_x");
     connect_pins("curpid",  0, "iq_fb", "adc", 0, "iw_x");
     connect_pins("curpid",  1, "id_fb", "adc", 0, "iu_y");
-    connect_pins("curpid",  1, "iq_fb", "adc", 0, "iu_y");
+    connect_pins("curpid",  1, "iq_fb", "adc", 0, "iw_y");
   
     connect_pins("pwm_dc", 0, "u_0", "curpid", 0, "ud");
     connect_pins("pwm_dc", 0, "u_1", "curpid", 0, "uq");

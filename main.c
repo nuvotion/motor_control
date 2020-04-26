@@ -118,7 +118,7 @@ int main(void) {
     RT_TIMER_WritePeriod(49);
     RT_IRQ_StartEx(rt_irq_handler);
 
-    override_en_pins();
+    //override_en_pins();
 
     CyGlobalIntEnable;
 
