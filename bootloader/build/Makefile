@@ -15,13 +15,10 @@ OBJ := $(SRC:.c=.o)
 CC := arm-psoc-eabi-gcc
 AS := arm-psoc-eabi-as
 AR := arm-psoc-eabi-ar
-ifneq ($(shell uname),Linux)
-    CYELFTOOL := cyelftool
-    WIN_PROJ_FILE := $(subst \,\\,$(shell cygpath -w $(PROJECT_FILE)))
-else
-    TOOLCHAIN := $(abspath $(TOP_SRCDIR)/../../toolchain)
-    CYELFTOOL := wine $(TOOLCHAIN)/cyelftool
-endif
+
+WINEPREFIX := ~/.local/share/wineprefixes/psoc_font
+PC_BIN     := drive_c/Program\ Files/Cypress/PSoC\ Creator/4.2/PSoC\ Creator/bin
+CYDSFIT	   := WINEPREFIX=$(WINEPREFIX) wine $(WINEPREFIX)/$(PC_BIN)/cydsfit
 
 INCLUDES := -I config
 
@@ -46,14 +43,18 @@ LDFLAGS += -Wl,--gc-sections -g -ffunction-sections -Og -ffat-lto-objects
 
 export
 
+$(TARGET).code $(TARGET).nvl: $(TARGET).hex
+	arm-psoc-eabi-objcopy $(TARGET).elf -O binary $@ \
+	    -R .cyconfigecc --dump-section .cycustnvl=$(TARGET).nvl
+
 $(TARGET).hex: $(TARGET).elf
-	$(CYELFTOOL) -P $< \
+	cyelftool -P $< \
 	    --flash_row_size 256 \
 	    --flash_size 262144 \
 	    --flash_offset 0x00000000 \
 	    --size_var_name Bootloader_SizeBytes \
 	    --checksum_var_name Bootloader_Checksum
-	$(CYELFTOOL) -S $<
+	cyelftool -S $<
 
 $(TARGET).elf: lib/$(TARGET).a $(OBJ)
 	$(CC) $(LDFLAGS) $^ -o $@
@@ -64,7 +65,8 @@ lib/$(TARGET).a: config/cyfitter_cfg.c
 
 config/cyfitter_cfg.c: $(CONFIG_DEPS)
 	mkdir -p config
-	cd config ; cydsfit -p $(WIN_PROJ_FILE) $(DSFIT_ARGS) -- $(WARP_ARGS)
+	cd config ; $(CYDSFIT) -p $(abspath $(PROJECT_FILE)) \
+	    $(DSFIT_ARGS) -- $(WARP_ARGS) 2>/dev/null
 
 %.o: $(TOP_SRCDIR)/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
