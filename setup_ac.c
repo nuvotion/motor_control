@@ -1,3 +1,8 @@
+static void override_en_pins(void) {
+    EN0_BYP &= ~(1 << EN0_SHIFT);
+    EN1_BYP &= ~(1 << EN1_SHIFT);
+}
+
 static void load_cur_pid(void) {
     load("adc");
     load("dq");
@@ -10,6 +15,8 @@ static void load_cur_pid(void) {
 }
 
 static void init_cur_pid(void) {
+    override_en_pins();
+
     set_pin_val("adc",      0, "rt_prio", 1);
     set_pin_val("dq",       0, "rt_prio", 2);
     set_pin_val("dq",       1, "rt_prio", 2);

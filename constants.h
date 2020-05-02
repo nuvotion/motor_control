@@ -38,16 +38,16 @@
 #define PID_MAX_TORQUE      8000K
 
 #define PID_POS_P_X         100K
-#define PID_VEL_P_X         2K
-#define PID_VEL_I_PERIOD_X  (0K * PERIOD)
-#define PID_CUR_GAIN_X      4.0e-3K
+#define PID_VEL_P_X         5K
+#define PID_VEL_I_PERIOD_X  (5K * PERIOD)
+#define PID_CUR_GAIN_X      2.5e-3K
 
 #define PID_POS_P_Y         100K
-#define PID_VEL_P_Y         2K
-#define PID_VEL_I_PERIOD_Y  (0K * PERIOD)
-#define PID_CUR_GAIN_Y      4.0e-3K
+#define PID_VEL_P_Y         5K
+#define PID_VEL_I_PERIOD_Y  (5K * PERIOD)
+#define PID_CUR_GAIN_Y      5.0e-3K
 
 #define PID_POS_P_Z         100K
 #define PID_VEL_P_Z         5K
 #define PID_VEL_I_PERIOD_Z  (5K * PERIOD)
-#define PID_CUR_GAIN_Z      4.0e-3K
+#define PID_CUR_GAIN_Z      1.0e-3K

@@ -100,45 +100,29 @@ static void init_hal(void) {
     hal_start();
 }
 
-static void override_en_pins(void) {
-    EN0_BYP &= ~(1 << EN0_SHIFT);
-}
-
 int main(void) {
     int i = 0;
-    int toggle = 0;
 
     USBFS_Start(0, USBFS_DWR_VDDD_OPERATION);
 
     init_hal();
     enable_drive(0);
     enable_drive(1);
+    LED_0_Write(1);
 
     RT_TIMER_Start();
     RT_TIMER_WritePeriod(49);
     RT_IRQ_StartEx(rt_irq_handler);
 
-    //override_en_pins();
-
     CyGlobalIntEnable;
 
     for(;;) {
-        //hal_run_frt();
-        //hal_run_nrt();
-
         if (i == 10000) {
             hal_run_nrt();
             i = 0;
-            LED_1_Write(toggle);
-            toggle = !toggle;
-
-            if (rt_deadline_err) {
-                //rt_deadline_err--;
-                LED_0_Write(1);
-            } else {
-                LED_0_Write(0);
-            }
         }
+
+        if (rt_deadline_err) LED_0_Write(0);
 
         usb_poll();
         i++;

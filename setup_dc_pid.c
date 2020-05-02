@@ -53,14 +53,14 @@ static void init_pos_pid(void) {
     set_pin_val("pid",  3, "vel_i",     PID_VEL_I_PERIOD_Z);
     set_pin_val("pid",  3, "cur_gain",  PID_CUR_GAIN_Z);
     
+    /* Report error */
+    connect_pins("dbg",     0, "error0", "curpid",  0, "error");
+    connect_pins("dbg",     0, "error1", "curpid",  1, "error");
+    
     /* Start up condition */
-    set_pin_val("encoder_dc",   0, "enable", 1);
-    set_pin_val("curpid",       0, "enable", 1);
-    set_pin_val("curpid",       1, "enable", 1);
-
-    //connect_pins("curpid",  0, "enable", "step_dir", 0, "enable");
-    //connect_pins("curpid",  1, "enable", "step_dir", 0, "enable");
-    //connect_pins("encoder_dc", 0, "enable", "step_dir", 0, "enable");
+    connect_pins("curpid",      0, "enable", "step_dir", 0, "enable");
+    connect_pins("curpid",      1, "enable", "step_dir", 0, "enable");
+    connect_pins("encoder_dc",  0, "enable", "step_dir", 0, "enable");
 
     /* Position motor model */
     connect_pins("vel", 1, "pos_in", "encoder_dc",  0, "mot_pos_0");
@@ -73,17 +73,17 @@ static void init_pos_pid(void) {
     connect_pins("vel", 7, "torque", "pid",         3, "torque_cor_cmd");
 
     /* External command */
-    connect_pins("vel", 0, "pos_in", "step_dir", 0, "pos_x");
-    connect_pins("vel", 2, "pos_in", "step_dir", 0, "pos_y");
+    //connect_pins("vel", 0, "pos_in", "step_dir", 0, "pos_a");
+    //connect_pins("vel", 2, "pos_in", "step_dir", 0, "pos_b");
     connect_pins("vel", 4, "pos_in", "step_dir", 0, "pos_x");
     connect_pins("vel", 6, "pos_in", "step_dir", 0, "pos_y");
 
     /* Position PID */
-    connect_pins("pid", 0, "pos_ext_cmd",   "step_dir",     0, "pos_x");
+    //connect_pins("pid", 0, "pos_ext_cmd",   "step_dir",     0, "pos_a");
     connect_pins("pid", 0, "vel_ext_cmd",   "vel",          0, "vel");
     connect_pins("pid", 0, "pos_fb",        "encoder_dc",   0, "mot_pos_0");
     connect_pins("pid", 0, "vel_fb",        "vel",          1, "vel");
-    connect_pins("pid", 1, "pos_ext_cmd",   "step_dir",     0, "pos_y");
+    //connect_pins("pid", 1, "pos_ext_cmd",   "step_dir",     0, "pos_b");
     connect_pins("pid", 1, "vel_ext_cmd",   "vel",          2, "vel");
     connect_pins("pid", 1, "pos_fb",        "encoder_dc",   0, "mot_pos_1");
     connect_pins("pid", 1, "vel_fb",        "vel",          3, "vel");
@@ -104,14 +104,14 @@ static void init_pos_pid(void) {
 
     /* Debug */
 #if 0
-    connect_pins("dbg", 0, "in0", "step_dir",   0, "pos_x");
+    connect_pins("dbg", 0, "in0", "step_dir",   0, "pos_a");
     connect_pins("dbg", 0, "in1", "vel",        0, "vel");
     connect_pins("dbg", 0, "in2", "encoder_dc", 0, "mot_pos_0");
     connect_pins("dbg", 0, "in3", "vel",        1, "vel");
     connect_pins("dbg", 0, "in4", "pid",        0, "torque_cor_cmd");
 #endif
 #if 0
-    connect_pins("dbg", 0, "in0", "step_dir",   0, "pos_y");
+    connect_pins("dbg", 0, "in0", "step_dir",   0, "pos_b");
     connect_pins("dbg", 0, "in1", "vel",        2, "vel");
     connect_pins("dbg", 0, "in2", "encoder_dc", 0, "mot_pos_1");
     connect_pins("dbg", 0, "in3", "vel",        3, "vel");
@@ -130,11 +130,5 @@ static void init_pos_pid(void) {
     connect_pins("dbg", 0, "in2", "encoder_dc", 0, "mot_pos_3");
     connect_pins("dbg", 0, "in3", "vel",        7, "vel");
     connect_pins("dbg", 0, "in4", "pid",        3, "torque_cor_cmd");
-#endif
-#if 0
-    connect_pins("dbg", 0, "in0", "encoder_dc", 0, "mot_pos_0");
-    connect_pins("dbg", 0, "in1", "encoder_dc", 0, "mot_pos_1");
-    connect_pins("dbg", 0, "in2", "encoder_dc", 0, "mot_pos_2");
-    connect_pins("dbg", 0, "in3", "encoder_dc", 0, "mot_pos_3");
 #endif
 }
