@@ -27,11 +27,10 @@ struct dbg_ctx_t {
     int count;
     int step;
     int init_samples;
-    int enabled;
 };
 
 static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
-    struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
+    //struct dbg_ctx_t *ctx      = (struct dbg_ctx_t *)ctx_ptr;
     struct dbg_pin_ctx_t *pins = (struct dbg_pin_ctx_t *)pin_ptr;
 
     print("in0: ");

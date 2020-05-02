@@ -67,6 +67,6 @@ hal_comp_t step_dir_comp_struct = {
     .frt_start = 0,
     .rt_stop   = 0,
     .frt_stop  = 0,
-    .ctx_size  = 0, //sizeof(struct step_dir_ctx_t),
+    .ctx_size  = sizeof(struct step_dir_ctx_t),
     .pin_count = sizeof(struct step_dir_pin_ctx_t) / sizeof(struct hal_pin_inst_t),
 };

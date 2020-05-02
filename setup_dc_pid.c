@@ -79,8 +79,8 @@ static void init_pos_pid(void) {
     connect_pins("vel", 6, "pos_in", "step_dir", 0, "pos_y");
 
     /* Position PID */
-    //connect_pins("pid", 0, "pos_ext_cmd",   "step_dir",     0, "pos_a");
-    connect_pins("pid", 0, "vel_ext_cmd",   "vel",          0, "vel");
+    connect_pins("pid", 0, "pos_ext_cmd",   "step_dir",     0, "pos_y");
+    connect_pins("pid", 0, "vel_ext_cmd",   "vel",          6, "vel");
     connect_pins("pid", 0, "pos_fb",        "encoder_dc",   0, "mot_pos_0");
     connect_pins("pid", 0, "vel_fb",        "vel",          1, "vel");
     //connect_pins("pid", 1, "pos_ext_cmd",   "step_dir",     0, "pos_b");
@@ -91,8 +91,8 @@ static void init_pos_pid(void) {
     connect_pins("pid", 2, "vel_ext_cmd",   "vel",          4, "vel");
     connect_pins("pid", 2, "pos_fb",        "encoder_dc",   0, "mot_pos_2");
     connect_pins("pid", 2, "vel_fb",        "vel",          5, "vel");
-    connect_pins("pid", 3, "pos_ext_cmd",   "step_dir",     0, "pos_y");
-    connect_pins("pid", 3, "vel_ext_cmd",   "vel",          6, "vel");
+    //connect_pins("pid", 3, "pos_ext_cmd",   "step_dir",     0, "pos_a");
+    connect_pins("pid", 3, "vel_ext_cmd",   "vel",          0, "vel");
     connect_pins("pid", 3, "pos_fb",        "encoder_dc",   0, "mot_pos_3");
     connect_pins("pid", 3, "vel_fb",        "vel",          7, "vel");
 
@@ -117,14 +117,14 @@ static void init_pos_pid(void) {
     connect_pins("dbg", 0, "in3", "vel",        3, "vel");
     connect_pins("dbg", 0, "in4", "pid",        1, "torque_cor_cmd");
 #endif
-#if 0
+#if 1
     connect_pins("dbg", 0, "in0", "step_dir",   0, "pos_x");
     connect_pins("dbg", 0, "in1", "vel",        4, "vel");
     connect_pins("dbg", 0, "in2", "encoder_dc", 0, "mot_pos_2");
     connect_pins("dbg", 0, "in3", "vel",        5, "vel");
     connect_pins("dbg", 0, "in4", "pid",        2, "torque_cor_cmd");
 #endif
-#if 1
+#if 0
     connect_pins("dbg", 0, "in0", "step_dir",   0, "pos_y");
     connect_pins("dbg", 0, "in1", "vel",        6, "vel");
     connect_pins("dbg", 0, "in2", "encoder_dc", 0, "mot_pos_3");
