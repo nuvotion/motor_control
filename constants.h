@@ -48,6 +48,6 @@
 #define PID_CUR_GAIN_Y      5.0e-3K
 
 #define PID_POS_P_Z         100K
-#define PID_VEL_P_Z         20K
+#define PID_VEL_P_Z         10K
 #define PID_VEL_I_PERIOD_Z  (20K * PERIOD)
 #define PID_CUR_GAIN_Z      1.0e-3K

@@ -103,9 +103,9 @@ static void init_pos_pid(void) {
     connect_pins("curpid", 1, "iq_cmd", "pid",  3, "cur_cor_cmd");
 
     /* Debug */
-#if 0
-    connect_pins("dbg", 0, "in0", "step_dir",   0, "pos_a");
-    connect_pins("dbg", 0, "in1", "vel",        0, "vel");
+#if 1
+    connect_pins("dbg", 0, "in0", "step_dir",   0, "pos_y");
+    connect_pins("dbg", 0, "in1", "vel",        6, "vel");
     connect_pins("dbg", 0, "in2", "encoder_dc", 0, "mot_pos_0");
     connect_pins("dbg", 0, "in3", "vel",        1, "vel");
     connect_pins("dbg", 0, "in4", "pid",        0, "torque_cor_cmd");
@@ -117,7 +117,7 @@ static void init_pos_pid(void) {
     connect_pins("dbg", 0, "in3", "vel",        3, "vel");
     connect_pins("dbg", 0, "in4", "pid",        1, "torque_cor_cmd");
 #endif
-#if 1
+#if 0
     connect_pins("dbg", 0, "in0", "step_dir",   0, "pos_x");
     connect_pins("dbg", 0, "in1", "vel",        4, "vel");
     connect_pins("dbg", 0, "in2", "encoder_dc", 0, "mot_pos_2");

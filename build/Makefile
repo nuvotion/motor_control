@@ -56,7 +56,7 @@ INCLUDES  := -I config $(STMBL_INC) -I fix_case -I $(TOP_SRCDIR)
 CFLAGS := -mcpu=cortex-m3 -mthumb -Wall -std=gnu11 -g
 CFLAGS += -ffunction-sections -ffat-lto-objects -O3 -flto
 CFLAGS += -D DEBUG -D CY_CORE_ID=0 
-#CFLAGS += -D DC_SERVO
+CFLAGS += -D DC_SERVO
 #CFLAGS += -D COM_TEST
 #CFLAGS += -D CURPID_TEST
 #CFLAGS += -D FIXED_POINT_TEST

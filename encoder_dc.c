@@ -43,7 +43,7 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
     if (!ctx->index_found_0 &&
             QuadDec_0_ReadStatusRegister() & QuadDec_0_STATUS_CAPTURE) {
         count_0 = QuadDec_0_ReadCapture() - 0x8000;
-        count_0 = (count_0 <= 0) ? -count_0 : 2000 - count_0;
+        count_0 = (count_0 <= 0) ? -count_0 : 1000 - count_0;
         ctx->index_offset_0 = count_0;
         ctx->index_found_0 = 1;
     }
@@ -51,7 +51,7 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
     if (!ctx->index_found_1 &&
             QuadDec_1_ReadStatusRegister() & QuadDec_1_STATUS_CAPTURE) {
         count_1 = QuadDec_1_ReadCapture() - 0x8000;
-        count_1 = (count_1 <= 0) ? -count_1 : 2000 - count_1;
+        count_1 = (count_1 <= 0) ? -count_1 : 1000 - count_1;
         ctx->index_offset_1 = count_1;
         ctx->index_found_1 = 1;
     }
@@ -59,7 +59,7 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
     if (!ctx->index_found_2 &&
             QuadDec_2_ReadStatusRegister() & QuadDec_2_STATUS_CAPTURE) {
         count_2 = QuadDec_2_ReadCapture() - 0x8000;
-        count_2 = (count_2 <= 0) ? -count_2 : 2000 - count_2;
+        count_2 = (count_2 <= 0) ? -count_2 : 1000 - count_2;
         ctx->index_offset_2 = count_2;
         ctx->index_found_2 = 1;
     }
@@ -67,7 +67,7 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
     if (!ctx->index_found_3 &&
             QuadDec_3_ReadStatusRegister() & QuadDec_3_STATUS_CAPTURE) {
         count_3 = QuadDec_3_ReadCapture() - 0x8000;
-        count_3 = (count_3 <= 0) ? -count_3 : 2000 - count_3;
+        count_3 = (count_3 <= 0) ? -count_3 : 1000 - count_3;
         ctx->index_offset_3 = count_3;
         ctx->index_found_3 = 1;
     }
