@@ -1,0 +1,47 @@
+[*]
+[*] GTKWave Analyzer v3.3.68 (w)1999-2016 BSI
+[*] Fri Apr 10 08:41:06 2020
+[*]
+[dumpfile] "/home/kmtaylor/vel_tb/sim/curpid_tb.ghw"
+[dumpfile_mtime] "Fri Apr 10 08:40:23 2020"
+[dumpfile_size] 76308
+[savefile] "/home/kmtaylor/vel_tb/sim/curpid_tb.gtkw"
+[timestart] 0
+[size] 1346 706
+[pos] -1 -1
+*-29.000000 210530000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.curpid_tb.
+[treeopen] top.curpid_tb.u_curpid.
+[sst_width] 214
+[signals_width] 194
+[sst_expanded] 1
+[sst_vpaned_height] 192
+@88028
+top.curpid_tb.u_mot.r_voltage
+@20000
+-
+-
+-
+-
+-
+@88028
+top.curpid_tb.u_mot.r_current
+@20000
+-
+-
+-
+-
+-
+@200
+-
+@28
+top.curpid_tb.u_curpid.r_i_error_sum
+@200
+-
+@28
+top.curpid_tb.u_curpid.r_sat
+@29
+top.curpid_tb.u_curpid.s_error
+[pattern_trace] 1
+[pattern_trace] 0

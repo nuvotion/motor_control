@@ -1,0 +1,87 @@
+[*]
+[*] GTKWave Analyzer v3.3.68 (w)1999-2016 BSI
+[*] Tue Apr 28 12:34:17 2020
+[*]
+[dumpfile] "/home/kmtaylor/src/vel_tb/sim/vel_tb.ghw"
+[dumpfile_mtime] "Tue Apr 28 12:28:29 2020"
+[dumpfile_size] 315425
+[savefile] "/home/kmtaylor/src/vel_tb/sim/torque_effect.gtkw"
+[timestart] 118200000
+[size] 1366 688
+[pos] -1 -1
+*-25.303238 205000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.vel_tb.
+[treeopen] top.vel_tb.u_vel_double.
+[sst_width] 201
+[signals_width] 244
+[sst_expanded] 1
+[sst_vpaned_height] 186
+@28
+top.vel_tb.clk
+top.vel_tb.rst
+top.vel_tb.torque_in_real
+@88028
+top.vel_tb.pos_in_real
+@200
+-
+@88028
+top.vel_tb.u_vel_double.r_acc_delta
+@20000
+-
+-
+-
+@8029
+top.vel_tb.pos_err
+@20000
+-
+-
+-
+@8028
+[color] 2
+top.vel_tb.pos_err_no_ff
+@20000
+-
+-
+-
+@88028
+top.vel_tb.u_vel_double.r_pos_error
+@20000
+-
+-
+-
+@8028
+top.vel_tb.u_vel_double.r_acc_sum
+@20000
+-
+-
+-
+@88028
+top.vel_tb.u_vel_double.r_vel_sum
+@20000
+-
+-
+-
+@8028
+[color] 2
+top.vel_tb.u_no_ff.r_pos_error
+@20000
+-
+-
+-
+@8028
+[color] 2
+top.vel_tb.u_no_ff.r_acc_sum
+@20000
+-
+-
+-
+@8028
+[color] 2
+top.vel_tb.u_no_ff.r_vel_sum
+@20000
+-
+-
+-
+[pattern_trace] 1
+[pattern_trace] 0

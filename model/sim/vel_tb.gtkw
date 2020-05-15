@@ -1,0 +1,207 @@
+[*]
+[*] GTKWave Analyzer v3.3.68 (w)1999-2016 BSI
+[*] Mon Mar 30 10:58:33 2020
+[*]
+[dumpfile] "/home/kmtaylor/vel_tb/sim/vel_tb.ghw"
+[dumpfile_mtime] "Mon Mar 30 10:57:29 2020"
+[dumpfile_size] 152535
+[savefile] "/home/kmtaylor/vel_tb/sim/vel_tb.gtkw"
+[timestart] 0
+[size] 1668 962
+[pos] -1 -1
+*-25.702768 13000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.vel_tb.
+[treeopen] top.vel_tb.u_vel_double.
+[sst_width] 214
+[signals_width] 318
+[sst_expanded] 1
+[sst_vpaned_height] 282
+@28
+top.vel_tb.u_vel.rst
+top.vel_tb.u_vel.clk
+@200
+-
+@22
+#{top.vel_tb.dbg_angle[31:0]} top.vel_tb.dbg_angle[31] top.vel_tb.dbg_angle[30] top.vel_tb.dbg_angle[29] top.vel_tb.dbg_angle[28] top.vel_tb.dbg_angle[27] top.vel_tb.dbg_angle[26] top.vel_tb.dbg_angle[25] top.vel_tb.dbg_angle[24] top.vel_tb.dbg_angle[23] top.vel_tb.dbg_angle[22] top.vel_tb.dbg_angle[21] top.vel_tb.dbg_angle[20] top.vel_tb.dbg_angle[19] top.vel_tb.dbg_angle[18] top.vel_tb.dbg_angle[17] top.vel_tb.dbg_angle[16] top.vel_tb.dbg_angle[15] top.vel_tb.dbg_angle[14] top.vel_tb.dbg_angle[13] top.vel_tb.dbg_angle[12] top.vel_tb.dbg_angle[11] top.vel_tb.dbg_angle[10] top.vel_tb.dbg_angle[9] top.vel_tb.dbg_angle[8] top.vel_tb.dbg_angle[7] top.vel_tb.dbg_angle[6] top.vel_tb.dbg_angle[5] top.vel_tb.dbg_angle[4] top.vel_tb.dbg_angle[3] top.vel_tb.dbg_angle[2] top.vel_tb.dbg_angle[1] top.vel_tb.dbg_angle[0]
+#{top.vel_tb.pos_in[31:0]} top.vel_tb.pos_in[31] top.vel_tb.pos_in[30] top.vel_tb.pos_in[29] top.vel_tb.pos_in[28] top.vel_tb.pos_in[27] top.vel_tb.pos_in[26] top.vel_tb.pos_in[25] top.vel_tb.pos_in[24] top.vel_tb.pos_in[23] top.vel_tb.pos_in[22] top.vel_tb.pos_in[21] top.vel_tb.pos_in[20] top.vel_tb.pos_in[19] top.vel_tb.pos_in[18] top.vel_tb.pos_in[17] top.vel_tb.pos_in[16] top.vel_tb.pos_in[15] top.vel_tb.pos_in[14] top.vel_tb.pos_in[13] top.vel_tb.pos_in[12] top.vel_tb.pos_in[11] top.vel_tb.pos_in[10] top.vel_tb.pos_in[9] top.vel_tb.pos_in[8] top.vel_tb.pos_in[7] top.vel_tb.pos_in[6] top.vel_tb.pos_in[5] top.vel_tb.pos_in[4] top.vel_tb.pos_in[3] top.vel_tb.pos_in[2] top.vel_tb.pos_in[1] top.vel_tb.pos_in[0]
+@88028
+top.vel_tb.pos_in_real
+@20000
+-
+@200
+-
+@28
+top.vel_tb.u_vel.r_acc
+top.vel_tb.u_vel.r_last_acc
+@88028
+top.vel_tb.u_vel.r_pos_out
+@20000
+-
+-
+-
+@c00022
+#{top.vel_tb.u_vel.s_acc_ff[31:0]} top.vel_tb.u_vel.s_acc_ff[31] top.vel_tb.u_vel.s_acc_ff[30] top.vel_tb.u_vel.s_acc_ff[29] top.vel_tb.u_vel.s_acc_ff[28] top.vel_tb.u_vel.s_acc_ff[27] top.vel_tb.u_vel.s_acc_ff[26] top.vel_tb.u_vel.s_acc_ff[25] top.vel_tb.u_vel.s_acc_ff[24] top.vel_tb.u_vel.s_acc_ff[23] top.vel_tb.u_vel.s_acc_ff[22] top.vel_tb.u_vel.s_acc_ff[21] top.vel_tb.u_vel.s_acc_ff[20] top.vel_tb.u_vel.s_acc_ff[19] top.vel_tb.u_vel.s_acc_ff[18] top.vel_tb.u_vel.s_acc_ff[17] top.vel_tb.u_vel.s_acc_ff[16] top.vel_tb.u_vel.s_acc_ff[15] top.vel_tb.u_vel.s_acc_ff[14] top.vel_tb.u_vel.s_acc_ff[13] top.vel_tb.u_vel.s_acc_ff[12] top.vel_tb.u_vel.s_acc_ff[11] top.vel_tb.u_vel.s_acc_ff[10] top.vel_tb.u_vel.s_acc_ff[9] top.vel_tb.u_vel.s_acc_ff[8] top.vel_tb.u_vel.s_acc_ff[7] top.vel_tb.u_vel.s_acc_ff[6] top.vel_tb.u_vel.s_acc_ff[5] top.vel_tb.u_vel.s_acc_ff[4] top.vel_tb.u_vel.s_acc_ff[3] top.vel_tb.u_vel.s_acc_ff[2] top.vel_tb.u_vel.s_acc_ff[1] top.vel_tb.u_vel.s_acc_ff[0]
+@28
+top.vel_tb.u_vel.s_acc_ff[31]
+top.vel_tb.u_vel.s_acc_ff[30]
+top.vel_tb.u_vel.s_acc_ff[29]
+top.vel_tb.u_vel.s_acc_ff[28]
+top.vel_tb.u_vel.s_acc_ff[27]
+top.vel_tb.u_vel.s_acc_ff[26]
+top.vel_tb.u_vel.s_acc_ff[25]
+top.vel_tb.u_vel.s_acc_ff[24]
+top.vel_tb.u_vel.s_acc_ff[23]
+top.vel_tb.u_vel.s_acc_ff[22]
+top.vel_tb.u_vel.s_acc_ff[21]
+top.vel_tb.u_vel.s_acc_ff[20]
+top.vel_tb.u_vel.s_acc_ff[19]
+top.vel_tb.u_vel.s_acc_ff[18]
+top.vel_tb.u_vel.s_acc_ff[17]
+top.vel_tb.u_vel.s_acc_ff[16]
+top.vel_tb.u_vel.s_acc_ff[15]
+top.vel_tb.u_vel.s_acc_ff[14]
+top.vel_tb.u_vel.s_acc_ff[13]
+top.vel_tb.u_vel.s_acc_ff[12]
+top.vel_tb.u_vel.s_acc_ff[11]
+top.vel_tb.u_vel.s_acc_ff[10]
+top.vel_tb.u_vel.s_acc_ff[9]
+top.vel_tb.u_vel.s_acc_ff[8]
+top.vel_tb.u_vel.s_acc_ff[7]
+top.vel_tb.u_vel.s_acc_ff[6]
+top.vel_tb.u_vel.s_acc_ff[5]
+top.vel_tb.u_vel.s_acc_ff[4]
+top.vel_tb.u_vel.s_acc_ff[3]
+top.vel_tb.u_vel.s_acc_ff[2]
+top.vel_tb.u_vel.s_acc_ff[1]
+top.vel_tb.u_vel.s_acc_ff[0]
+@1401200
+-group_end
+@28
+top.vel_tb.u_vel.r_acc_ff
+@22
+#{top.vel_tb.u_vel.s_vel[31:0]} top.vel_tb.u_vel.s_vel[31] top.vel_tb.u_vel.s_vel[30] top.vel_tb.u_vel.s_vel[29] top.vel_tb.u_vel.s_vel[28] top.vel_tb.u_vel.s_vel[27] top.vel_tb.u_vel.s_vel[26] top.vel_tb.u_vel.s_vel[25] top.vel_tb.u_vel.s_vel[24] top.vel_tb.u_vel.s_vel[23] top.vel_tb.u_vel.s_vel[22] top.vel_tb.u_vel.s_vel[21] top.vel_tb.u_vel.s_vel[20] top.vel_tb.u_vel.s_vel[19] top.vel_tb.u_vel.s_vel[18] top.vel_tb.u_vel.s_vel[17] top.vel_tb.u_vel.s_vel[16] top.vel_tb.u_vel.s_vel[15] top.vel_tb.u_vel.s_vel[14] top.vel_tb.u_vel.s_vel[13] top.vel_tb.u_vel.s_vel[12] top.vel_tb.u_vel.s_vel[11] top.vel_tb.u_vel.s_vel[10] top.vel_tb.u_vel.s_vel[9] top.vel_tb.u_vel.s_vel[8] top.vel_tb.u_vel.s_vel[7] top.vel_tb.u_vel.s_vel[6] top.vel_tb.u_vel.s_vel[5] top.vel_tb.u_vel.s_vel[4] top.vel_tb.u_vel.s_vel[3] top.vel_tb.u_vel.s_vel[2] top.vel_tb.u_vel.s_vel[1] top.vel_tb.u_vel.s_vel[0]
+@88028
+top.vel_tb.u_vel.r_vel
+@20000
+-
+-
+-
+-
+-
+-
+-
+-
+-
+@28
+top.vel_tb.u_vel.r_pos_error
+@22
+#{top.vel_tb.u_vel.s_pos_error[31:0]} top.vel_tb.u_vel.s_pos_error[31] top.vel_tb.u_vel.s_pos_error[30] top.vel_tb.u_vel.s_pos_error[29] top.vel_tb.u_vel.s_pos_error[28] top.vel_tb.u_vel.s_pos_error[27] top.vel_tb.u_vel.s_pos_error[26] top.vel_tb.u_vel.s_pos_error[25] top.vel_tb.u_vel.s_pos_error[24] top.vel_tb.u_vel.s_pos_error[23] top.vel_tb.u_vel.s_pos_error[22] top.vel_tb.u_vel.s_pos_error[21] top.vel_tb.u_vel.s_pos_error[20] top.vel_tb.u_vel.s_pos_error[19] top.vel_tb.u_vel.s_pos_error[18] top.vel_tb.u_vel.s_pos_error[17] top.vel_tb.u_vel.s_pos_error[16] top.vel_tb.u_vel.s_pos_error[15] top.vel_tb.u_vel.s_pos_error[14] top.vel_tb.u_vel.s_pos_error[13] top.vel_tb.u_vel.s_pos_error[12] top.vel_tb.u_vel.s_pos_error[11] top.vel_tb.u_vel.s_pos_error[10] top.vel_tb.u_vel.s_pos_error[9] top.vel_tb.u_vel.s_pos_error[8] top.vel_tb.u_vel.s_pos_error[7] top.vel_tb.u_vel.s_pos_error[6] top.vel_tb.u_vel.s_pos_error[5] top.vel_tb.u_vel.s_pos_error[4] top.vel_tb.u_vel.s_pos_error[3] top.vel_tb.u_vel.s_pos_error[2] top.vel_tb.u_vel.s_pos_error[1] top.vel_tb.u_vel.s_pos_error[0]
+@200
+-
+@28
+top.vel_tb.u_vel.r_acc_sum
+top.vel_tb.u_vel.r_vel_sum
+@200
+-
+-Comparison
+@28
+top.vel_tb.u_vel.r_vel_sum
+top.vel_tb.u_vel.r_pos_error
+@200
+-Double length
+@28
+top.vel_tb.u_vel_double.r_vel_sum
+top.vel_tb.u_vel_double.r_pos_error
+@88028
+top.vel_tb.u_vel_double.r_pos_out
+@20000
+-
+-
+-
+@88028
+top.vel_tb.u_vel_double.r_vel
+@20000
+-
+-
+-
+-
+-
+-
+-
+-
+-
+@200
+-
+-IIR Model
+@8028
+top.vel_tb.u_vel_iir.r_pos_out
+@20000
+-
+-
+-
+@200
+-
+@8028
+top.vel_tb.u_vel_iir.r_vel
+@20000
+-
+-
+-
+-
+-
+-
+-
+-
+-
+@200
+-
+-High pass feed forward
+@28
+top.vel_tb.rst
+@88028
+top.vel_tb.pos_in_real
+top.vel_tb.u_vel_double.r_pos_out
+top.vel_tb.u_vel_double.r_pos_error
+@28
+top.vel_tb.torque_in_real
+@88029
+top.vel_tb.u_vel_double.r_acc_delta
+@20000
+-
+-
+-
+-
+@200
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+[pattern_trace] 1
+[pattern_trace] 0
