@@ -13,11 +13,13 @@ static void init_cur_pid(void) {
 
     set_pin_val("curpid",   0, "bus_voltage",   BUS_DC);
     set_pin_val("curpid",   0, "sat_voltage",   SAT_VOLTAGE_DC);
+    set_pin_val("curpid",   0, "max_current",   CURPID_MAX_CUR_DC);
     set_pin_val("curpid",   0, "kp",            CURPID_Z_KP);
     set_pin_val("curpid",   0, "kp_ki",         CURPID_Z_KP * CURPID_Z_KI);
 
     set_pin_val("curpid",   1, "bus_voltage",   BUS_DC);
     set_pin_val("curpid",   1, "sat_voltage",   SAT_VOLTAGE_DC);
+    set_pin_val("curpid",   1, "max_current",   CURPID_MAX_CUR_DC);
     set_pin_val("curpid",   1, "kp",            CURPID_Z_KP);
     set_pin_val("curpid",   1, "kp_ki",         CURPID_Z_KP * CURPID_Z_KI);
 

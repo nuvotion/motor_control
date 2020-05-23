@@ -5,12 +5,13 @@
 #define VEL_VEL_FF_GAIN     (2*0.9*1000.0*PERIOD)
 
 #define BUS_DC              141.0K
-//#define BUS_DC              62.0K
 #define BUS_3PH             (BUS_DC / M_SQRT3 * 0.95K)
-#define SAT_FACTOR          0.33K
-#define SAT_VOLTAGE_DC      (SAT_FACTOR*SAT_FACTOR * BUS_DC*BUS_DC)
-#define SAT_VOLTAGE_3PH     (SAT_FACTOR*SAT_FACTOR * BUS_3PH*BUS_3PH)
-#define CURPID_MAX_CURRENT  3.0K
+#define SAT_FACTOR_DC       0.25K
+#define SAT_FACTOR_3PH      0.50K
+#define SAT_VOLTAGE_DC      (SAT_FACTOR_DC*SAT_FACTOR_DC * BUS_DC*BUS_DC)
+#define SAT_VOLTAGE_3PH     (SAT_FACTOR_3PH*SAT_FACTOR_3PH * BUS_3PH*BUS_3PH)
+#define CURPID_MAX_CUR_DC   1.0K
+#define CURPID_MAX_CUR_3PH  4.0K
 #define CURPID_SAT_TIME     0.33K
 
 #define CONF_X_R            1.70        // Resistance (ohms) measured
@@ -39,12 +40,12 @@
 
 #define PID_POS_P_X         100K
 #define PID_VEL_P_X         40K
-#define PID_VEL_I_PERIOD_X  (20K * PERIOD)
+#define PID_VEL_I_PERIOD_X  (400K * PERIOD)
 #define PID_CUR_GAIN_X      2.5e-3K
 
 #define PID_POS_P_Y         100K
 #define PID_VEL_P_Y         40K
-#define PID_VEL_I_PERIOD_Y  (20K * PERIOD)
+#define PID_VEL_I_PERIOD_Y  (400K * PERIOD)
 #define PID_CUR_GAIN_Y      5.0e-3K
 
 #define PID_POS_P_Z         100K

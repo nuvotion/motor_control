@@ -24,6 +24,7 @@ HAL_PIN(kp_ki);
 
 HAL_PIN(bus_voltage);
 HAL_PIN(sat_voltage);
+HAL_PIN(max_current);
 
 HAL_PIN(enable);
 HAL_PIN(error);
@@ -46,8 +47,8 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
   accum idc     = PIN(id_cmd);
   accum iqc     = PIN(iq_cmd);
 
-  idc = LIMIT(idc, CURPID_MAX_CURRENT);
-  iqc = LIMIT(iqc, CURPID_MAX_CURRENT);
+  idc = LIMIT(idc, PIN(max_current));
+  iqc = LIMIT(iqc, PIN(max_current));
 
   accum id_error = idc - PIN(id_fb);
   accum iq_error = iqc - PIN(iq_fb);
