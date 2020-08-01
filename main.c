@@ -38,9 +38,9 @@ CY_ISR(rt_irq_handler) {
 
     /* RT_TIMER is free running. If the interrupt bit is set at the end of the
      * ISR then the ISR routine has missed the realtime deadline. */
-    if (*RT_IRQ_INTC_SET_PD & RT_IRQ__INTC_MASK) {
+    if (CY_INT_SET_PEND_REG & (1 << CY_INT_SYSTICK_IRQN)) {
         rt_deadline_err++;
-        RT_IRQ_ClearPending();
+        CyIntClearPending(CY_INT_SYSTICK_IRQN);
     }
 }
 
@@ -110,9 +110,10 @@ int main(void) {
     enable_drive(1);
     LED_0_Write(1);
 
-    RT_TIMER_Start();
-    RT_TIMER_WritePeriod(49);
-    RT_IRQ_StartEx(rt_irq_handler);
+    CySysTickStart();
+    CySysTickSetReload(BCLK__BUS_CLK__HZ/5000);
+    CySysTickClear();
+    CySysTickSetCallback(0, rt_irq_handler);
 
     CyGlobalIntEnable;
 
