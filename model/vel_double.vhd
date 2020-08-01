@@ -81,9 +81,9 @@ begin
 
     vel_p : process(clk) begin
         if rising_edge(clk) then
+            v_vel_sum   := daccum_mac(read_daccum(v_acc_sum), C_PERIOD, v_vel_sum);
             v_pos_error := accum_minus(pos_in, read_daccum(v_vel_sum));
             v_acc_delta := torque_in - v_last_acc;
-            v_vel_sum   := daccum_mac(read_daccum(v_acc_sum), C_PERIOD, v_vel_sum);
             v_last_acc  := v_last_acc + accum_mul(v_acc_delta, C_LP);
             v_acc_sum   := daccum_mac(v_acc_delta, C_PERIOD, v_acc_sum);
             v_acc_sum   := daccum_mac(v_pos_error, C_ACC_GAIN, v_acc_sum);
