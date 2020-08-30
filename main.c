@@ -35,13 +35,9 @@ CY_ISR(rt_irq_handler) {
     //EN0_Write(1);
     hal_run_rt();
     //EN0_Write(0);
-
-    /* RT_TIMER is free running. If the interrupt bit is set at the end of the
-     * ISR then the ISR routine has missed the realtime deadline. */
-    if (CY_INT_SET_PEND_REG & (1 << CY_INT_SYSTICK_IRQN)) {
-        rt_deadline_err++;
-        CyIntClearPending(CY_INT_SYSTICK_IRQN);
-    }
+    
+    /* Check if the routine has taken too long */
+    if (CySysTickGetCountFlag()) rt_deadline_err++;
 }
 
 static void enable_drive(uint8_t drive) {
@@ -105,15 +101,16 @@ int main(void) {
 
     USBFS_Start(0, USBFS_DWR_VDDD_OPERATION);
 
+    /* API is broken and turns on I2C interrupt (15) */
+    CySysTickStart(); CyIntDisable(15);
+    CySysTickSetReload(BCLK__BUS_CLK__HZ/5000);
+    CySysTickClear();
+    CySysTickSetCallback(0, rt_irq_handler);
+
     init_hal();
     enable_drive(0);
     enable_drive(1);
     LED_0_Write(1);
-
-    CySysTickStart();
-    CySysTickSetReload(BCLK__BUS_CLK__HZ/5000);
-    CySysTickClear();
-    CySysTickSetCallback(0, rt_irq_handler);
 
     CyGlobalIntEnable;
 

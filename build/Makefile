@@ -22,6 +22,7 @@ STMBL_COMPS += $(TOP_SRCDIR)/pwm_dc.c
 STMBL_COMPS += $(TOP_SRCDIR)/encoder.c
 STMBL_COMPS += $(TOP_SRCDIR)/encoder_dc.c
 STMBL_COMPS += $(TOP_SRCDIR)/step_dir.c
+STMBL_COMPS += $(TOP_SRCDIR)/ufm.c
 STMBL_COMPS += $(TOP_SRCDIR)/dbg_comp.c
 STMBL_SRC := $(STMBL_COMPS)
 STMBL_SRC += $(STMBL_DIR)/shared/angle.c
@@ -56,7 +57,7 @@ INCLUDES  := -I config $(STMBL_INC) -I fix_case -I $(TOP_SRCDIR)
 CFLAGS := -mcpu=cortex-m3 -mthumb -Wall -std=gnu11 -g
 CFLAGS += -ffunction-sections -ffat-lto-objects -O3 -flto
 CFLAGS += -D DEBUG -D CY_CORE_ID=0 
-CFLAGS += -D DC_SERVO
+#CFLAGS += -D DC_SERVO
 #CFLAGS += -D COM_TEST
 #CFLAGS += -D CURPID_TEST
 #CFLAGS += -D FIXED_POINT_TEST

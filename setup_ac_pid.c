@@ -1,6 +1,6 @@
 static void load_pos_pid(void) {
     load("encoder");
-    load("step_dir");
+    load("ufm");
     load("vel");
     load("vel");
     load("vel");
@@ -14,7 +14,7 @@ static void load_pos_pid(void) {
 
 static void init_pos_pid(void) {
     set_pin_val("encoder",      0, "rt_prio",  7);
-    set_pin_val("step_dir",     0, "rt_prio",  7);
+    set_pin_val("ufm",          0, "rt_prio",  7);
     set_pin_val("vel",          0, "rt_prio", 10);
     set_pin_val("vel",          1, "rt_prio", 10);
     set_pin_val("vel",          2, "rt_prio", 10);
@@ -40,9 +40,9 @@ static void init_pos_pid(void) {
     connect_pins("dbg",     0, "error1", "curpid",  1, "error");
     
     /* Start up condition */
-    connect_pins("curpid",  0, "enable", "step_dir", 0, "enable");
-    connect_pins("curpid",  1, "enable", "step_dir", 0, "enable");
-    connect_pins("encoder", 0, "enable", "step_dir", 0, "enable");
+    connect_pins("curpid",  0, "enable", "ufm", 0, "enable");
+    connect_pins("curpid",  1, "enable", "ufm", 0, "enable");
+    connect_pins("encoder", 0, "enable", "ufm", 0, "enable");
 
     /* Commutation motor model - generates position for dq/idq */
     connect_pins("vel", 2, "pos_in", "encoder",     0, "com_pos_x"); 
@@ -57,15 +57,15 @@ static void init_pos_pid(void) {
     connect_pins("vel", 4, "torque", "pid",     1, "torque_cor_cmd");
 
     /* External command */
-    connect_pins("vel", 0, "pos_in", "step_dir", 0, "pos_x");
-    connect_pins("vel", 3, "pos_in", "step_dir", 0, "pos_y");
+    connect_pins("vel", 0, "pos_in", "ufm", 0, "pos_x");
+    connect_pins("vel", 3, "pos_in", "ufm", 0, "pos_y");
 
     /* Position PID */
-    connect_pins("pid", 0, "pos_ext_cmd",   "step_dir", 0, "pos_x");
+    connect_pins("pid", 0, "pos_ext_cmd",   "ufm",      0, "pos_x");
     connect_pins("pid", 0, "vel_ext_cmd",   "vel",      0, "vel");
     connect_pins("pid", 0, "pos_fb",        "encoder",  0, "mot_pos_x");
     connect_pins("pid", 0, "vel_fb",        "vel",      1, "vel");
-    connect_pins("pid", 1, "pos_ext_cmd",   "step_dir", 0, "pos_y");
+    connect_pins("pid", 1, "pos_ext_cmd",   "ufm",      0, "pos_y");
     connect_pins("pid", 1, "vel_ext_cmd",   "vel",      3, "vel");
     connect_pins("pid", 1, "pos_fb",        "encoder",  0, "mot_pos_y");
     connect_pins("pid", 1, "vel_fb",        "vel",      4, "vel");
@@ -80,14 +80,14 @@ static void init_pos_pid(void) {
 
     /* Debug */
 #if 0
-    connect_pins("dbg", 0, "in0", "step_dir",   0, "pos_x");
+    connect_pins("dbg", 0, "in0", "ufm",        0, "pos_x");
     connect_pins("dbg", 0, "in1", "vel",        0, "vel");
     connect_pins("dbg", 0, "in2", "encoder",    0, "mot_pos_x");
     connect_pins("dbg", 0, "in3", "vel",        1, "vel");
     connect_pins("dbg", 0, "in4", "pid",        0, "torque_cor_cmd");
 #endif
 #if 1
-    connect_pins("dbg", 0, "in0", "step_dir",   0, "pos_y");
+    connect_pins("dbg", 0, "in0", "ufm",        0, "pos_y");
     connect_pins("dbg", 0, "in1", "vel",        3, "vel");
     connect_pins("dbg", 0, "in2", "encoder",    0, "mot_pos_y");
     connect_pins("dbg", 0, "in3", "vel",        4, "vel");
