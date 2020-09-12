@@ -93,4 +93,11 @@ static void init_pos_pid(void) {
     connect_pins("dbg", 0, "in3", "vel",        4, "vel");
     connect_pins("dbg", 0, "in4", "pid",        1, "torque_cor_cmd");
 #endif
+#if 0
+    connect_pins("dbg", 0, "in0", "ufm",        0, "pos_x");
+    connect_pins("dbg", 0, "in1", "ufm",        0, "pos_y");
+    connect_pins("dbg", 0, "in2", "ufm",        0, "pos_a");
+    connect_pins("dbg", 0, "in3", "ufm",        0, "pos_b");
+    connect_pins("dbg", 0, "in4", "ufm",        0, "pos_c");
+#endif
 }

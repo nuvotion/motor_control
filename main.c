@@ -103,7 +103,7 @@ int main(void) {
 
     /* API is broken and turns on I2C interrupt (15) */
     CySysTickStart(); CyIntDisable(15);
-    CySysTickSetReload(BCLK__BUS_CLK__HZ/5000);
+    CySysTickSetReload(BCLK__BUS_CLK__HZ/5000-1);
     CySysTickClear();
     CySysTickSetCallback(0, rt_irq_handler);
 
@@ -120,7 +120,7 @@ int main(void) {
             i = 0;
         }
 
-        if (rt_deadline_err) LED_0_Write(0);
+        if (rt_deadline_err > 1) LED_0_Write(0);
 
         usb_poll();
         i++;

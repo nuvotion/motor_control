@@ -21,6 +21,7 @@ HAL_PIN(enable);
 struct ufm_ctx_t {
     uint8_t ufm_data[BUF_SIZE*2];
     int steps[NUM_AXIS];
+    int filt[NUM_AXIS];
     int ufm_data_idx;
     int last_packet_id;
     int running;
@@ -76,12 +77,32 @@ static inline int find_packets(uint8_t *buf, int start, int *end) {
     return found;
 }
 
-static inline void update_steps(struct ufm_ctx_t *ctx, struct ufm_pin_ctx_t *pins, int *pkt_data) {
+static inline void update_steps(struct ufm_ctx_t *ctx,
+                                struct ufm_pin_ctx_t *pins, 
+                                int *pkt_data,
+                                int pkt) {
+#define FILTER 1
     int i;
 
     if (ctx->running) {
         for (i = 0; i < NUM_AXIS; i++) {
+#if FILTER
+            if (pkt) {
+                ctx->filt[i] += pkt_data[i];
+            } else {
+                ctx->steps[i] += pkt_data[i];
+            }
+
+            if (ctx->filt[i] > 0) {
+                ctx->steps[i]++;
+                ctx->filt[i]--;
+            } else if (ctx->filt[i] < 0) {
+                ctx->steps[i]--;
+                ctx->filt[i]++;
+            }
+#else
             ctx->steps[i] += pkt_data[i];
+#endif
         }
     } else if (pkt_data[0]) {
         ctx->running = 1;
@@ -119,7 +140,7 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
             // Error
         }
 
-        update_steps(ctx, pins, pkt_data);
+        update_steps(ctx, pins, pkt_data, pkt);
 
         ctx->last_packet_id = pkt_id;
     }
