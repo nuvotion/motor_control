@@ -1,0 +1,70 @@
+[*]
+[*] GTKWave Analyzer v3.3.106 (w)1999-2020 BSI
+[*] Fri Nov  6 06:11:14 2020
+[*]
+[dumpfile] "asrc_tb.ghw"
+[dumpfile_mtime] "Fri Nov  6 06:10:43 2020"
+[dumpfile_size] 1696351
+[savefile] "asrc_tb.gtkw"
+[timestart] 0
+[size] 1597 751
+[pos] -1 -1
+*-50.000000 3166200000000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.asrc_tb.
+[sst_width] 198
+[signals_width] 310
+[sst_expanded] 1
+[sst_vpaned_height] 212
+@28
+top.asrc_tb.clk_g2
+top.asrc_tb.clk_mc
+@200
+-
+@8028
+top.asrc_tb.r_ratio
+@28
+top.asrc_tb.r_phase
+@c08022
+#{top.asrc_tb.s_sample_ptr[3:0]} top.asrc_tb.s_sample_ptr[2] top.asrc_tb.s_sample_ptr[1] top.asrc_tb.s_sample_ptr[0]
+@28
+top.asrc_tb.s_sample_ptr[2]
+top.asrc_tb.s_sample_ptr[1]
+top.asrc_tb.s_sample_ptr[0]
+@1401200
+-group_end
+@20000
+-
+-
+@28
+top.asrc_tb.r_sample
+@8028
+top.asrc_tb.r_sample
+@20000
+-
+@8028
+top.asrc_tb.r_sample_diff
+@20000
+-
+@28
+top.asrc_tb.r_sample_buf[0]
+top.asrc_tb.r_sample_buf[1]
+top.asrc_tb.r_sample_buf[2]
+[color] 2
+top.asrc_tb.r_sample_buf[3]
+[color] 2
+top.asrc_tb.r_sample_buf[4]
+[color] 2
+top.asrc_tb.r_sample_buf[5]
+@29
+top.asrc_tb.r_sample_buf[6]
+@28
+top.asrc_tb.r_sample_buf[7]
+@200
+-
+@22
+#{top.asrc_tb.s_wr_ptr[3:0]} top.asrc_tb.s_wr_ptr[2] top.asrc_tb.s_wr_ptr[1] top.asrc_tb.s_wr_ptr[0]
+#{top.asrc_tb.s_rd_ptr_a[3:0]} top.asrc_tb.s_rd_ptr_a[2] top.asrc_tb.s_rd_ptr_a[1] top.asrc_tb.s_rd_ptr_a[0]
+#{top.asrc_tb.s_rd_ptr_b[3:0]} top.asrc_tb.s_rd_ptr_b[2] top.asrc_tb.s_rd_ptr_b[1] top.asrc_tb.s_rd_ptr_b[0]
+[pattern_trace] 1
+[pattern_trace] 0

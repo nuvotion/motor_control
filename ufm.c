@@ -1,4 +1,5 @@
 #include <project.h>
+#include <string.h>
 #include "hal.h"
 #include "defines.h"
 #include "angle.h"
@@ -20,11 +21,14 @@ HAL_PIN(enable);
 
 struct ufm_ctx_t {
     uint8_t ufm_data[BUF_SIZE*2];
-    int steps[NUM_AXIS];
-    int filt[NUM_AXIS];
+    int wr_ptr;
+    int phase;
+    int ratio;
+    int lvl;
     int ufm_data_idx;
     int last_packet_id;
     int running;
+    accum steps[NUM_AXIS][8];
 };
 
 static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
@@ -32,6 +36,7 @@ static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     //struct ufm_pin_ctx_t *pins = (struct ufm_pin_ctx_t *) pin_ptr;
     
     ctx->last_packet_id = -1;
+    ctx->lvl = 3;
     I2C_UFM_SetupDMA(BUF_SIZE*2, ctx->ufm_data);
 }
 
@@ -81,33 +86,19 @@ static inline void update_steps(struct ufm_ctx_t *ctx,
                                 struct ufm_pin_ctx_t *pins, 
                                 int *pkt_data,
                                 int pkt) {
-#define FILTER 1
     int i;
 
-    if (ctx->running) {
-        for (i = 0; i < NUM_AXIS; i++) {
-#if FILTER
-            if (pkt) {
-                ctx->filt[i] += pkt_data[i];
-            } else {
-                ctx->steps[i] += pkt_data[i];
-            }
-
-            if (ctx->filt[i] > 0) {
-                ctx->steps[i]++;
-                ctx->filt[i]--;
-            } else if (ctx->filt[i] < 0) {
-                ctx->steps[i]--;
-                ctx->filt[i]++;
-            }
-#else
-            ctx->steps[i] += pkt_data[i];
-#endif
-        }
-    } else if (pkt_data[0]) {
-        ctx->running = 1;
-        PIN(enable) = 1K;
+    if (!ctx->running) {
+        if (pkt_data[0]) {
+            ctx->running = 1;
+            PIN(enable) = 1K;
+        } else return;
     }
+
+    for (i = 0; i < NUM_AXIS; i++) {
+        ctx->steps[i][ctx->wr_ptr] = ctx->steps[i][(ctx->wr_ptr - 1) & 7] + (accum) pkt_data[i];
+    }
+    ctx->wr_ptr = (ctx->wr_ptr + 1) & 7;
 }
 
 static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
@@ -117,6 +108,11 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
     uint8_t pkt_id;
     int i, j, found, pkt, end[MAX_PKTS];
     int pkt_data[NUM_AXIS];
+    int phase_overflow;
+    int rd_ptr_a, rd_ptr_b;
+    accum steps_interp[NUM_AXIS];
+    int phase_l;
+    accum phase_a;
 
     if (!(found = find_packets(ctx->ufm_data, ctx->ufm_data_idx, end))) return;
 
@@ -145,12 +141,55 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
         ctx->last_packet_id = pkt_id;
     }
 
-    PIN(pos_x) = (accum) mod((accum) ctx->steps[0] * (M_PI / 1000K));
-    PIN(pos_y) = (accum) mod((accum) ctx->steps[1] * (M_PI / 1000K));
-    PIN(pos_a) = (accum) mod((accum) ctx->steps[2] * (M_PI / 1000K));
-    PIN(pos_b) = (accum) mod((accum) ctx->steps[3] * (M_PI / 1000K));
-    PIN(pos_c) = (accum) mod((accum) ctx->steps[4] * (M_PI / 1000K));
-    PIN(pos_d) = (accum) mod((accum) ctx->steps[5] * (M_PI / 1000K));
+    /* Phase accumulator */
+    ctx->phase += ctx->ratio;
+    phase_overflow = ctx->phase & 0x80000000;
+    ctx->phase &= ctx->phase & 0x7FFFFFFF;
+
+    if (found == 2 && !phase_overflow && ctx->lvl > 0) {
+        ctx->lvl--;
+    } else if (found != 2 && phase_overflow && ctx->lvl < 6) {
+        ctx->lvl++;
+    }
+
+    switch (ctx->lvl) {
+        case 0:
+            ctx->ratio += 2048;
+            break;
+        case 1:
+            ctx->ratio += 1024;
+            break;
+        case 2:
+            ctx->ratio += 512;
+            break;
+        case 4:
+            ctx->ratio -= 512;
+            break;
+        case 5:
+            ctx->ratio -= 1024;
+            break;
+        case 6:
+            ctx->ratio -= 2048;
+            break;
+    }
+
+    rd_ptr_a = (ctx->wr_ptr + ctx->lvl) & 7;
+    rd_ptr_b = (ctx->wr_ptr + ctx->lvl + 1) & 7;
+
+    phase_l = ctx->phase >> 16;
+    memcpy(&phase_a, &phase_l, sizeof(int));
+
+    for (i = 0; i < NUM_AXIS; i++) {
+        steps_interp[i] = ctx->steps[i][rd_ptr_a] +
+            phase_a * (ctx->steps[i][rd_ptr_b] - ctx->steps[i][rd_ptr_a]); 
+    }
+
+    PIN(pos_x) = mod(steps_interp[0] * (M_PI / 1000K));
+    PIN(pos_y) = mod(steps_interp[1] * (M_PI / 1000K));
+    PIN(pos_a) = mod(steps_interp[2] * (M_PI / 1000K));
+    PIN(pos_b) = mod(steps_interp[3] * (M_PI / 1000K));
+    PIN(pos_c) = mod(steps_interp[4] * (M_PI / 1000K));
+    PIN(pos_d) = mod(steps_interp[5] * (M_PI / 1000K));
 }
 
 hal_comp_t ufm_comp_struct = {

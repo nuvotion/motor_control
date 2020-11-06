@@ -1,4 +1,4 @@
-TESTBENCHES := vel_tb.vhd curpid_tb.vhd
+TESTBENCHES := vel_tb.vhd curpid_tb.vhd asrc_tb.vhd
 
 VHDL_STD := 93
 IEEE_LIB := standard
