@@ -1,18 +1,18 @@
 [*]
-[*] GTKWave Analyzer v3.3.106 (w)1999-2020 BSI
-[*] Fri Nov  6 06:11:14 2020
+[*] GTKWave Analyzer v3.3.68 (w)1999-2016 BSI
+[*] Sat Nov  7 03:15:58 2020
 [*]
-[dumpfile] "asrc_tb.ghw"
-[dumpfile_mtime] "Fri Nov  6 06:10:43 2020"
-[dumpfile_size] 1696351
-[savefile] "asrc_tb.gtkw"
+[dumpfile] "/home/kmtaylor/src/motor_control/model/sim/asrc_tb.ghw"
+[dumpfile_mtime] "Sat Nov  7 03:14:07 2020"
+[dumpfile_size] 1880456
+[savefile] "/home/kmtaylor/src/motor_control/model/sim/asrc_tb.gtkw"
 [timestart] 0
-[size] 1597 751
+[size] 1354 682
 [pos] -1 -1
-*-50.000000 3166200000000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-50.000000 1273400000000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.asrc_tb.
-[sst_width] 198
+[sst_width] 201
 [signals_width] 310
 [sst_expanded] 1
 [sst_vpaned_height] 212
@@ -25,18 +25,13 @@ top.asrc_tb.clk_mc
 top.asrc_tb.r_ratio
 @28
 top.asrc_tb.r_phase
-@c08022
-#{top.asrc_tb.s_sample_ptr[3:0]} top.asrc_tb.s_sample_ptr[2] top.asrc_tb.s_sample_ptr[1] top.asrc_tb.s_sample_ptr[0]
-@28
-top.asrc_tb.s_sample_ptr[2]
-top.asrc_tb.s_sample_ptr[1]
-top.asrc_tb.s_sample_ptr[0]
-@1401200
--group_end
+@8022
+#{top.asrc_tb.s_sample_ptr[3:0]} top.asrc_tb.s_sample_ptr[3] top.asrc_tb.s_sample_ptr[2] top.asrc_tb.s_sample_ptr[1] top.asrc_tb.s_sample_ptr[0]
 @20000
 -
 -
 @28
+top.asrc_tb.r_sample_sub
 top.asrc_tb.r_sample
 @8028
 top.asrc_tb.r_sample
@@ -46,25 +41,21 @@ top.asrc_tb.r_sample
 top.asrc_tb.r_sample_diff
 @20000
 -
-@28
-top.asrc_tb.r_sample_buf[0]
-top.asrc_tb.r_sample_buf[1]
-top.asrc_tb.r_sample_buf[2]
-[color] 2
-top.asrc_tb.r_sample_buf[3]
-[color] 2
-top.asrc_tb.r_sample_buf[4]
-[color] 2
-top.asrc_tb.r_sample_buf[5]
 @29
-top.asrc_tb.r_sample_buf[6]
-@28
-top.asrc_tb.r_sample_buf[7]
+top.asrc_tb.r_sample_mod_diff
+@8028
+top.asrc_tb.r_sample_mod
+@20000
+-
 @200
 -
 @22
-#{top.asrc_tb.s_wr_ptr[3:0]} top.asrc_tb.s_wr_ptr[2] top.asrc_tb.s_wr_ptr[1] top.asrc_tb.s_wr_ptr[0]
-#{top.asrc_tb.s_rd_ptr_a[3:0]} top.asrc_tb.s_rd_ptr_a[2] top.asrc_tb.s_rd_ptr_a[1] top.asrc_tb.s_rd_ptr_a[0]
-#{top.asrc_tb.s_rd_ptr_b[3:0]} top.asrc_tb.s_rd_ptr_b[2] top.asrc_tb.s_rd_ptr_b[1] top.asrc_tb.s_rd_ptr_b[0]
+#{top.asrc_tb.s_wr_ptr[3:0]} top.asrc_tb.s_wr_ptr[3] top.asrc_tb.s_wr_ptr[2] top.asrc_tb.s_wr_ptr[1] top.asrc_tb.s_wr_ptr[0]
+#{top.asrc_tb.s_rd_ptr_a[3:0]} top.asrc_tb.s_rd_ptr_a[3] top.asrc_tb.s_rd_ptr_a[2] top.asrc_tb.s_rd_ptr_a[1] top.asrc_tb.s_rd_ptr_a[0]
+#{top.asrc_tb.s_rd_ptr_b[3:0]} top.asrc_tb.s_rd_ptr_b[3] top.asrc_tb.s_rd_ptr_b[2] top.asrc_tb.s_rd_ptr_b[1] top.asrc_tb.s_rd_ptr_b[0]
+@200
+-
+@22
+#{top.asrc_tb.r_sample_buf[0:15]} top.asrc_tb.r_sample_buf[0] top.asrc_tb.r_sample_buf[1] top.asrc_tb.r_sample_buf[2] top.asrc_tb.r_sample_buf[3] top.asrc_tb.r_sample_buf[4] top.asrc_tb.r_sample_buf[5] top.asrc_tb.r_sample_buf[6] top.asrc_tb.r_sample_buf[7] top.asrc_tb.r_sample_buf[8] top.asrc_tb.r_sample_buf[9] top.asrc_tb.r_sample_buf[10] top.asrc_tb.r_sample_buf[11] top.asrc_tb.r_sample_buf[12] top.asrc_tb.r_sample_buf[13] top.asrc_tb.r_sample_buf[14] top.asrc_tb.r_sample_buf[15]
 [pattern_trace] 1
 [pattern_trace] 0

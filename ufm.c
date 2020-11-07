@@ -28,7 +28,7 @@ struct ufm_ctx_t {
     int ufm_data_idx;
     int last_packet_id;
     int running;
-    accum steps[NUM_AXIS][8];
+    int steps[NUM_AXIS][16];
 };
 
 static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
@@ -36,7 +36,8 @@ static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     //struct ufm_pin_ctx_t *pins = (struct ufm_pin_ctx_t *) pin_ptr;
     
     ctx->last_packet_id = -1;
-    ctx->lvl = 3;
+    ctx->lvl = 7;
+    ctx->ratio = 0x147AE14; // 1.01;
     I2C_UFM_SetupDMA(BUF_SIZE*2, ctx->ufm_data);
 }
 
@@ -96,9 +97,10 @@ static inline void update_steps(struct ufm_ctx_t *ctx,
     }
 
     for (i = 0; i < NUM_AXIS; i++) {
-        ctx->steps[i][ctx->wr_ptr] = ctx->steps[i][(ctx->wr_ptr - 1) & 7] + (accum) pkt_data[i];
+        ctx->steps[i][ctx->wr_ptr] = 
+            (ctx->steps[i][(ctx->wr_ptr - 1) & 15] + pkt_data[i]) % 2000;
     }
-    ctx->wr_ptr = (ctx->wr_ptr + 1) & 7;
+    ctx->wr_ptr = (ctx->wr_ptr + 1) & 15;
 }
 
 static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
@@ -110,9 +112,10 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
     int pkt_data[NUM_AXIS];
     int phase_overflow;
     int rd_ptr_a, rd_ptr_b;
+    int sample_diff;
+    int64_t sample_mul;
+    int sample_mul_int, sample_int;
     accum steps_interp[NUM_AXIS];
-    int phase_l;
-    accum phase_a;
 
     if (!(found = find_packets(ctx->ufm_data, ctx->ufm_data_idx, end))) return;
 
@@ -148,40 +151,33 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
 
     if (found == 2 && !phase_overflow && ctx->lvl > 0) {
         ctx->lvl--;
-    } else if (found != 2 && phase_overflow && ctx->lvl < 6) {
+    } else if (found != 2 && phase_overflow && ctx->lvl < 14) {
         ctx->lvl++;
     }
 
-    switch (ctx->lvl) {
-        case 0:
-            ctx->ratio += 2048;
-            break;
-        case 1:
-            ctx->ratio += 1024;
-            break;
-        case 2:
-            ctx->ratio += 512;
-            break;
-        case 4:
-            ctx->ratio -= 512;
-            break;
-        case 5:
-            ctx->ratio -= 1024;
-            break;
-        case 6:
-            ctx->ratio -= 2048;
-            break;
+    if (ctx->lvl < 7) {
+        ctx->ratio += 128;
+    } else if (ctx->lvl > 7) {
+        ctx->ratio -= 128;
     }
 
-    rd_ptr_a = (ctx->wr_ptr + ctx->lvl) & 7;
-    rd_ptr_b = (ctx->wr_ptr + ctx->lvl + 1) & 7;
-
-    phase_l = ctx->phase >> 16;
-    memcpy(&phase_a, &phase_l, sizeof(int));
+    rd_ptr_a = (ctx->wr_ptr + ctx->lvl) & 15;
+    rd_ptr_b = (ctx->wr_ptr + ctx->lvl + 1) & 15;
 
     for (i = 0; i < NUM_AXIS; i++) {
-        steps_interp[i] = ctx->steps[i][rd_ptr_a] +
-            phase_a * (ctx->steps[i][rd_ptr_b] - ctx->steps[i][rd_ptr_a]); 
+        sample_diff = ctx->steps[i][rd_ptr_b] - ctx->steps[i][rd_ptr_a];
+
+        if (sample_diff < -1000) sample_diff += 2000;
+        else if (sample_diff > 1000) sample_diff -= 2000;
+
+        sample_mul = (int64_t) ctx->phase * (int64_t) sample_diff; 
+        sample_mul >>= 16;
+
+        sample_mul_int = (int) sample_mul;
+
+        sample_int = sample_mul_int + (ctx->steps[i][rd_ptr_a] << 15);
+
+        memcpy(&steps_interp[i], &sample_int, sizeof(int));
     }
 
     PIN(pos_x) = mod(steps_interp[0] * (M_PI / 1000K));

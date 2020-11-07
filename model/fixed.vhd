@@ -16,7 +16,7 @@ package fixed is
     function daccum_mac(a, b, c : signed) return signed;
     function read_daccum(a : signed) return signed;
 
-    constant C_F_PI     : real := 3.14159265358979323844;
+    constant C_F_PI     : real := 3.14332;
 
     constant C_1K   : signed(31 downto 0) := to_accum(1.0);
     constant C_M_PI : signed(31 downto 0) := to_accum(C_F_PI);
@@ -36,12 +36,12 @@ package body fixed is
     function accum_mod(val : signed) return signed is
         variable mod_arg : signed(31 downto 0);
     begin
-        mod_arg := val + 102944;
-        mod_arg := mod_arg mod 205888;
+        mod_arg := val + 103000;
+        mod_arg := mod_arg mod 206000;
         if mod_arg(31) = '1' then
-            mod_arg := mod_arg + 102944;
+            mod_arg := mod_arg + 103000;
         else
-            mod_arg := mod_arg - 102944;
+            mod_arg := mod_arg - 103000;
         end if;
         return mod_arg;
     end function accum_mod;
@@ -98,8 +98,8 @@ package body fixed is
     end function accum_mul_rnd;
 
     function daccum_mod(val : signed) return signed is
-        constant pi_x1   : signed(63 downto 0) := X"0000_0000_C90F_DAA2";
-        constant pi_x2   : signed(63 downto 0) := X"0000_0001_921F_B544";
+        constant pi_x1   : signed(63 downto 0) := X"0000_0000_C92C_27A6";
+        constant pi_x2   : signed(63 downto 0) := X"0000_0001_9258_4F4C";
         variable mod_arg : signed(63 downto 0);
     begin
         mod_arg := val + pi_x1;
