@@ -19,16 +19,21 @@ HAL_PIN(enable);
 #define NUM_AXIS 6
 #define MAX_PKTS (BUF_SIZE/(NUM_AXIS+2))
 
+#define ASRC_DEPTH_BITS 5
+#define ASRC_DEPTH      (1 << ASRC_DEPTH_BITS)
+#define ASRC_DEPTH_MASK (ASRC_DEPTH-1)
+
 struct ufm_ctx_t {
     uint8_t ufm_data[BUF_SIZE*2];
     int wr_ptr;
     int phase;
-    int ratio;
     int lvl;
+    uint32_t num;
+    uint32_t den;
     int ufm_data_idx;
     int last_packet_id;
     int running;
-    int steps[NUM_AXIS][16];
+    int steps[NUM_AXIS][ASRC_DEPTH];
 };
 
 static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
@@ -36,8 +41,7 @@ static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     //struct ufm_pin_ctx_t *pins = (struct ufm_pin_ctx_t *) pin_ptr;
     
     ctx->last_packet_id = -1;
-    ctx->lvl = 7;
-    ctx->ratio = 0x147AE14; // 1.01;
+    ctx->lvl = ASRC_DEPTH/2;
     I2C_UFM_SetupDMA(BUF_SIZE*2, ctx->ufm_data);
 }
 
@@ -90,7 +94,7 @@ static inline void update_steps(struct ufm_ctx_t *ctx,
     int i;
 
     if (!ctx->running) {
-        if (pkt_data[0]) {
+        if (pkt_data[4]) {
             ctx->running = 1;
             PIN(enable) = 1K;
         } else return;
@@ -98,9 +102,9 @@ static inline void update_steps(struct ufm_ctx_t *ctx,
 
     for (i = 0; i < NUM_AXIS; i++) {
         ctx->steps[i][ctx->wr_ptr] = 
-            (ctx->steps[i][(ctx->wr_ptr - 1) & 15] + pkt_data[i]) % 2000;
+            (ctx->steps[i][(ctx->wr_ptr - 1) & ASRC_DEPTH_MASK] + pkt_data[i]) % 2000;
     }
-    ctx->wr_ptr = (ctx->wr_ptr + 1) & 15;
+    ctx->wr_ptr = (ctx->wr_ptr + 1) & ASRC_DEPTH_MASK;
 }
 
 static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
@@ -110,6 +114,9 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
     uint8_t pkt_id;
     int i, j, found, pkt, end[MAX_PKTS];
     int pkt_data[NUM_AXIS];
+    uint32_t ratio_div;
+    uint64_t ratio_mul;
+    int ratio;
     int phase_overflow;
     int rd_ptr_a, rd_ptr_b;
     int sample_diff;
@@ -144,25 +151,40 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
         ctx->last_packet_id = pkt_id;
     }
 
+    /* Ratio estimation */
+    if (ctx->num & 0x8000) {
+        ctx->num >>= 1;
+        ctx->den >>= 1;
+    }
+
+    ctx->num += found;
+    ctx->den += 1;
+
+    ratio_div = 0x80000000 / ctx->den;
+    ratio_mul = (uint64_t) ctx->num * (uint64_t) ratio_div;
+
+    ratio = (int) ratio_mul & 0x7FFFFFFF; 
+
+    if (ctx->lvl < ASRC_DEPTH/2) {
+        ratio += 1 << (ASRC_DEPTH/2 - ctx->lvl - 1 + 12);
+    } else {
+        ratio -= 1 << (ctx->lvl - ASRC_DEPTH/2 + 1 + 12);
+    }
+
     /* Phase accumulator */
-    ctx->phase += ctx->ratio;
+    ctx->phase += ratio;
     phase_overflow = ctx->phase & 0x80000000;
     ctx->phase &= ctx->phase & 0x7FFFFFFF;
 
     if (found == 2 && !phase_overflow && ctx->lvl > 0) {
         ctx->lvl--;
-    } else if (found != 2 && phase_overflow && ctx->lvl < 14) {
+    } else if (found != 2 && phase_overflow && ctx->lvl < (ASRC_DEPTH-2)) {
         ctx->lvl++;
     }
 
-    if (ctx->lvl < 7) {
-        ctx->ratio += 128;
-    } else if (ctx->lvl > 7) {
-        ctx->ratio -= 128;
-    }
-
-    rd_ptr_a = (ctx->wr_ptr + ctx->lvl) & 15;
-    rd_ptr_b = (ctx->wr_ptr + ctx->lvl + 1) & 15;
+    /* Interpolator */
+    rd_ptr_a = (ctx->wr_ptr + ctx->lvl) & ASRC_DEPTH_MASK;
+    rd_ptr_b = (ctx->wr_ptr + ctx->lvl + 1) & ASRC_DEPTH_MASK;
 
     for (i = 0; i < NUM_AXIS; i++) {
         sample_diff = ctx->steps[i][rd_ptr_b] - ctx->steps[i][rd_ptr_a];

@@ -1,31 +1,106 @@
 [*]
-[*] GTKWave Analyzer v3.3.68 (w)1999-2016 BSI
-[*] Sat Nov  7 03:15:58 2020
+[*] GTKWave Analyzer v3.3.106 (w)1999-2020 BSI
+[*] Mon Nov  9 08:36:41 2020
 [*]
-[dumpfile] "/home/kmtaylor/src/motor_control/model/sim/asrc_tb.ghw"
-[dumpfile_mtime] "Sat Nov  7 03:14:07 2020"
-[dumpfile_size] 1880456
-[savefile] "/home/kmtaylor/src/motor_control/model/sim/asrc_tb.gtkw"
+[dumpfile] "/home/kmtaylor/PSoC/motor_control/model/sim/asrc_tb.ghw"
+[dumpfile_mtime] "Mon Nov  9 08:33:15 2020"
+[dumpfile_size] 5681930
+[savefile] "/home/kmtaylor/PSoC/motor_control/model/sim/asrc_tb.gtkw"
 [timestart] 0
-[size] 1354 682
+[size] 1436 792
 [pos] -1 -1
-*-50.000000 1273400000000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-51.000000 2190200000000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.asrc_tb.
 [sst_width] 201
 [signals_width] 310
 [sst_expanded] 1
-[sst_vpaned_height] 212
+[sst_vpaned_height] 260
 @28
 top.asrc_tb.clk_g2
 top.asrc_tb.clk_mc
 @200
 -
+@c00024
+#{top.asrc_tb.s_ratio_num[31:0]} top.asrc_tb.s_ratio_num[31] top.asrc_tb.s_ratio_num[30] top.asrc_tb.s_ratio_num[29] top.asrc_tb.s_ratio_num[28] top.asrc_tb.s_ratio_num[27] top.asrc_tb.s_ratio_num[26] top.asrc_tb.s_ratio_num[25] top.asrc_tb.s_ratio_num[24] top.asrc_tb.s_ratio_num[23] top.asrc_tb.s_ratio_num[22] top.asrc_tb.s_ratio_num[21] top.asrc_tb.s_ratio_num[20] top.asrc_tb.s_ratio_num[19] top.asrc_tb.s_ratio_num[18] top.asrc_tb.s_ratio_num[17] top.asrc_tb.s_ratio_num[16] top.asrc_tb.s_ratio_num[15] top.asrc_tb.s_ratio_num[14] top.asrc_tb.s_ratio_num[13] top.asrc_tb.s_ratio_num[12] top.asrc_tb.s_ratio_num[11] top.asrc_tb.s_ratio_num[10] top.asrc_tb.s_ratio_num[9] top.asrc_tb.s_ratio_num[8] top.asrc_tb.s_ratio_num[7] top.asrc_tb.s_ratio_num[6] top.asrc_tb.s_ratio_num[5] top.asrc_tb.s_ratio_num[4] top.asrc_tb.s_ratio_num[3] top.asrc_tb.s_ratio_num[2] top.asrc_tb.s_ratio_num[1] top.asrc_tb.s_ratio_num[0]
+@28
+top.asrc_tb.s_ratio_num[31]
+top.asrc_tb.s_ratio_num[30]
+top.asrc_tb.s_ratio_num[29]
+top.asrc_tb.s_ratio_num[28]
+top.asrc_tb.s_ratio_num[27]
+top.asrc_tb.s_ratio_num[26]
+top.asrc_tb.s_ratio_num[25]
+top.asrc_tb.s_ratio_num[24]
+top.asrc_tb.s_ratio_num[23]
+top.asrc_tb.s_ratio_num[22]
+top.asrc_tb.s_ratio_num[21]
+top.asrc_tb.s_ratio_num[20]
+top.asrc_tb.s_ratio_num[19]
+top.asrc_tb.s_ratio_num[18]
+top.asrc_tb.s_ratio_num[17]
+top.asrc_tb.s_ratio_num[16]
+top.asrc_tb.s_ratio_num[15]
+top.asrc_tb.s_ratio_num[14]
+top.asrc_tb.s_ratio_num[13]
+top.asrc_tb.s_ratio_num[12]
+top.asrc_tb.s_ratio_num[11]
+top.asrc_tb.s_ratio_num[10]
+top.asrc_tb.s_ratio_num[9]
+top.asrc_tb.s_ratio_num[8]
+top.asrc_tb.s_ratio_num[7]
+top.asrc_tb.s_ratio_num[6]
+top.asrc_tb.s_ratio_num[5]
+top.asrc_tb.s_ratio_num[4]
+top.asrc_tb.s_ratio_num[3]
+top.asrc_tb.s_ratio_num[2]
+top.asrc_tb.s_ratio_num[1]
+top.asrc_tb.s_ratio_num[0]
+@1401200
+-group_end
+@24
+#{top.asrc_tb.s_ratio_den[31:0]} top.asrc_tb.s_ratio_den[31] top.asrc_tb.s_ratio_den[30] top.asrc_tb.s_ratio_den[29] top.asrc_tb.s_ratio_den[28] top.asrc_tb.s_ratio_den[27] top.asrc_tb.s_ratio_den[26] top.asrc_tb.s_ratio_den[25] top.asrc_tb.s_ratio_den[24] top.asrc_tb.s_ratio_den[23] top.asrc_tb.s_ratio_den[22] top.asrc_tb.s_ratio_den[21] top.asrc_tb.s_ratio_den[20] top.asrc_tb.s_ratio_den[19] top.asrc_tb.s_ratio_den[18] top.asrc_tb.s_ratio_den[17] top.asrc_tb.s_ratio_den[16] top.asrc_tb.s_ratio_den[15] top.asrc_tb.s_ratio_den[14] top.asrc_tb.s_ratio_den[13] top.asrc_tb.s_ratio_den[12] top.asrc_tb.s_ratio_den[11] top.asrc_tb.s_ratio_den[10] top.asrc_tb.s_ratio_den[9] top.asrc_tb.s_ratio_den[8] top.asrc_tb.s_ratio_den[7] top.asrc_tb.s_ratio_den[6] top.asrc_tb.s_ratio_den[5] top.asrc_tb.s_ratio_den[4] top.asrc_tb.s_ratio_den[3] top.asrc_tb.s_ratio_den[2] top.asrc_tb.s_ratio_den[1] top.asrc_tb.s_ratio_den[0]
+@c00022
+#{top.asrc_tb.s_ratio_div[31:0]} top.asrc_tb.s_ratio_div[31] top.asrc_tb.s_ratio_div[30] top.asrc_tb.s_ratio_div[29] top.asrc_tb.s_ratio_div[28] top.asrc_tb.s_ratio_div[27] top.asrc_tb.s_ratio_div[26] top.asrc_tb.s_ratio_div[25] top.asrc_tb.s_ratio_div[24] top.asrc_tb.s_ratio_div[23] top.asrc_tb.s_ratio_div[22] top.asrc_tb.s_ratio_div[21] top.asrc_tb.s_ratio_div[20] top.asrc_tb.s_ratio_div[19] top.asrc_tb.s_ratio_div[18] top.asrc_tb.s_ratio_div[17] top.asrc_tb.s_ratio_div[16] top.asrc_tb.s_ratio_div[15] top.asrc_tb.s_ratio_div[14] top.asrc_tb.s_ratio_div[13] top.asrc_tb.s_ratio_div[12] top.asrc_tb.s_ratio_div[11] top.asrc_tb.s_ratio_div[10] top.asrc_tb.s_ratio_div[9] top.asrc_tb.s_ratio_div[8] top.asrc_tb.s_ratio_div[7] top.asrc_tb.s_ratio_div[6] top.asrc_tb.s_ratio_div[5] top.asrc_tb.s_ratio_div[4] top.asrc_tb.s_ratio_div[3] top.asrc_tb.s_ratio_div[2] top.asrc_tb.s_ratio_div[1] top.asrc_tb.s_ratio_div[0]
+@28
+top.asrc_tb.s_ratio_div[31]
+top.asrc_tb.s_ratio_div[30]
+top.asrc_tb.s_ratio_div[29]
+top.asrc_tb.s_ratio_div[28]
+top.asrc_tb.s_ratio_div[27]
+top.asrc_tb.s_ratio_div[26]
+top.asrc_tb.s_ratio_div[25]
+top.asrc_tb.s_ratio_div[24]
+top.asrc_tb.s_ratio_div[23]
+top.asrc_tb.s_ratio_div[22]
+top.asrc_tb.s_ratio_div[21]
+top.asrc_tb.s_ratio_div[20]
+top.asrc_tb.s_ratio_div[19]
+top.asrc_tb.s_ratio_div[18]
+top.asrc_tb.s_ratio_div[17]
+top.asrc_tb.s_ratio_div[16]
+top.asrc_tb.s_ratio_div[15]
+top.asrc_tb.s_ratio_div[14]
+top.asrc_tb.s_ratio_div[13]
+top.asrc_tb.s_ratio_div[12]
+top.asrc_tb.s_ratio_div[11]
+top.asrc_tb.s_ratio_div[10]
+top.asrc_tb.s_ratio_div[9]
+top.asrc_tb.s_ratio_div[8]
+top.asrc_tb.s_ratio_div[7]
+top.asrc_tb.s_ratio_div[6]
+top.asrc_tb.s_ratio_div[5]
+top.asrc_tb.s_ratio_div[4]
+top.asrc_tb.s_ratio_div[3]
+top.asrc_tb.s_ratio_div[2]
+top.asrc_tb.s_ratio_div[1]
+top.asrc_tb.s_ratio_div[0]
+@1401200
+-group_end
 @8028
 top.asrc_tb.r_ratio
-@28
+@8024
 top.asrc_tb.r_phase
-@8022
 #{top.asrc_tb.s_sample_ptr[3:0]} top.asrc_tb.s_sample_ptr[3] top.asrc_tb.s_sample_ptr[2] top.asrc_tb.s_sample_ptr[1] top.asrc_tb.s_sample_ptr[0]
 @20000
 -
@@ -41,7 +116,7 @@ top.asrc_tb.r_sample
 top.asrc_tb.r_sample_diff
 @20000
 -
-@29
+@28
 top.asrc_tb.r_sample_mod_diff
 @8028
 top.asrc_tb.r_sample_mod
@@ -55,7 +130,36 @@ top.asrc_tb.r_sample_mod
 #{top.asrc_tb.s_rd_ptr_b[3:0]} top.asrc_tb.s_rd_ptr_b[3] top.asrc_tb.s_rd_ptr_b[2] top.asrc_tb.s_rd_ptr_b[1] top.asrc_tb.s_rd_ptr_b[0]
 @200
 -
-@22
+@8029
+top.asrc_tb.r_sample_vel
+@c00022
 #{top.asrc_tb.r_sample_buf[0:15]} top.asrc_tb.r_sample_buf[0] top.asrc_tb.r_sample_buf[1] top.asrc_tb.r_sample_buf[2] top.asrc_tb.r_sample_buf[3] top.asrc_tb.r_sample_buf[4] top.asrc_tb.r_sample_buf[5] top.asrc_tb.r_sample_buf[6] top.asrc_tb.r_sample_buf[7] top.asrc_tb.r_sample_buf[8] top.asrc_tb.r_sample_buf[9] top.asrc_tb.r_sample_buf[10] top.asrc_tb.r_sample_buf[11] top.asrc_tb.r_sample_buf[12] top.asrc_tb.r_sample_buf[13] top.asrc_tb.r_sample_buf[14] top.asrc_tb.r_sample_buf[15]
+@28
+top.asrc_tb.r_sample_buf[0]
+top.asrc_tb.r_sample_buf[1]
+top.asrc_tb.r_sample_buf[2]
+top.asrc_tb.r_sample_buf[3]
+top.asrc_tb.r_sample_buf[4]
+top.asrc_tb.r_sample_buf[5]
+top.asrc_tb.r_sample_buf[6]
+top.asrc_tb.r_sample_buf[7]
+top.asrc_tb.r_sample_buf[8]
+top.asrc_tb.r_sample_buf[9]
+top.asrc_tb.r_sample_buf[10]
+top.asrc_tb.r_sample_buf[11]
+top.asrc_tb.r_sample_buf[12]
+top.asrc_tb.r_sample_buf[13]
+top.asrc_tb.r_sample_buf[14]
+top.asrc_tb.r_sample_buf[15]
+@1401200
+-group_end
+@200
+-
+@8028
+top.asrc_tb.u_vel_double.r_vel
+@20000
+-
+-
+-
 [pattern_trace] 1
 [pattern_trace] 0
