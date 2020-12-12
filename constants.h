@@ -11,8 +11,8 @@
 #define SAT_VOLTAGE_DC      (SAT_FACTOR_DC*SAT_FACTOR_DC * BUS_DC*BUS_DC)
 #define SAT_VOLTAGE_3PH     (SAT_FACTOR_3PH*SAT_FACTOR_3PH * BUS_3PH*BUS_3PH)
 #define CURPID_MAX_CUR_DC   1.0K
-#define CURPID_MAX_CUR_3PH  4.0K
-#define CURPID_SAT_TIME     0.33K
+#define CURPID_MAX_CUR_3PH  8.0K
+#define CURPID_SAT_TIME     0.5K
 
 #define CONF_X_R            1.70        // Resistance (ohms) measured
 #define CONF_X_L            0.0026      // Inductance (henry) measured
