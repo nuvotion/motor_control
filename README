@@ -1,0 +1,12 @@
+AC/DC Motor control using a Cypress PSOC5
+
+Based on STMBL:
+https://github.com/rene-dev/stmbl
+
+This version uses only fixed point operations, and is suitable for Cortex-M3
+chips.
+
+The current design supports simultaneous drive of either two AC (PMSM) servos,
+or four DC servos.
+
+This is designed to work with g2_core using I2C in UFM mode for control.
