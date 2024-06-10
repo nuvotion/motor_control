@@ -130,12 +130,12 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
                             (accum) ADC_DC_FILT_LP;
         ctx->w_offset_y += ((accum) ADC_GetResult16(3) - ctx->w_offset_y) *
                             (accum) ADC_DC_FILT_LP;
-    } else {
-        PIN(iu_x) = ((accum) ADC_GetResult16(0) - ctx->u_offset_x) * (1K/350K);
-        PIN(iw_x) = ((accum) ADC_GetResult16(1) - ctx->w_offset_x) * (1K/350K);
-        PIN(iu_y) = ((accum) ADC_GetResult16(2) - ctx->u_offset_y) * (1K/350K);
-        PIN(iw_y) = ((accum) ADC_GetResult16(3) - ctx->w_offset_y) * (1K/350K);
     }
+
+    PIN(iu_x) = ((accum) ADC_GetResult16(0) - ctx->u_offset_x) * (1K/350K);
+    PIN(iw_x) = ((accum) ADC_GetResult16(1) - ctx->w_offset_x) * (1K/350K);
+    PIN(iu_y) = ((accum) ADC_GetResult16(2) - ctx->u_offset_y) * (1K/350K);
+    PIN(iw_y) = ((accum) ADC_GetResult16(3) - ctx->w_offset_y) * (1K/350K);
 
     ADC_StartConvert();
 }
