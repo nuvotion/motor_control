@@ -61,6 +61,7 @@ static void init_pos_pid(void) {
     connect_pins("curpid",      0, "enable", "ufm", 0, "enable");
     connect_pins("curpid",      1, "enable", "ufm", 0, "enable");
     connect_pins("encoder_dc",  0, "enable", "ufm", 0, "enable");
+    connect_pins("adc",         0, "enable", "ufm", 0, "enable");
 
     /* Position motor model */
     connect_pins("vel", 1, "pos_in", "encoder_dc",  0, "mot_pos_0");
