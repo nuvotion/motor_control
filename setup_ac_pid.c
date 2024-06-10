@@ -43,6 +43,7 @@ static void init_pos_pid(void) {
     connect_pins("curpid",  0, "enable", "ufm", 0, "enable");
     connect_pins("curpid",  1, "enable", "ufm", 0, "enable");
     connect_pins("encoder", 0, "enable", "ufm", 0, "enable");
+    connect_pins("adc",     0, "enable", "ufm", 0, "enable");
 
     /* Commutation motor model - generates position for dq/idq */
     connect_pins("vel", 2, "pos_in", "encoder",     0, "com_pos_x"); 
