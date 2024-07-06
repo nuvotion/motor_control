@@ -1,5 +1,7 @@
 #define PERIOD              0.0002 
 
+#define ADC_DC_FILT_LP      LP_HZ(1.0, PERIOD)
+
 #define VEL_ACC_LP          LP_HZ(50.0, PERIOD)
 #define VEL_ACC_FF_GAIN     (1000.0*1000.0*PERIOD)
 #define VEL_VEL_FF_GAIN     (2*0.9*1000.0*PERIOD)

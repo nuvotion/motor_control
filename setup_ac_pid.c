@@ -43,6 +43,7 @@ static void init_pos_pid(void) {
     connect_pins("curpid",  0, "enable", "ufm", 0, "enable");
     connect_pins("curpid",  1, "enable", "ufm", 0, "enable");
     connect_pins("encoder", 0, "enable", "ufm", 0, "enable");
+    connect_pins("adc",     0, "enable", "ufm", 0, "enable");
 
     /* Commutation motor model - generates position for dq/idq */
     connect_pins("vel", 2, "pos_in", "encoder",     0, "com_pos_x"); 
@@ -79,14 +80,17 @@ static void init_pos_pid(void) {
     connect_pins("idq",    1, "pos",    "vel",  5, "pos_out");
 
     /* Debug */
-#if 0
-    connect_pins("dbg", 0, "in0", "ufm",        0, "pos_x");
-    connect_pins("dbg", 0, "in1", "vel",        0, "vel");
-    connect_pins("dbg", 0, "in2", "encoder",    0, "mot_pos_x");
-    connect_pins("dbg", 0, "in3", "vel",        1, "vel");
-    connect_pins("dbg", 0, "in4", "pid",        0, "torque_cor_cmd");
-#endif
 #if 1
+    connect_pins("dbg", 0, "in0", "ufm",        0, "enable");
+    connect_pins("dbg", 0, "in1", "encoder",    0, "com_pos_x");
+    connect_pins("dbg", 0, "in2", "encoder",    0, "mot_pos_x");
+    connect_pins("dbg", 0, "in3", "adc",        0, "iu_x");
+    connect_pins("dbg", 0, "in4", "adc",        0, "iw_x");
+    connect_pins("dbg", 0, "in5", "curpid",     0, "ud");
+    connect_pins("dbg", 0, "in6", "curpid",     0, "uq");
+    connect_pins("dbg", 0, "in7", "pid",        0, "torque_cor_cmd");
+#endif
+#if 0
     connect_pins("dbg", 0, "in0", "ufm",        0, "pos_y");
     connect_pins("dbg", 0, "in1", "vel",        3, "vel");
     connect_pins("dbg", 0, "in2", "encoder",    0, "mot_pos_y");

@@ -12,6 +12,7 @@ HAL_PIN(in3);
 HAL_PIN(in4);
 HAL_PIN(in5);
 HAL_PIN(in6);
+HAL_PIN(in7);
 
 HAL_PIN(angle);
 HAL_PIN(step);
@@ -43,6 +44,12 @@ static void nrt_func(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     print(print_float(PIN(in3)));
     print(", in4: ");
     print(print_float(PIN(in4)));
+    print(", in5: ");
+    print(print_float(PIN(in5)));
+    print(", in6: ");
+    print(print_float(PIN(in6)));
+    print(", in7: ");
+    print(print_float(PIN(in7)));
     print("\n");
 
     if (PIN(error0) != 0K) LED_0_Write(0);

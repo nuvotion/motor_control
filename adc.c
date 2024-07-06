@@ -1,5 +1,7 @@
 #include <project.h>
 #include "hal.h"
+#include "defines.h"
+#include "constants.h"
 
 #define ADC_NUMBER_OF_CHANNELS 4
 
@@ -24,16 +26,13 @@ HAL_PIN(iw_x);
 HAL_PIN(iu_y);
 HAL_PIN(iw_y);
 
+HAL_PIN(enable);
+
 struct adc_ctx_t {
-    int u_average_x;
-    int w_average_x;
     accum u_offset_x;
     accum w_offset_x;
-    int u_average_y;
-    int w_average_y;
     accum u_offset_y;
     accum w_offset_y;
-    int init_samples;
 };
 
 static uint16_t adc_buffer[ADC_NUMBER_OF_CHANNELS];
@@ -51,7 +50,6 @@ static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
     uint8_t sample_ch, sample_td;
     uint8_t buffer_ch, buffer_td;
     uint8_t flags;
-    struct adc_ctx_t *ctx = (struct adc_ctx_t *) ctx_ptr;
 
     /* Init DMA, 2 bytes bursts, each burst requires a request */
     sample_ch = ADC_SAMPLE_DMA_DmaInitialize(2, 1,
@@ -116,8 +114,6 @@ static void nrt_init(volatile void *ctx_ptr, volatile hal_pin_inst_t *pin_ptr) {
 
     CY_GET_REG8(ADC_STATUS_PTR);
 
-    /* Take 1000 samples to determine offset */
-    ctx->init_samples = 1000;
     ADC_StartConvert();
 }
 
@@ -125,29 +121,21 @@ static void rt_func(accum period, volatile void *ctx_ptr, volatile hal_pin_inst_
     struct adc_ctx_t *ctx      = (struct adc_ctx_t *) ctx_ptr;
     struct adc_pin_ctx_t *pins = (struct adc_pin_ctx_t *) pin_ptr;
 
-    if (ctx->init_samples) {
-        ctx->u_average_x += ADC_GetResult16(0);
-        ctx->w_average_x += ADC_GetResult16(1);
-        ctx->u_average_y += ADC_GetResult16(2);
-        ctx->w_average_y += ADC_GetResult16(3);
-
-        if (ctx->init_samples == 1) {
-            ctx->u_average_x /= 1000;
-            ctx->w_average_x /= 1000;
-            ctx->u_offset_x = (accum) ctx->u_average_x;
-            ctx->w_offset_x = (accum) ctx->w_average_x;
-            ctx->u_average_y /= 1000;
-            ctx->w_average_y /= 1000;
-            ctx->u_offset_y = (accum) ctx->u_average_y;
-            ctx->w_offset_y = (accum) ctx->w_average_y;
-        }
-        ctx->init_samples--;
-    } else {
-        PIN(iu_x) = ((accum) ADC_GetResult16(0) - ctx->u_offset_x) * (1K/350K);
-        PIN(iw_x) = ((accum) ADC_GetResult16(1) - ctx->w_offset_x) * (1K/350K);
-        PIN(iu_y) = ((accum) ADC_GetResult16(2) - ctx->u_offset_y) * (1K/350K);
-        PIN(iw_y) = ((accum) ADC_GetResult16(3) - ctx->w_offset_y) * (1K/350K);
+    if (PIN(enable) == 0K) {
+        ctx->u_offset_x += ((accum) ADC_GetResult16(0) - ctx->u_offset_x) *
+                            (accum) ADC_DC_FILT_LP;
+        ctx->w_offset_x += ((accum) ADC_GetResult16(1) - ctx->w_offset_x) *
+                            (accum) ADC_DC_FILT_LP;
+        ctx->u_offset_y += ((accum) ADC_GetResult16(2) - ctx->u_offset_y) *
+                            (accum) ADC_DC_FILT_LP;
+        ctx->w_offset_y += ((accum) ADC_GetResult16(3) - ctx->w_offset_y) *
+                            (accum) ADC_DC_FILT_LP;
     }
+
+    PIN(iu_x) = ((accum) ADC_GetResult16(0) - ctx->u_offset_x) * (1K/350K);
+    PIN(iw_x) = ((accum) ADC_GetResult16(1) - ctx->w_offset_x) * (1K/350K);
+    PIN(iu_y) = ((accum) ADC_GetResult16(2) - ctx->u_offset_y) * (1K/350K);
+    PIN(iw_y) = ((accum) ADC_GetResult16(3) - ctx->w_offset_y) * (1K/350K);
 
     ADC_StartConvert();
 }
